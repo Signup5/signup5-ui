@@ -8,14 +8,12 @@ import { useHistory } from "react-router-dom";
 
 interface Props {
   email: String;
-  checkLogin: Dispatch<SetStateAction<boolean>>;
+  password: String;
 }
 
 const ValidatePersonCredentials: FC<Props> = props => {
   const dispatch = useDispatch();
   const rootDispatcher = new RootDispatcher(dispatch);
-
-  const history = useHistory();
 
   const response: QueryResponse = useQuery(GET_PERSON_BY_EMAIL, {
     variables: {
@@ -30,10 +28,10 @@ const ValidatePersonCredentials: FC<Props> = props => {
 
   const person: Person = response.data.person;
 
-  rootDispatcher.updatePerson(person);
-
-  history.push("/dashboard");
-
+  if (props.password.length >= 1) {
+    rootDispatcher.updatePerson(person);
+    // props.setValidCredentials(true);
+  }
   return <div>{person.email}</div>;
 };
 export default ValidatePersonCredentials;

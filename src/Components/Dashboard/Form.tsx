@@ -21,7 +21,13 @@ import { useSelector } from "react-redux";
 import Classes from "../../App.module.css";
 import { CREATE_EVENT } from "../../Store/GQL";
 import { InitialState } from "../../Store/Reducers/rootReducer";
-import { EventInput, Person, InvitationInput } from "../../Types";
+import {
+  EventInput,
+  Person,
+  InvitationInput,
+  Invitation,
+  HostInput
+} from "../../Types";
 import { GuestList } from "./GuestList";
 
 function Alert(props: AlertProps) {
@@ -51,7 +57,7 @@ export const Form: FC<Props> = () => {
   const stateProps = useSelector<InitialState, StateProps>(
     (state: InitialState) => {
       return {
-        host: { ...state.person }
+        host: { id: state.person.id }
       };
     }
   );
@@ -118,7 +124,7 @@ export const Form: FC<Props> = () => {
     });
 
     const eventInput: EventInput = {
-      host: stateProps.host,
+      host: { id: stateProps.host.id },
       title: title,
       description: description,
       date_of_event: dateString,

@@ -1,20 +1,25 @@
-import { Button, Grid, TextField, Paper, Card } from "@material-ui/core";
+import { Button, Card, Grid, TextField } from "@material-ui/core";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import LockIcon from "@material-ui/icons/Lock";
-import React, { ChangeEvent, FC, FormEvent, useState, useEffect } from "react";
+import React, { ChangeEvent, FC, FormEvent, useEffect, useState } from "react";
 import Classes from "../App.module.css";
 import { emailRegEx } from "../Utility";
 import ValidatePersonCredentials from "./ValidatePersonCredentials";
+import { useHistory } from "react-router-dom";
+import { Credentials } from "../Types/index";
 
 interface Props {}
 
 const LoginForm: FC<Props> = () => {
   const [email, setEmail] = useState<string>("");
-  const [submittedEmail, setSubmittedEmail] = useState<string>("");
-  const [validEmail, setValidEmail] = useState<boolean>(true);
-  const [submitted, setSubmitted] = useState<boolean>(false);
   const [password, setPassword] = useState<string>("");
-  const [loggedIn, login] = useState<boolean>(false);
+  const [userCredentials] = useState<Credentials>(new Credentials("", ""));
+  const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
+  const [updateState, setUpdateState] = useState<boolean>(false);
+  const [displayEmailError, setDisplayEmailError] = useState<boolean>(false);
+  const [displayPasswordError, setDisplayPasswordError] = useState<boolean>(
+    false
+  );
 
   const onPasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
@@ -26,18 +31,34 @@ const LoginForm: FC<Props> = () => {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setSubmitted(true);
-    validateEmail();
-    setSubmittedEmail(email);
-    login(true);
+    setIsFormSubmitted(true);
+    userCredentials.setEmail(email);
+    userCredentials.setPassword(password);
+    setUpdateState(!updateState);
   };
 
-  const validateEmail = () => {
-    setValidEmail(email.match(emailRegEx) ? true : false);
+  const changeDisplayEmailError = () => {
+    if (isFormSubmitted) {
+      if (!email.match(emailRegEx)) {
+        setDisplayEmailError(true);
+      } else {
+        setDisplayEmailError(false);
+      }
+    }
+  };
+  const changeDisplayPasswordError = () => {
+    if (isFormSubmitted) {
+      if (password.length <= 3) {
+        setDisplayPasswordError(true);
+      } else {
+        setDisplayPasswordError(false);
+      }
+    }
   };
 
   useEffect(() => {
-    if (submitted) validateEmail();
+    changeDisplayEmailError();
+    changeDisplayPasswordError();
   });
 
   return (
@@ -56,8 +77,8 @@ const LoginForm: FC<Props> = () => {
               onChange={onEmailChange}
               name="email"
               type="email"
-              error={!validEmail}
-              helperText={validEmail ? "" : "Not a valid email!"}
+              error={displayEmailError}
+              helperText={displayEmailError ? "Not a valid email!" : ""}
               value={email}
             />
           </Grid>
@@ -76,9 +97,11 @@ const LoginForm: FC<Props> = () => {
               onChange={onPasswordChange}
               name="password"
               type="password"
-              error={password.length === 0 && submitted}
+              error={displayPasswordError}
               helperText={
-                password.length === 0 && submitted ? "Password required!" : ""
+                displayPasswordError
+                  ? "Password should be at least 4 characters!"
+                  : ""
               }
               value={password}
             />
@@ -95,8 +118,12 @@ const LoginForm: FC<Props> = () => {
           Sign in
         </Button>
       </form>
-      {loggedIn && validEmail ? (
-        <ValidatePersonCredentials email={submittedEmail} checkLogin={login} />
+      {userCredentials.isEmailValidFormat() &&
+      userCredentials.isPasswordValidFormat() ? (
+        <ValidatePersonCredentials
+          email={userCredentials.getEmail()}
+          password={userCredentials.getPassword()}
+        />
       ) : (
         ""
       )}
