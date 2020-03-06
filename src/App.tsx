@@ -2,12 +2,11 @@ import React, { FC } from "react";
 import { useSelector } from "react-redux";
 import { BrowserRouter, Route } from "react-router-dom";
 import Classes from "./App.module.css";
-import { Form } from "./Components/Dashboard";
+import { Form, DisplayInvitations } from "./Components/Dashboard";
 import SignupLogo from "./Components/Icons/SignupLogo";
 import LoginForm from "./Components/LoginForm";
 import { InitialState } from "./Store/Reducers/rootReducer";
 import { Person } from "./Types";
-import { Paper } from "@material-ui/core";
 
 interface StateProps {
   person: Person;
@@ -33,6 +32,7 @@ const App: FC = () => {
           </Route>
           <Route path="/dashboard">
             <Form />
+            <DisplayInvitations />
           </Route>
         </BrowserRouter>
       </div>

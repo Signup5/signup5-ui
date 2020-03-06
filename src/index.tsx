@@ -9,7 +9,7 @@ import * as serviceWorker from "./serviceWorker";
 import { store } from "./Store";
 
 const client = new ApolloClient({
-  uri: "https://signup5-stage.herokuapp.com/graphql"
+  uri: "http://192.168.68.121:8080/graphql"
 });
 
 ReactDOM.render(

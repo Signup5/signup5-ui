@@ -4,33 +4,27 @@ import {
   Card,
   CardActions,
   CardContent,
-  TextField,
-  Snackbar
+  Snackbar,
+  TextField
 } from "@material-ui/core";
 import RoomOutlinedIcon from "@material-ui/icons/RoomOutlined";
 import ScheduleIcon from "@material-ui/icons/Schedule";
+import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
 import {
   KeyboardDatePicker,
   KeyboardTimePicker,
   MuiPickersUtilsProvider
 } from "@material-ui/pickers";
-import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
 import React, { ChangeEvent, FC, useEffect, useState } from "react";
 import { useMutation } from "react-apollo";
 import { useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
 import Classes from "../../App.module.css";
 import { CREATE_EVENT } from "../../Store/GQL";
 import { InitialState } from "../../Store/Reducers/rootReducer";
-import {
-  EventInput,
-  Person,
-  InvitationInput,
-  Invitation,
-  HostInput
-} from "../../Types";
-import { GuestList } from "./GuestList";
+import { EventInput, InvitationInput, Person } from "../../Types";
 import { emailRegEx } from "../../Utility";
-import { useHistory } from "react-router-dom";
+import { GuestList } from "./GuestList";
 
 function Alert(props: AlertProps) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -174,8 +168,8 @@ export const Form: FC<Props> = () => {
   });
 
   return (
-    <>
-      <Card className={Classes.MainPaper}>
+    <div className={Classes.MainPaper}>
+      <Card>
         <CardContent>
           <h2 style={{ margin: "0px" }}>Create new event</h2>
 
@@ -276,6 +270,6 @@ export const Form: FC<Props> = () => {
         </Alert>
       </Snackbar>
       <GuestList guestList={guestList} />
-    </>
+    </div>
   );
 };

@@ -8,3 +8,13 @@ export const CREATE_EVENT = gql`
     }
   }
 `;
+export const SET_ATTENDANCE = gql`
+  mutation($attendance: Attendance!, $invitation_id: Int!) {
+    response: setAttendance(
+      attendance: $attendance
+      invitation_id: $invitation_id
+    ) {
+      message
+    }
+  }
+`;
