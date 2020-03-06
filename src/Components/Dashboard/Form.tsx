@@ -29,6 +29,7 @@ import {
   HostInput
 } from "../../Types";
 import { GuestList } from "./GuestList";
+import { emailRegEx } from "../../Utility";
 
 function Alert(props: AlertProps) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -48,6 +49,9 @@ export const Form: FC<Props> = () => {
   const [location, setLocation] = useState<string>("");
   const [guestEmail, setGuestEmail] = useState<string>("");
   const [guestList, setGuestList] = useState<Array<string>>([]);
+  const [isGuestSubmitted, setIsGuestSubmitted] = useState<boolean>(false);
+  const [displayEmailError, setDisplayEmailError] = useState<boolean>(false);
+
   const [open, setOpen] = useState<boolean>(false);
   const [responseMessage, setResponseMessage] = useState<string>("");
   const [severity, setSeverity] = useState<
@@ -137,22 +141,41 @@ export const Form: FC<Props> = () => {
 
   const addToGuestList = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key == "Enter") {
+      setIsGuestSubmitted(true);
       const guests: Array<string> = guestList;
-      guests.push(guestEmail);
-      setGuestEmail("");
-      setGuestList(guests);
+
+      if (guestEmail.match(emailRegEx)) {
+        guests.push(guestEmail);
+        setGuestEmail("");
+        setGuestList(guests);
+        setDisplayEmailError(false);
+        setIsGuestSubmitted(false);
+      }
     }
   };
 
-  useEffect(() => {});
+  const changeDisplayEmailError = () => {
+    if (isGuestSubmitted) {
+      if (!guestEmail.match(emailRegEx)) {
+        setDisplayEmailError(true);
+      } else {
+        setDisplayEmailError(false);
+      }
+    }
+  };
+
+  useEffect(() => {
+    changeDisplayEmailError();
+  });
 
   return (
     <>
       <Card className={Classes.MainPaper}>
         <CardContent>
-          <h2>Create new event</h2>
+          <h2 style={{ margin: "0px" }}>Create new event</h2>
 
           <TextField
+            className={Classes.TextField}
             required
             id="title"
             label="Title"
@@ -163,6 +186,7 @@ export const Form: FC<Props> = () => {
           />
 
           <TextField
+            className={Classes.TextField}
             id="description"
             label="Description"
             multiline
@@ -204,6 +228,7 @@ export const Form: FC<Props> = () => {
           </MuiPickersUtilsProvider>
 
           <TextField
+            className={Classes.TextField}
             required
             id="location"
             label="Location"
@@ -217,12 +242,15 @@ export const Form: FC<Props> = () => {
             }}
           />
           <TextField
+            className={Classes.TextField}
             id="addGuest"
             label="Add guest"
             style={{ width: "100%" }}
             value={guestEmail}
             onKeyUp={addToGuestList}
             onChange={onGuestEmailChange}
+            error={displayEmailError}
+            helperText={displayEmailError ? "Not a valid email!" : ""}
           />
         </CardContent>
         <CardActions>

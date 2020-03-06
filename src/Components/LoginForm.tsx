@@ -3,13 +3,17 @@ import AccountCircle from "@material-ui/icons/AccountCircle";
 import LockIcon from "@material-ui/icons/Lock";
 import React, { ChangeEvent, FC, FormEvent, useEffect, useState } from "react";
 import Classes from "../App.module.css";
+import { Credentials, Person } from "../Types/index";
 import { emailRegEx } from "../Utility";
 import ValidatePersonCredentials from "./ValidatePersonCredentials";
-import { useHistory } from "react-router-dom";
-import { Credentials } from "../Types/index";
+import { useSelector } from "react-redux";
+import { InitialState } from "../Store/Reducers/rootReducer";
 
 interface Props {}
 
+interface StateProps {
+  host: Person;
+}
 const LoginForm: FC<Props> = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -19,6 +23,14 @@ const LoginForm: FC<Props> = () => {
   const [displayEmailError, setDisplayEmailError] = useState<boolean>(false);
   const [displayPasswordError, setDisplayPasswordError] = useState<boolean>(
     false
+  );
+
+  const stateProps = useSelector<InitialState, StateProps>(
+    (state: InitialState) => {
+      return {
+        host: { id: state.person.id }
+      };
+    }
   );
 
   const onPasswordChange = (e: ChangeEvent<HTMLInputElement>) => {

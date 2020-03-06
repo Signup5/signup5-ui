@@ -1,5 +1,5 @@
 import { Card, CardContent } from "@material-ui/core";
-import React, { FC } from "react";
+import React, { FC, Dispatch, SetStateAction } from "react";
 import Classes from "../../App.module.css";
 
 interface Props {
@@ -10,9 +10,9 @@ export const GuestList: FC<Props> = props => {
   return (
     <Card className={Classes.MainPaper}>
       <CardContent>
-        {props.guestList.map(guest => {
-          console.log(guest);
-          return <p>{guest}</p>;
+        <h2 style={{ margin: "0px" }}>Guest List</h2>
+        {props.guestList.map((guest, index) => {
+          return <p key={index}>{guest}</p>;
         })}
       </CardContent>
     </Card>

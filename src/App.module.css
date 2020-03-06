@@ -1,13 +1,20 @@
+body {
+  background-color: whitesmoke;
+}
+
+h2 {
+  margin: 0px;
+}
+
 .AppHeader {
   padding: 10px;
-  background-color: f7f7f7;
+
   grid-area: header;
   border-bottom: 1px solid rgb(135, 135, 135);
 
   margin: 10px 30px 0 30px;
 }
 .AppMainContent {
-  background-color: f7f7f7;
   grid-area: main;
   overflow-y: scroll;
   overflow-x: hidden;
@@ -17,14 +24,12 @@
   flex-basis: 50%;
 }
 .AppSidebar {
-  background-color: f7f7f7;
   grid-area: sidebar;
   border-right: 1px solid rgb(135, 135, 135);
   margin: 30px 0 30px 0;
   padding-left: 30px;
 }
 .AppFooter {
-  background-color: f7f7f7;
   grid-area: footer;
   border-top: 1px solid rgb(135, 135, 135);
   margin: 0 30px 0 30px;
@@ -56,6 +61,11 @@
 .LoginForm {
   width: 100%;
   max-width: 300px;
+  padding: 12px;
+}
+
+.TextField {
+  margin: 10px 0px !important;
 }
 
 .Button {
@@ -64,6 +74,8 @@
 
 .MainPaper {
   width: 50%;
+  padding: 12px 24px;
+  margin-bottom: 10px;
 }
 
 .CreateEventForm {
