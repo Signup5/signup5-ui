@@ -30,6 +30,7 @@ import {
 } from "../../Types";
 import { GuestList } from "./GuestList";
 import { emailRegEx } from "../../Utility";
+import { useHistory } from "react-router-dom";
 
 function Alert(props: AlertProps) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -58,6 +59,7 @@ export const Form: FC<Props> = () => {
     "success" | "info" | "warning" | "error" | undefined
   >(undefined);
 
+  const history = useHistory();
   const stateProps = useSelector<InitialState, StateProps>(
     (state: InitialState) => {
       return {
@@ -165,6 +167,9 @@ export const Form: FC<Props> = () => {
   };
 
   useEffect(() => {
+    if (!stateProps.host.id) {
+      history.push("");
+    }
     changeDisplayEmailError();
   });
 
