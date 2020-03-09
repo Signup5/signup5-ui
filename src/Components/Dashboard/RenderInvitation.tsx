@@ -70,7 +70,6 @@ export const RenderInvitation: FC<Props> = props => {
 
   return (
     <>
-      <h2>Your invitations</h2> <br />
       <ExpansionPanel>
         <ExpansionPanelSummary
           expandIcon={<ExpandMoreIcon />}

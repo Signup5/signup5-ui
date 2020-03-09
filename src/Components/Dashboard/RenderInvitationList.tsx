@@ -39,5 +39,10 @@ export const RenderInvitationList: FC<Props> = () => {
     });
   };
 
-  return <div>{render()}</div>;
+  return (
+    <div>
+      <h2>Your invitations</h2> <br />
+      {render()}
+    </div>
+  );
 };

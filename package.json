@@ -34,7 +34,7 @@
   "scripts": {
     "start": "react-scripts start",
     "hello": "echo hello",
-    "local": "export REACT_APP_API_URI=http://192.168.68.121:8080/graphql || set REACT_APP_API_URI=http://192.168.68.121:8080/graphql && react-scripts start",
+    "local": "export REACT_APP_API_URI=http://192.168.68.121:8080/graphql || set REACT_APP_API_URI=https://signup5-dev.herokuapp.com/graphql && react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
