@@ -64,9 +64,9 @@ const LoginForm: FC<Props> = () => {
     <Card className={Classes.MainPaper}>
       <form onSubmit={handleSubmit} noValidate className={Classes.LoginForm}>
         <h2>Sign in</h2>
-        <Grid container spacing={1} alignItems="flex-end">
+        <Grid container spacing={1} alignItems="flex-start">
           <Grid item xs={1}>
-            <AccountCircle />
+            <AccountCircle style={{ marginTop: "16px" }} />
           </Grid>
           <Grid item xs={11}>
             <TextField

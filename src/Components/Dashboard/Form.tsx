@@ -5,7 +5,16 @@ import {
   CardActions,
   CardContent,
   Snackbar,
-  TextField
+  TextField,
+  FormControl,
+  Grid,
+  List,
+  ListItem,
+  Avatar,
+  ListItemAvatar,
+  ListItemText,
+  ListItemSecondaryAction,
+  IconButton
 } from "@material-ui/core";
 import RoomOutlinedIcon from "@material-ui/icons/RoomOutlined";
 import ScheduleIcon from "@material-ui/icons/Schedule";
@@ -13,9 +22,11 @@ import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
 import {
   KeyboardDatePicker,
   KeyboardTimePicker,
-  MuiPickersUtilsProvider
+  MuiPickersUtilsProvider,
+  TimePicker,
+  DatePicker
 } from "@material-ui/pickers";
-import React, { ChangeEvent, FC, useEffect, useState } from "react";
+import React, { ChangeEvent, FC, useEffect, useState, FormEvent } from "react";
 import { useMutation } from "react-apollo";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
@@ -25,7 +36,10 @@ import { InitialState } from "../../Store/Reducers/rootReducer";
 import { EventInput, InvitationInput, Person } from "../../Types";
 import { emailRegEx } from "../../Utility";
 import { GuestList } from "./GuestList";
-
+import SubjectIcon from "@material-ui/icons/Subject";
+import PeopleAltOutlinedIcon from "@material-ui/icons/PeopleAltOutlined";
+import EventOutlinedIcon from "@material-ui/icons/EventOutlined";
+import ClearIcon from "@material-ui/icons/Clear";
 function Alert(props: AlertProps) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
@@ -106,7 +120,9 @@ export const Form: FC<Props> = () => {
     setGuestEmail(e.target.value);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
     const dateString = date_of_event
       ? date_of_event.toLocaleDateString("se-SV")
       : "";
@@ -162,6 +178,33 @@ export const Form: FC<Props> = () => {
     }
   };
 
+  const renderGuestList = () => {
+    return guestList.map((guest, index) => {
+      return (
+        <ListItem key={index}>
+          <ListItemAvatar>
+            <Avatar>{guest.substring(0, 1).toUpperCase()}</Avatar>
+          </ListItemAvatar>
+          <ListItemText primary={guest} />
+          <ListItemSecondaryAction>
+            <IconButton
+              edge="end"
+              aria-label="delete"
+              name={guest}
+              onClick={() => removeGuest(guest)}
+            >
+              <ClearIcon />
+            </IconButton>
+          </ListItemSecondaryAction>
+        </ListItem>
+      );
+    });
+  };
+
+  const removeGuest = (guest: string) => {
+    setGuestList(guestList.filter(g => g !== guest));
+  };
+
   useEffect(() => {
     if (!stateProps.host.id) {
       history.push("");
@@ -172,106 +215,136 @@ export const Form: FC<Props> = () => {
   return (
     <div className={Classes.MainPaper}>
       <Card>
+        {/* <form onSubmit={handleSubmit} noValidate> */}
         <CardContent>
-          <h2 style={{ margin: "0px" }}>Create new event</h2>
-
           <TextField
-            className={Classes.TextField}
+            size="medium"
             required
+            className={Classes.TextField}
             id="title"
-            label="Title"
+            placeholder="Add Title"
+            type="text"
             style={{ width: "100%" }}
             autoComplete="off"
             value={title}
             onChange={onTitleChange}
+            inputProps={{ min: "1", max: "140" }}
           />
 
-          <TextField
-            className={Classes.TextField}
-            id="description"
-            label="Description"
-            multiline
-            rows="2"
-            rowsMax="10"
-            value={description}
-            onChange={onDesciptionChange}
-            variant="outlined"
-            style={{ width: "100%" }}
-          />
-
-          <MuiPickersUtilsProvider utils={DateFnsUtils}>
-            <KeyboardDatePicker
-              required
-              margin="normal"
-              id="date-picker-dialog"
-              label="Date of event"
-              format="yyyy-MM-dd"
-              value={date_of_event}
-              onChange={onDateChange}
-              KeyboardButtonProps={{
-                "aria-label": "change date"
-              }}
-              style={{ marginRight: 20 }}
+          <div style={{ display: "flex" }}>
+            <SubjectIcon
+              style={{ marginTop: "26px", marginRight: "14px", flexGrow: 0 }}
             />
-            <KeyboardTimePicker
-              required
-              margin="normal"
-              id="time-picker"
-              label="Time of event"
-              value={time_of_event}
-              onChange={onTimeChange}
-              ampm={false}
-              keyboardIcon={<ScheduleIcon />}
-              KeyboardButtonProps={{
-                "aria-label": "change time"
-              }}
-            />
-          </MuiPickersUtilsProvider>
 
-          <TextField
-            className={Classes.TextField}
-            required
-            id="location"
-            label="Location"
-            style={{ width: "100%" }}
-            value={location}
-            onChange={onLocationChange}
-            InputProps={{
-              endAdornment: (
-                <RoomOutlinedIcon style={{ marginRight: 10, opacity: 0.65 }} />
-              )
-            }}
-          />
-          <TextField
-            className={Classes.TextField}
-            id="addGuest"
-            label="Add guest"
-            style={{ width: "100%" }}
-            value={guestEmail}
-            onKeyUp={addToGuestList}
-            onChange={onGuestEmailChange}
-            error={displayEmailError}
-            helperText={displayEmailError ? "Not a valid email!" : ""}
-          />
+            <TextField
+              className={Classes.TextField}
+              id="description"
+              label="Description"
+              multiline
+              rowsMax="10"
+              value={description}
+              onChange={onDesciptionChange}
+              variant="outlined"
+              inputProps={{ max: "5000" }}
+              style={{ flexGrow: 20 }}
+            />
+          </div>
+          <div style={{ display: "flex" }}>
+            <RoomOutlinedIcon
+              style={{ marginTop: "26px", marginRight: "14px", flexGrow: 0 }}
+            />
+            <TextField
+              className={Classes.TextField}
+              required
+              id="location"
+              label="Location"
+              style={{ flexGrow: 20 }}
+              value={location}
+              onChange={onLocationChange}
+              variant="filled"
+              inputProps={{ min: "1", max: "140" }}
+            />
+          </div>
+          <div style={{ display: "flex" }}>
+            <EventOutlinedIcon
+              style={{ marginTop: "26px", marginRight: "14px", flexGrow: 0 }}
+            />
+            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+              <KeyboardDatePicker
+                autoOk
+                variant="inline"
+                label="Date"
+                inputVariant="outlined"
+                required
+                margin="normal"
+                id="date-picker-dialog"
+                format="yyyy-MM-dd"
+                value={date_of_event}
+                onChange={onDateChange}
+                style={{ flexGrow: 9.5 }}
+                // KeyboardButtonProps={{
+                //   "aria-label": "change date"
+                // }}
+              />
+              <div style={{ flexGrow: 1 }}></div>
+              <KeyboardTimePicker
+                autoOk
+                variant="inline"
+                required
+                inputVariant="outlined"
+                margin="normal"
+                placeholder="Time of event"
+                id="time-picker"
+                value={time_of_event}
+                onChange={onTimeChange}
+                ampm={false}
+                keyboardIcon={<ScheduleIcon />}
+                KeyboardButtonProps={{
+                  "aria-label": "change time"
+                }}
+                style={{ flexGrow: 9.5 }}
+              />
+            </MuiPickersUtilsProvider>
+          </div>
+
+          <div style={{ display: "flex" }}>
+            <PeopleAltOutlinedIcon
+              style={{ marginTop: "26px", marginRight: "14px", flexGrow: 0 }}
+            />
+            <TextField
+              className={Classes.TextField}
+              id="addGuest"
+              label="Add guest"
+              style={{ flexGrow: 20 }}
+              value={guestEmail}
+              onKeyUp={addToGuestList}
+              onChange={onGuestEmailChange}
+              error={displayEmailError}
+              helperText={displayEmailError ? "Not a valid email!" : ""}
+              variant="filled"
+            />
+          </div>
+          <List dense={true}>{renderGuestList()}</List>
         </CardContent>
         <CardActions>
           <Button
             color="primary"
             variant="contained"
             type="submit"
-            onClick={handleSubmit}
+            onClick={() => handleSubmit}
             style={{ marginLeft: "auto" }}
           >
             create event
           </Button>
         </CardActions>
+        {/* </form> */}
       </Card>
       <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
         <Alert onClose={handleClose} severity={severity}>
           {responseMessage}
         </Alert>
       </Snackbar>
-      <GuestList guestList={guestList} />
+      {/* <GuestList guestList={guestList} /> */}
     </div>
   );
 };
