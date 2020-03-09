@@ -107,14 +107,16 @@ export const Form: FC<Props> = () => {
   };
 
   const handleSubmit = () => {
-    const dateString = date_of_event ? date_of_event.toLocaleDateString() : "";
+    const dateString = date_of_event
+      ? date_of_event.toLocaleDateString("se-SV")
+      : "";
     const timeString = time_of_event
       ? time_of_event.toLocaleTimeString().substring(0, 5)
       : "";
 
     const invitations: Array<InvitationInput> = [];
 
-    guestList.map(email => {
+    guestList.forEach(email => {
       const invitation: InvitationInput = {
         guest: {
           email: email
@@ -136,7 +138,7 @@ export const Form: FC<Props> = () => {
   };
 
   const addToGuestList = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key == "Enter") {
+    if (e.key === "Enter") {
       setIsGuestSubmitted(true);
       const guests: Array<string> = guestList;
 
