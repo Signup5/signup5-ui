@@ -34,8 +34,8 @@ export const RenderInvitationList: FC<Props> = () => {
   const invitations: Array<Invitation> = response.data.invitations;
 
   const render = () => {
-    return invitations.map(invitation => {
-      return <RenderInvitation invitation={invitation} />;
+    return invitations.map((invitation, index) => {
+      return <RenderInvitation key={index} invitation={invitation} />;
     });
   };
 

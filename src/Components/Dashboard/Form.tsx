@@ -4,29 +4,24 @@ import {
   Card,
   CardActions,
   CardContent,
+  InputAdornment,
+  List,
   Snackbar,
   TextField,
-  FormControl,
-  Grid,
-  List,
-  ListItem,
-  Avatar,
-  ListItemAvatar,
-  ListItemText,
-  ListItemSecondaryAction,
   IconButton
 } from "@material-ui/core";
+import EventOutlinedIcon from "@material-ui/icons/EventOutlined";
+import PeopleAltOutlinedIcon from "@material-ui/icons/PeopleAltOutlined";
 import RoomOutlinedIcon from "@material-ui/icons/RoomOutlined";
 import ScheduleIcon from "@material-ui/icons/Schedule";
+import SubjectIcon from "@material-ui/icons/Subject";
 import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
 import {
   KeyboardDatePicker,
   KeyboardTimePicker,
-  MuiPickersUtilsProvider,
-  TimePicker,
-  DatePicker
+  MuiPickersUtilsProvider
 } from "@material-ui/pickers";
-import React, { ChangeEvent, FC, useEffect, useState, FormEvent } from "react";
+import React, { ChangeEvent, FC, useEffect, useState } from "react";
 import { useMutation } from "react-apollo";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
@@ -35,11 +30,9 @@ import { CREATE_EVENT } from "../../Store/GQL";
 import { InitialState } from "../../Store/Reducers/rootReducer";
 import { EventInput, InvitationInput, Person } from "../../Types";
 import { emailRegEx } from "../../Utility";
-import { GuestList } from "./GuestList";
-import SubjectIcon from "@material-ui/icons/Subject";
-import PeopleAltOutlinedIcon from "@material-ui/icons/PeopleAltOutlined";
-import EventOutlinedIcon from "@material-ui/icons/EventOutlined";
-import ClearIcon from "@material-ui/icons/Clear";
+import { RenderGuest } from "./RenderGuest";
+import KeyboardReturnIcon from "@material-ui/icons/KeyboardReturn";
+
 function Alert(props: AlertProps) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
@@ -60,6 +53,8 @@ export const Form: FC<Props> = () => {
   const [guestList, setGuestList] = useState<Array<string>>([]);
   const [isGuestSubmitted, setIsGuestSubmitted] = useState<boolean>(false);
   const [displayEmailError, setDisplayEmailError] = useState<boolean>(false);
+  const [emailError, setEmailError] = useState<string>("");
+  const [isEventSubmitted, setIsEventSubmitted] = useState<boolean>(false);
 
   const [open, setOpen] = useState<boolean>(false);
   const [responseMessage, setResponseMessage] = useState<string>("");
@@ -78,7 +73,12 @@ export const Form: FC<Props> = () => {
 
   const [createEvent] = useMutation(CREATE_EVENT, {
     onError(err) {
-      setResponseMessage(err.message);
+      const message = err.graphQLErrors[0].message;
+      if (message.includes("'date_of_event'"))
+        setResponseMessage("You have entered an invalid date!");
+      else if (message.includes("'time_of_event'"))
+        setResponseMessage("You have entered an invalid time!");
+      else setResponseMessage(message);
       setSeverity("error");
       setOpen(true);
     },
@@ -120,37 +120,39 @@ export const Form: FC<Props> = () => {
     setGuestEmail(e.target.value);
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleSubmit = () => {
+    setIsEventSubmitted(true);
+    if (title.length > 0 && date_of_event != null && time_of_event != null) {
+      const dateString = date_of_event
+        ? date_of_event.toLocaleDateString("se-SV")
+        : "";
+      const timeString = time_of_event
+        ? time_of_event.toLocaleTimeString().substring(0, 5)
+        : "";
 
-    const dateString = date_of_event
-      ? date_of_event.toLocaleDateString("se-SV")
-      : "";
-    const timeString = time_of_event
-      ? time_of_event.toLocaleTimeString().substring(0, 5)
-      : "";
+      const invitations: Array<InvitationInput> = [];
 
-    const invitations: Array<InvitationInput> = [];
+      guestList.forEach(email => {
+        const invitation: InvitationInput = {
+          guest: {
+            email: email
+          }
+        };
+        invitations.push(invitation);
+      });
 
-    guestList.forEach(email => {
-      const invitation: InvitationInput = {
-        guest: {
-          email: email
-        }
+      const eventInput: EventInput = {
+        host: { id: stateProps.host.id },
+        title: title,
+        description: description,
+        date_of_event: dateString,
+        time_of_event: timeString,
+        location: location,
+        invitations: invitations
       };
-      invitations.push(invitation);
-    });
-
-    const eventInput: EventInput = {
-      host: { id: stateProps.host.id },
-      title: title,
-      description: description,
-      date_of_event: dateString,
-      time_of_event: timeString,
-      location: location,
-      invitations: invitations
-    };
-    createEvent({ variables: { eventInput } });
+      createEvent({ variables: { eventInput } });
+      setIsEventSubmitted(false);
+    }
   };
 
   const addToGuestList = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -158,12 +160,23 @@ export const Form: FC<Props> = () => {
       setIsGuestSubmitted(true);
       const guests: Array<string> = guestList;
 
+      const lowerCaseGuestList = guestList.map(email => {
+        return email.toLowerCase();
+      });
+
       if (guestEmail.match(emailRegEx)) {
-        guests.push(guestEmail);
-        setGuestEmail("");
-        setGuestList(guests);
-        setDisplayEmailError(false);
-        setIsGuestSubmitted(false);
+        if (!lowerCaseGuestList.includes(guestEmail.toLowerCase())) {
+          guests.push(guestEmail);
+          setGuestEmail("");
+          setGuestList(guests);
+          setDisplayEmailError(false);
+          setEmailError("");
+          setIsGuestSubmitted(false);
+        } else {
+          setEmailError("Guest already invited");
+          setDisplayEmailError(true);
+          setIsGuestSubmitted(false);
+        }
       }
     }
   };
@@ -172,8 +185,10 @@ export const Form: FC<Props> = () => {
     if (isGuestSubmitted) {
       if (!guestEmail.match(emailRegEx)) {
         setDisplayEmailError(true);
+        setEmailError("Invalid email");
       } else {
         setDisplayEmailError(false);
+        setEmailError("");
       }
     }
   };
@@ -181,22 +196,11 @@ export const Form: FC<Props> = () => {
   const renderGuestList = () => {
     return guestList.map((guest, index) => {
       return (
-        <ListItem key={index}>
-          <ListItemAvatar>
-            <Avatar>{guest.substring(0, 1).toUpperCase()}</Avatar>
-          </ListItemAvatar>
-          <ListItemText primary={guest} />
-          <ListItemSecondaryAction>
-            <IconButton
-              edge="end"
-              aria-label="delete"
-              name={guest}
-              onClick={() => removeGuest(guest)}
-            >
-              <ClearIcon />
-            </IconButton>
-          </ListItemSecondaryAction>
-        </ListItem>
+        <RenderGuest
+          guest={guest}
+          removeGuest={removeGuest}
+          key={index + guest}
+        />
       );
     });
   };
@@ -204,6 +208,9 @@ export const Form: FC<Props> = () => {
   const removeGuest = (guest: string) => {
     setGuestList(guestList.filter(g => g !== guest));
   };
+
+  const today = new Date();
+  const maxDate = new Date().setFullYear(today.getFullYear() + 3);
 
   useEffect(() => {
     if (!stateProps.host.id) {
@@ -215,20 +222,30 @@ export const Form: FC<Props> = () => {
   return (
     <div className={Classes.MainPaper}>
       <Card>
-        {/* <form onSubmit={handleSubmit} noValidate> */}
         <CardContent>
           <TextField
             size="medium"
             required
             className={Classes.TextField}
             id="title"
-            placeholder="Add Title"
+            placeholder="Add Title *"
             type="text"
             style={{ width: "100%" }}
             autoComplete="off"
             value={title}
+            error={isEventSubmitted && title.length === 0 ? true : false}
+            helperText={
+              isEventSubmitted && title.length === 0 ? "Required!" : ""
+            }
             onChange={onTitleChange}
-            inputProps={{ min: "1", max: "140" }}
+            inputProps={{ minLength: "1", maxLength: "140" }}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  {title.length}/140
+                </InputAdornment>
+              )
+            }}
           />
 
           <div style={{ display: "flex" }}>
@@ -245,8 +262,15 @@ export const Form: FC<Props> = () => {
               value={description}
               onChange={onDesciptionChange}
               variant="outlined"
-              inputProps={{ max: "5000" }}
+              inputProps={{ maxLength: "5000" }}
               style={{ flexGrow: 20 }}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    {description.length}/5000
+                  </InputAdornment>
+                )
+              }}
             />
           </div>
           <div style={{ display: "flex" }}>
@@ -255,14 +279,12 @@ export const Form: FC<Props> = () => {
             />
             <TextField
               className={Classes.TextField}
-              required
               id="location"
               label="Location"
               style={{ flexGrow: 20 }}
               value={location}
               onChange={onLocationChange}
               variant="filled"
-              inputProps={{ min: "1", max: "140" }}
             />
           </div>
           <div style={{ display: "flex" }}>
@@ -282,21 +304,31 @@ export const Form: FC<Props> = () => {
                 value={date_of_event}
                 onChange={onDateChange}
                 style={{ flexGrow: 9.5 }}
-                // KeyboardButtonProps={{
-                //   "aria-label": "change date"
-                // }}
+                maxDate={maxDate}
+                error={isEventSubmitted && !date_of_event ? true : false}
+                helperText={
+                  isEventSubmitted && !date_of_event ? "Required!" : ""
+                }
+                maxDateMessage="Date is too far in the future."
+                minDate={today}
+                minDateMessage="Date is in the past."
               />
               <div style={{ flexGrow: 1 }}></div>
               <KeyboardTimePicker
+                required
                 autoOk
                 variant="inline"
-                required
+                label="Time"
                 inputVariant="outlined"
                 margin="normal"
                 placeholder="Time of event"
                 id="time-picker"
                 value={time_of_event}
                 onChange={onTimeChange}
+                error={isEventSubmitted && !time_of_event ? true : false}
+                helperText={
+                  isEventSubmitted && !time_of_event ? "Required!" : ""
+                }
                 ampm={false}
                 keyboardIcon={<ScheduleIcon />}
                 KeyboardButtonProps={{
@@ -320,31 +352,52 @@ export const Form: FC<Props> = () => {
               onKeyUp={addToGuestList}
               onChange={onGuestEmailChange}
               error={displayEmailError}
-              helperText={displayEmailError ? "Not a valid email!" : ""}
+              helperText={emailError}
               variant="filled"
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    {guestEmail.match(emailRegEx) ? (
+                      <IconButton color="primary">
+                        <KeyboardReturnIcon />
+                      </IconButton>
+                    ) : (
+                      ""
+                    )}
+                  </InputAdornment>
+                )
+              }}
             />
           </div>
-          <List dense={true}>{renderGuestList()}</List>
+          <div>
+            <List
+              dense={true}
+              style={{
+                maxHeight: "150px",
+                overflowY: guestList.length >= 4 ? "scroll" : "hidden"
+              }}
+            >
+              {renderGuestList()}
+            </List>
+          </div>
         </CardContent>
         <CardActions>
           <Button
             color="primary"
             variant="contained"
             type="submit"
-            onClick={() => handleSubmit}
+            onClick={handleSubmit}
             style={{ marginLeft: "auto" }}
           >
             create event
           </Button>
         </CardActions>
-        {/* </form> */}
       </Card>
       <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
         <Alert onClose={handleClose} severity={severity}>
           {responseMessage}
         </Alert>
       </Snackbar>
-      {/* <GuestList guestList={guestList} /> */}
     </div>
   );
 };
