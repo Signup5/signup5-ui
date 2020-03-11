@@ -11,7 +11,7 @@ h2 {
     grid-template-columns: 1.5fr 10.5fr;
 
     grid-template-rows: 1fr 10.5fr 0.5fr;
-    grid-template-areas: "header header" "sidebar main" "footer footer";
+    grid-template-areas: "header header" "main main" "footer footer";
 
     height: 100vh;
 }
@@ -75,6 +75,10 @@ h2 {
     flex-grow: 1;
     padding: 12px 24px;
     margin-bottom: 10px;
+}
+
+.Card {
+    padding: 12px 24px;
 }
 
 .DisplayInvitations {

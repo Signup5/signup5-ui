@@ -28,6 +28,7 @@ import {EventInput, InvitationInput, Person} from "../../../Types";
 import {dateToLocalDateString, emailRegEx} from "../../../Utility";
 import {RenderGuest} from "./RenderGuest";
 import KeyboardReturnIcon from "@material-ui/icons/KeyboardReturn";
+import {Class} from "@material-ui/icons";
 
 function Alert(props: AlertProps) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -40,7 +41,7 @@ interface StateProps {
   host: Person;
 }
 
-export const Form: FC<Props> = () => {
+export const CreateEventForm: FC<Props> = () => {
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [date_of_event, setDate_of_event] = useState<Date | null>(null);
@@ -216,7 +217,7 @@ console.log(dateString);
 
   return (
     <div className={Classes.MainPaper}>
-      <Card>
+      <Card className={Classes.Card}>
         <CardContent>
           <TextField
             size="medium"

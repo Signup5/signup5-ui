@@ -36,3 +36,33 @@ export const GET_EVENT_BY_ID = gql`
     }
   }
 `;
+
+export const GET_EVENTS_BY_HOST_ID = gql`
+  query getEventsByHostId($id: Int!) {
+    getEventsByHostId(id: $id) {
+      id
+      host {
+        id
+        email
+        first_name
+        last_name
+      }
+      title
+      description
+      date_of_event
+      time_of_event
+      location
+      invitations {
+        id
+        guest {
+          id
+          email
+          first_name
+          last_name
+        }
+        attendance
+      }
+    }
+  }
+
+`;

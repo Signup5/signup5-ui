@@ -1,6 +1,6 @@
 import {useQuery} from "@apollo/react-hooks";
 import React, {FC} from "react";
-import {GET_INVITATIONS_BY_GUEST_ID} from "../../Store/GQL/queries";
+import {GET_INVITATIONS_BY_GUEST_ID} from "../../Store/GQL";
 import {Invitation, Person, QueryResponse} from "../../Types";
 import {RenderInvitation} from "./RenderInvitation";
 import {InitialState} from "../../Store/Reducers/rootReducer";

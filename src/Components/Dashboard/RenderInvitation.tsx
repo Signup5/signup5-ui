@@ -12,8 +12,8 @@ import {
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import Alert from "@material-ui/lab/Alert";
 import React, {FC, useState} from "react";
-import {SET_ATTENDANCE} from "../../Store/GQL/mutations";
-import {GET_EVENT_BY_ID} from "../../Store/GQL/queries";
+import {SET_ATTENDANCE} from "../../Store/GQL";
+import {GET_EVENT_BY_ID} from "../../Store/GQL";
 import {Attendance, Event, Invitation, QueryResponse} from "../../Types";
 
 interface Props {

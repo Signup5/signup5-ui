@@ -67,10 +67,6 @@ export type QueryResponse = {
   data?: any;
 };
 
-export type MutationResponse = {
-  id: number;
-  message: string;
-};
 
 export class Credentials {
   private email: string;

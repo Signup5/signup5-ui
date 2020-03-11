@@ -1,2 +1,2 @@
-export {GET_PERSON_BY_EMAIL} from "./queries"
-export {CREATE_EVENT} from "./mutations"
+export {GET_PERSON_BY_EMAIL, GET_EVENTS_BY_HOST_ID, GET_INVITATIONS_BY_GUEST_ID, GET_EVENT_BY_ID} from "./queries"
+export {CREATE_EVENT, SET_ATTENDANCE} from "./mutations"

@@ -17,7 +17,7 @@ export const RenderGuest: FC<Props> = props => {
           flexGrow: 0
         }}
       >
-        <div style={{minWidth: "24px", maxWidth: "24px"}}></div>
+        <div style={{minWidth: "24px", maxWidth: "24px"}}/>
       </div>
       <div style={{flexGrow: 20}}>
         <ListItem style={{paddingLeft: 0}}>
