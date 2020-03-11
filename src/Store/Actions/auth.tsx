@@ -8,7 +8,7 @@ type Person = {
 };
 
 export const updatePerson = (person: Person) => {
-  return { type: actionTypes.UPDATE_PERSON, payload: person };
+  return {type: actionTypes.UPDATE_PERSON, payload: person};
 };
 
 

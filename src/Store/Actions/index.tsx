@@ -1,1 +1,1 @@
-export { updatePerson } from "./auth";
+export {updatePerson} from "./auth";

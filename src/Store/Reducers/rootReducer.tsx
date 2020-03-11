@@ -1,5 +1,5 @@
-import { Action, Reducer, Dispatch } from "redux";
-import { Person } from "../../Types";
+import {Action, Dispatch, Reducer} from "redux";
+import {Person} from "../../Types";
 import * as ActionType from "../Actions/actionTypes";
 
 export interface InitialState {
@@ -20,7 +20,7 @@ export const rootReducer: Reducer<InitialState, DispatchAction> = (
 ) => {
   switch (action.type) {
     case ActionType.UPDATE_PERSON:
-      return { ...state, person: action.payload.person || ({} as Person) };
+      return {...state, person: action.payload.person || ({} as Person)};
 
     default:
       return state;
@@ -35,5 +35,5 @@ export class RootDispatcher {
   }
 
   updatePerson = (person: Person) =>
-    this.dispatch({ type: ActionType.UPDATE_PERSON, payload: { person } });
+    this.dispatch({type: ActionType.UPDATE_PERSON, payload: {person}});
 }

@@ -1,43 +1,40 @@
 import DateFnsUtils from "@date-io/date-fns";
 import {
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  InputAdornment,
-  List,
-  Snackbar,
-  TextField,
-  IconButton
+    Button,
+    Card,
+    CardActions,
+    CardContent,
+    IconButton,
+    InputAdornment,
+    List,
+    Snackbar,
+    TextField
 } from "@material-ui/core";
 import EventOutlinedIcon from "@material-ui/icons/EventOutlined";
 import PeopleAltOutlinedIcon from "@material-ui/icons/PeopleAltOutlined";
 import RoomOutlinedIcon from "@material-ui/icons/RoomOutlined";
 import ScheduleIcon from "@material-ui/icons/Schedule";
 import SubjectIcon from "@material-ui/icons/Subject";
-import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
-import {
-  KeyboardDatePicker,
-  KeyboardTimePicker,
-  MuiPickersUtilsProvider
-} from "@material-ui/pickers";
-import React, { ChangeEvent, FC, useEffect, useState } from "react";
-import { useMutation } from "react-apollo";
-import { useSelector } from "react-redux";
-import { useHistory } from "react-router-dom";
+import MuiAlert, {AlertProps} from "@material-ui/lab/Alert";
+import {KeyboardDatePicker, KeyboardTimePicker, MuiPickersUtilsProvider} from "@material-ui/pickers";
+import React, {ChangeEvent, FC, useEffect, useState} from "react";
+import {useMutation} from "react-apollo";
+import {useSelector} from "react-redux";
+import {useHistory} from "react-router-dom";
 import Classes from "../../App.module.css";
-import { CREATE_EVENT } from "../../Store/GQL";
-import { InitialState } from "../../Store/Reducers/rootReducer";
-import { EventInput, InvitationInput, Person } from "../../Types";
-import { emailRegEx } from "../../Utility";
-import { RenderGuest } from "./RenderGuest";
+import {CREATE_EVENT} from "../../Store/GQL";
+import {InitialState} from "../../Store/Reducers/rootReducer";
+import {EventInput, InvitationInput, Person} from "../../Types";
+import {emailRegEx} from "../../Utility";
+import {RenderGuest} from "./RenderGuest";
 import KeyboardReturnIcon from "@material-ui/icons/KeyboardReturn";
 
 function Alert(props: AlertProps) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
-interface Props {}
+interface Props {
+}
 
 interface StateProps {
   host: Person;
@@ -58,15 +55,13 @@ export const Form: FC<Props> = () => {
 
   const [open, setOpen] = useState<boolean>(false);
   const [responseMessage, setResponseMessage] = useState<string>("");
-  const [severity, setSeverity] = useState<
-    "success" | "info" | "warning" | "error" | undefined
-  >(undefined);
+  const [severity, setSeverity] = useState<"success" | "info" | "warning" | "error" | undefined>(undefined);
 
   const history = useHistory();
   const stateProps = useSelector<InitialState, StateProps>(
     (state: InitialState) => {
       return {
-        host: { id: state.person.id }
+        host: {id: state.person.id}
       };
     }
   );
@@ -82,7 +77,7 @@ export const Form: FC<Props> = () => {
       setSeverity("error");
       setOpen(true);
     },
-    onCompleted({ response }) {
+    onCompleted({response}) {
       setResponseMessage(response.message);
       setSeverity("success");
       setOpen(true);
@@ -142,7 +137,7 @@ export const Form: FC<Props> = () => {
       });
 
       const eventInput: EventInput = {
-        host: { id: stateProps.host.id },
+        host: {id: stateProps.host.id},
         title: title,
         description: description,
         date_of_event: dateString,
@@ -150,7 +145,7 @@ export const Form: FC<Props> = () => {
         location: location,
         invitations: invitations
       };
-      createEvent({ variables: { eventInput } });
+      createEvent({variables: {eventInput}});
       setIsEventSubmitted(false);
     }
   };
@@ -230,7 +225,7 @@ export const Form: FC<Props> = () => {
             id="title"
             placeholder="Add Title *"
             type="text"
-            style={{ width: "100%" }}
+            style={{width: "100%"}}
             autoComplete="off"
             value={title}
             error={isEventSubmitted && title.length === 0 ? true : false}
@@ -238,7 +233,7 @@ export const Form: FC<Props> = () => {
               isEventSubmitted && title.length === 0 ? "Required!" : ""
             }
             onChange={onTitleChange}
-            inputProps={{ minLength: "1", maxLength: "140" }}
+            inputProps={{minLength: "1", maxLength: "140"}}
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
@@ -248,9 +243,9 @@ export const Form: FC<Props> = () => {
             }}
           />
 
-          <div style={{ display: "flex" }}>
+          <div style={{display: "flex"}}>
             <SubjectIcon
-              style={{ marginTop: "26px", marginRight: "14px", flexGrow: 0 }}
+              style={{marginTop: "26px", marginRight: "14px", flexGrow: 0}}
             />
 
             <TextField
@@ -262,8 +257,8 @@ export const Form: FC<Props> = () => {
               value={description}
               onChange={onDesciptionChange}
               variant="outlined"
-              inputProps={{ maxLength: "5000" }}
-              style={{ flexGrow: 20 }}
+              inputProps={{maxLength: "5000"}}
+              style={{flexGrow: 20}}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
@@ -273,23 +268,23 @@ export const Form: FC<Props> = () => {
               }}
             />
           </div>
-          <div style={{ display: "flex" }}>
+          <div style={{display: "flex"}}>
             <RoomOutlinedIcon
-              style={{ marginTop: "26px", marginRight: "14px", flexGrow: 0 }}
+              style={{marginTop: "26px", marginRight: "14px", flexGrow: 0}}
             />
             <TextField
               className={Classes.TextField}
               id="location"
               label="Location"
-              style={{ flexGrow: 20 }}
+              style={{flexGrow: 20}}
               value={location}
               onChange={onLocationChange}
               variant="filled"
             />
           </div>
-          <div style={{ display: "flex" }}>
+          <div style={{display: "flex"}}>
             <EventOutlinedIcon
-              style={{ marginTop: "26px", marginRight: "14px", flexGrow: 0 }}
+              style={{marginTop: "26px", marginRight: "14px", flexGrow: 0}}
             />
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
               <KeyboardDatePicker
@@ -303,7 +298,7 @@ export const Form: FC<Props> = () => {
                 format="yyyy-MM-dd"
                 value={date_of_event}
                 onChange={onDateChange}
-                style={{ flexGrow: 9.5 }}
+                style={{flexGrow: 9.5}}
                 maxDate={maxDate}
                 error={isEventSubmitted && !date_of_event ? true : false}
                 helperText={
@@ -313,7 +308,7 @@ export const Form: FC<Props> = () => {
                 minDate={today}
                 minDateMessage="Date is in the past."
               />
-              <div style={{ flexGrow: 1 }}></div>
+              <div style={{flexGrow: 1}}></div>
               <KeyboardTimePicker
                 required
                 autoOk
@@ -330,24 +325,24 @@ export const Form: FC<Props> = () => {
                   isEventSubmitted && !time_of_event ? "Required!" : ""
                 }
                 ampm={false}
-                keyboardIcon={<ScheduleIcon />}
+                keyboardIcon={<ScheduleIcon/>}
                 KeyboardButtonProps={{
                   "aria-label": "change time"
                 }}
-                style={{ flexGrow: 9.5 }}
+                style={{flexGrow: 9.5}}
               />
             </MuiPickersUtilsProvider>
           </div>
 
-          <div style={{ display: "flex" }}>
+          <div style={{display: "flex"}}>
             <PeopleAltOutlinedIcon
-              style={{ marginTop: "26px", marginRight: "14px", flexGrow: 0 }}
+              style={{marginTop: "26px", marginRight: "14px", flexGrow: 0}}
             />
             <TextField
               className={Classes.TextField}
               id="addGuest"
               label="Add guest"
-              style={{ flexGrow: 20 }}
+              style={{flexGrow: 20}}
               value={guestEmail}
               onKeyUp={addToGuestList}
               onChange={onGuestEmailChange}
@@ -359,7 +354,7 @@ export const Form: FC<Props> = () => {
                   <InputAdornment position="end">
                     {guestEmail.match(emailRegEx) ? (
                       <IconButton color="primary">
-                        <KeyboardReturnIcon />
+                        <KeyboardReturnIcon/>
                       </IconButton>
                     ) : (
                       ""
@@ -387,7 +382,7 @@ export const Form: FC<Props> = () => {
             variant="contained"
             type="submit"
             onClick={handleSubmit}
-            style={{ marginLeft: "auto" }}
+            style={{marginLeft: "auto"}}
           >
             create event
           </Button>

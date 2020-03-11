@@ -1,4 +1,4 @@
-import { emailRegEx } from "../Utility";
+import {emailRegEx} from "../Utility";
 
 export type Person = {
   id: number;
@@ -75,19 +75,24 @@ export type MutationResponse = {
 export class Credentials {
   private email: string;
   private password: string;
+
   constructor(email: string, password: string) {
     this.email = email;
     this.password = password;
   }
+
   setEmail(email: string) {
     this.email = email;
   }
+
   getEmail() {
     return this.email;
   }
+
   setPassword(password: string) {
     this.password = password;
   }
+
   getPassword() {
     return this.password;
   }

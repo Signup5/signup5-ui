@@ -1,12 +1,13 @@
-import { useQuery } from "@apollo/react-hooks";
-import React, { FC } from "react";
-import { GET_INVITATIONS_BY_GUEST_ID } from "../../Store/GQL/queries";
-import { Invitation, Person, QueryResponse } from "../../Types";
-import { RenderInvitation } from "./RenderInvitation";
-import { InitialState } from "../../Store/Reducers/rootReducer";
-import { useSelector } from "react-redux";
+import {useQuery} from "@apollo/react-hooks";
+import React, {FC} from "react";
+import {GET_INVITATIONS_BY_GUEST_ID} from "../../Store/GQL/queries";
+import {Invitation, Person, QueryResponse} from "../../Types";
+import {RenderInvitation} from "./RenderInvitation";
+import {InitialState} from "../../Store/Reducers/rootReducer";
+import {useSelector} from "react-redux";
 
-interface Props {}
+interface Props {
+}
 
 interface StateProps {
   person: Person;
@@ -35,13 +36,13 @@ export const RenderInvitationList: FC<Props> = () => {
 
   const render = () => {
     return invitations.map((invitation, index) => {
-      return <RenderInvitation key={index} invitation={invitation} />;
+      return <RenderInvitation key={index} invitation={invitation}/>;
     });
   };
 
   return (
     <div>
-      <h2>Your invitations</h2> <br />
+      <h2>Your invitations</h2> <br/>
       {render()}
     </div>
   );

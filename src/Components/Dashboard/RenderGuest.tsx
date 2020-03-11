@@ -1,13 +1,6 @@
-import {
-  Avatar,
-  IconButton,
-  ListItem,
-  ListItemAvatar,
-  ListItemSecondaryAction,
-  ListItemText
-} from "@material-ui/core";
+import {Avatar, IconButton, ListItem, ListItemAvatar, ListItemSecondaryAction, ListItemText} from "@material-ui/core";
 import ClearIcon from "@material-ui/icons/Clear";
-import React, { FC } from "react";
+import React, {FC} from "react";
 
 interface Props {
   guest: string;
@@ -16,7 +9,7 @@ interface Props {
 
 export const RenderGuest: FC<Props> = props => {
   return (
-    <div style={{ display: "flex", justifyContent: "flex-start" }}>
+    <div style={{display: "flex", justifyContent: "flex-start"}}>
       <div
         style={{
           marginTop: "26px",
@@ -24,14 +17,14 @@ export const RenderGuest: FC<Props> = props => {
           flexGrow: 0
         }}
       >
-        <div style={{ minWidth: "24px", maxWidth: "24px" }}></div>
+        <div style={{minWidth: "24px", maxWidth: "24px"}}></div>
       </div>
-      <div style={{ flexGrow: 20 }}>
-        <ListItem style={{ paddingLeft: 0 }}>
+      <div style={{flexGrow: 20}}>
+        <ListItem style={{paddingLeft: 0}}>
           <ListItemAvatar>
             <Avatar>{props.guest.substring(0, 1).toUpperCase()}</Avatar>
           </ListItemAvatar>
-          <ListItemText primary={props.guest} />
+          <ListItemText primary={props.guest}/>
           <ListItemSecondaryAction>
             <IconButton
               edge="end"
@@ -39,7 +32,7 @@ export const RenderGuest: FC<Props> = props => {
               name={props.guest}
               onClick={() => props.removeGuest(props.guest)}
             >
-              <ClearIcon />
+              <ClearIcon/>
             </IconButton>
           </ListItemSecondaryAction>
         </ListItem>

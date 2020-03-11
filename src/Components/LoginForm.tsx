@@ -1,13 +1,14 @@
-import { Button, Card, Grid, TextField } from "@material-ui/core";
+import {Button, Card, Grid, TextField} from "@material-ui/core";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import LockIcon from "@material-ui/icons/Lock";
-import React, { ChangeEvent, FC, FormEvent, useEffect, useState } from "react";
+import React, {ChangeEvent, FC, FormEvent, useEffect, useState} from "react";
 import Classes from "../App.module.css";
-import { Credentials } from "../Types/index";
-import { emailRegEx } from "../Utility";
+import {Credentials} from "../Types/index";
+import {emailRegEx} from "../Utility";
 import ValidatePersonCredentials from "./ValidatePersonCredentials";
 
-interface Props {}
+interface Props {
+}
 
 const LoginForm: FC<Props> = () => {
   const [email, setEmail] = useState<string>("");
@@ -66,7 +67,7 @@ const LoginForm: FC<Props> = () => {
         <h2>Sign in</h2>
         <Grid container spacing={1} alignItems="flex-start">
           <Grid item xs={1}>
-            <AccountCircle style={{ marginTop: "16px" }} />
+            <AccountCircle style={{marginTop: "16px"}}/>
           </Grid>
           <Grid item xs={11}>
             <TextField
@@ -83,10 +84,10 @@ const LoginForm: FC<Props> = () => {
           </Grid>
         </Grid>
 
-        <br />
+        <br/>
         <Grid container spacing={1} alignItems="flex-end">
           <Grid item xs={1}>
-            <LockIcon />
+            <LockIcon/>
           </Grid>
           <Grid item xs={11}>
             <TextField
@@ -106,7 +107,7 @@ const LoginForm: FC<Props> = () => {
             />
           </Grid>
         </Grid>
-        <br />
+        <br/>
         <Button
           className={Classes.Button}
           color="primary"

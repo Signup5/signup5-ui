@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@apollo/react-hooks";
+import {useMutation, useQuery} from "@apollo/react-hooks";
 import {
   Button,
   ButtonGroup,
@@ -11,10 +11,10 @@ import {
 } from "@material-ui/core";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import Alert from "@material-ui/lab/Alert";
-import React, { FC, useState } from "react";
-import { SET_ATTENDANCE } from "../../Store/GQL/mutations";
-import { GET_EVENT_BY_ID } from "../../Store/GQL/queries";
-import { Attendance, Event, Invitation, QueryResponse } from "../../Types";
+import React, {FC, useState} from "react";
+import {SET_ATTENDANCE} from "../../Store/GQL/mutations";
+import {GET_EVENT_BY_ID} from "../../Store/GQL/queries";
+import {Attendance, Event, Invitation, QueryResponse} from "../../Types";
 
 interface Props {
   invitation: Invitation;
@@ -23,9 +23,7 @@ interface Props {
 export const RenderInvitation: FC<Props> = props => {
   const [open, setOpen] = useState<boolean>(false);
   const [responseMessage, setResponseMessage] = useState<string>("");
-  const [severity, setSeverity] = useState<
-    "success" | "info" | "warning" | "error" | undefined
-  >(undefined);
+  const [severity, setSeverity] = useState<"success" | "info" | "warning" | "error" | undefined>(undefined);
 
   const [setAttendance] = useMutation(SET_ATTENDANCE, {
     onError(err) {
@@ -33,7 +31,7 @@ export const RenderInvitation: FC<Props> = props => {
       setSeverity("error");
       setOpen(true);
     },
-    onCompleted({ response }) {
+    onCompleted({response}) {
       setResponseMessage(response.message);
       setSeverity("success");
       setOpen(true);
@@ -72,7 +70,7 @@ export const RenderInvitation: FC<Props> = props => {
     <>
       <ExpansionPanel>
         <ExpansionPanelSummary
-          expandIcon={<ExpandMoreIcon />}
+          expandIcon={<ExpandMoreIcon/>}
           aria-controls="panel1a-content"
           id="panel1a-header"
         >
@@ -111,10 +109,10 @@ export const RenderInvitation: FC<Props> = props => {
           />
         </ExpansionPanelSummary>
         <ExpansionPanelDetails>
-          description: {event.description} <br />
-          date: {event.date_of_event} <br />
-          time: {event.time_of_event} <br />
-          location: {event.location} <br />
+          description: {event.description} <br/>
+          date: {event.date_of_event} <br/>
+          time: {event.time_of_event} <br/>
+          location: {event.location} <br/>
         </ExpansionPanelDetails>
       </ExpansionPanel>
       <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>

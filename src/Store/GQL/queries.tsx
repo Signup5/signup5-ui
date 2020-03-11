@@ -1,4 +1,4 @@
-import { gql } from "apollo-boost";
+import {gql} from "apollo-boost";
 
 export const GET_PERSON_BY_EMAIL = gql`
   query getPersonByEmail($email: String!) {

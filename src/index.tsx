@@ -2,11 +2,11 @@ import App from "./App";
 import "./index.css";
 import ApolloClient from "apollo-boost";
 import React from "react";
-import { Provider } from "react-redux";
-import { ApolloProvider } from "react-apollo";
+import {Provider} from "react-redux";
+import {ApolloProvider} from "react-apollo";
 import ReactDOM from "react-dom";
 import * as serviceWorker from "./serviceWorker";
-import { store } from "./Store";
+import {store} from "./Store";
 
 const client = new ApolloClient({
   uri: process.env.REACT_APP_API_URI
@@ -15,7 +15,7 @@ const client = new ApolloClient({
 ReactDOM.render(
   <ApolloProvider client={client}>
     <Provider store={store}>
-      <App />
+      <App/>
     </Provider>
   </ApolloProvider>,
   document.getElementById("root")

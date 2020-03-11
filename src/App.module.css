@@ -1,79 +1,80 @@
 body {
-  background-color: whitesmoke;
+    background-color: whitesmoke;
 }
 
 h2 {
-  margin: 0px;
+    margin: 0px;
 }
+
 .App {
-  display: grid;
-  grid-template-columns: 1.5fr 10.5fr;
+    display: grid;
+    grid-template-columns: 1.5fr 10.5fr;
 
-  grid-template-rows: 1fr 10.5fr 0.5fr;
-  grid-template-areas:
-    "header header"
-    "sidebar main"
-    "footer footer";
+    grid-template-rows: 1fr 10.5fr 0.5fr;
+    grid-template-areas: "header header" "sidebar main" "footer footer";
 
-  height: 100vh;
+    height: 100vh;
 }
 
 .AppHeader {
-  padding: 10px;
+    padding: 10px;
 
-  grid-area: header;
-  border-bottom: 1px solid rgb(135, 135, 135);
+    grid-area: header;
+    border-bottom: 1px solid rgb(135, 135, 135);
 
-  margin: 10px 30px 0 30px;
+    margin: 10px 30px 0 30px;
 }
+
 .AppMainContent {
-  grid-area: main;
-  overflow-y: scroll;
-  overflow-x: hidden;
-  padding: 30px 50px;
-  margin-bottom: 30px;
-  display: flex;
+    grid-area: main;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    padding: 30px 50px;
+    margin-bottom: 30px;
+    display: flex;
 }
+
 .AppSidebar {
-  grid-area: sidebar;
-  border-right: 1px solid rgb(135, 135, 135);
-  margin: 30px 0 30px 0;
-  padding-left: 30px;
+    grid-area: sidebar;
+    border-right: 1px solid rgb(135, 135, 135);
+    margin: 30px 0 30px 0;
+    padding-left: 30px;
 }
+
 .AppFooter {
-  grid-area: footer;
-  border-top: 1px solid rgb(135, 135, 135);
-  margin: 0 30px 0 30px;
-  padding-left: 30px;
+    grid-area: footer;
+    border-top: 1px solid rgb(135, 135, 135);
+    margin: 0 30px 0 30px;
+    padding-left: 30px;
 }
 
 .SignupLogo {
-  max-width: 15%;
-  min-width: 215px;
+    max-width: 15%;
+    min-width: 215px;
 }
 
 .InputField {
-  width: 100%;
+    width: 100%;
 }
 
 .LoginForm {
-  width: 100%;
-  max-width: 300px;
-  padding: 12px;
+    width: 100%;
+    max-width: 300px;
+    padding: 12px;
 }
 
 .TextField {
-  margin: 10px 0px !important;
+    margin: 10px 0px !important;
 }
 
 .Button {
-  margin-top: 16px !important;
+    margin-top: 16px !important;
 }
 
 .MainPaper {
-  flex-grow: 1;
-  padding: 12px 24px;
-  margin-bottom: 10px;
+    flex-grow: 1;
+    padding: 12px 24px;
+    margin-bottom: 10px;
 }
 
 .DisplayInvitations {

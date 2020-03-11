@@ -1,10 +1,10 @@
-import { useQuery } from "@apollo/react-hooks";
-import React, { FC } from "react";
-import { useDispatch } from "react-redux";
-import { GET_PERSON_BY_EMAIL } from "../Store/GQL";
-import { RootDispatcher } from "../Store/Reducers/rootReducer";
-import { Person, QueryResponse } from "../Types";
-import { useHistory } from "react-router-dom";
+import {useQuery} from "@apollo/react-hooks";
+import React, {FC} from "react";
+import {useDispatch} from "react-redux";
+import {GET_PERSON_BY_EMAIL} from "../Store/GQL";
+import {RootDispatcher} from "../Store/Reducers/rootReducer";
+import {Person, QueryResponse} from "../Types";
+import {useHistory} from "react-router-dom";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
 interface Props {
@@ -23,7 +23,7 @@ const ValidatePersonCredentials: FC<Props> = props => {
     }
   });
 
-  if (response.loading) return <CircularProgress />;
+  if (response.loading) return <CircularProgress/>;
   if (response.error) {
     return <p>Email and/or password did not match!</p>;
   }
