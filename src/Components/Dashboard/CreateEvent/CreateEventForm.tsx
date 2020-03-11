@@ -21,11 +21,11 @@ import React, {ChangeEvent, FC, useEffect, useState} from "react";
 import {useMutation} from "react-apollo";
 import {useSelector} from "react-redux";
 import {useHistory} from "react-router-dom";
-import Classes from "../../App.module.css";
-import {CREATE_EVENT} from "../../Store/GQL";
-import {InitialState} from "../../Store/Reducers/rootReducer";
-import {EventInput, InvitationInput, Person} from "../../Types";
-import {dateToLocalDateString, emailRegEx} from "../../Utility";
+import Classes from "../../../App.module.css";
+import {CREATE_EVENT} from "../../../Store/GQL";
+import {InitialState} from "../../../Store/Reducers/rootReducer";
+import {EventInput, InvitationInput, Person} from "../../../Types";
+import {dateToLocalDateString, emailRegEx} from "../../../Utility";
 import {RenderGuest} from "./RenderGuest";
 import KeyboardReturnIcon from "@material-ui/icons/KeyboardReturn";
 
