@@ -25,7 +25,7 @@ import Classes from "../../App.module.css";
 import {CREATE_EVENT} from "../../Store/GQL";
 import {InitialState} from "../../Store/Reducers/rootReducer";
 import {EventInput, InvitationInput, Person} from "../../Types";
-import {emailRegEx} from "../../Utility";
+import {dateToLocalDateString, emailRegEx} from "../../Utility";
 import {RenderGuest} from "./RenderGuest";
 import KeyboardReturnIcon from "@material-ui/icons/KeyboardReturn";
 
@@ -103,7 +103,7 @@ export const Form: FC<Props> = () => {
     setTime_of_event(time);
   };
 
-  const onDesciptionChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const onDescriptionChange = (e: ChangeEvent<HTMLInputElement>) => {
     setDescription(e.target.value);
   };
 
@@ -119,12 +119,12 @@ export const Form: FC<Props> = () => {
     setIsEventSubmitted(true);
     if (title.length > 0 && date_of_event != null && time_of_event != null) {
       const dateString = date_of_event
-        ? date_of_event.toLocaleDateString("se-SV")
+        ? dateToLocalDateString(date_of_event)
         : "";
       const timeString = time_of_event
         ? time_of_event.toLocaleTimeString().substring(0, 5)
         : "";
-
+console.log(dateString);
       const invitations: Array<InvitationInput> = [];
 
       guestList.forEach(email => {
@@ -228,7 +228,7 @@ export const Form: FC<Props> = () => {
             style={{width: "100%"}}
             autoComplete="off"
             value={title}
-            error={isEventSubmitted && title.length === 0 ? true : false}
+            error={isEventSubmitted && title.length === 0}
             helperText={
               isEventSubmitted && title.length === 0 ? "Required!" : ""
             }
@@ -255,7 +255,7 @@ export const Form: FC<Props> = () => {
               multiline
               rowsMax="10"
               value={description}
-              onChange={onDesciptionChange}
+              onChange={onDescriptionChange}
               variant="outlined"
               inputProps={{maxLength: "5000"}}
               style={{flexGrow: 20}}
@@ -300,7 +300,7 @@ export const Form: FC<Props> = () => {
                 onChange={onDateChange}
                 style={{flexGrow: 9.5}}
                 maxDate={maxDate}
-                error={isEventSubmitted && !date_of_event ? true : false}
+                error={isEventSubmitted && !date_of_event}
                 helperText={
                   isEventSubmitted && !date_of_event ? "Required!" : ""
                 }
@@ -320,7 +320,7 @@ export const Form: FC<Props> = () => {
                 id="time-picker"
                 value={time_of_event}
                 onChange={onTimeChange}
-                error={isEventSubmitted && !time_of_event ? true : false}
+                error={isEventSubmitted && !time_of_event}
                 helperText={
                   isEventSubmitted && !time_of_event ? "Required!" : ""
                 }
