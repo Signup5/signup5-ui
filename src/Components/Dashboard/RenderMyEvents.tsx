@@ -43,7 +43,7 @@ export const RenderMyEvents: FC<Props> = () => {
 
   return (
     <div>
-      <ul>{render()}</ul>
+      <ul style={{ margin: "0px", padding: "0px" }}>{render()}</ul>
     </div>
   );
 };

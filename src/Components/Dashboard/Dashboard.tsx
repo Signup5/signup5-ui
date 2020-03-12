@@ -1,14 +1,12 @@
-import React from "react";
-import { makeStyles, Theme } from "@material-ui/core/styles";
-import AppBar from "@material-ui/core/AppBar";
-import Tabs from "@material-ui/core/Tabs";
-import Tab from "@material-ui/core/Tab";
-import Typography from "@material-ui/core/Typography";
-import Box from "@material-ui/core/Box";
-import { CreateEventForm } from "./CreateEvent";
 import { Card } from "@material-ui/core";
-import { GET_EVENTS_BY_HOST_ID, SET_ATTENDANCE } from "../../Store/GQL";
-import { useMutation } from "@apollo/react-hooks";
+import AppBar from "@material-ui/core/AppBar";
+import Box from "@material-ui/core/Box";
+import { makeStyles, Theme } from "@material-ui/core/styles";
+import Tab from "@material-ui/core/Tab";
+import Tabs from "@material-ui/core/Tabs";
+import Typography from "@material-ui/core/Typography";
+import React from "react";
+import { CreateEventForm } from "./CreateEvent";
 import { RenderMyEvents } from "./RenderMyEvents";
 
 interface TabPanelProps {
@@ -43,6 +41,8 @@ function a11yProps(index: any) {
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
+    padding: 0,
+    margin: 0,
     flexGrow: 1,
     backgroundColor: theme.palette.background.paper
   }
@@ -70,15 +70,17 @@ export const Dashboard: React.FC = () => {
           <Tab label="My events" {...a11yProps(2)} />
         </Tabs>
       </AppBar>
-      <TabPanel value={value} index={0}>
-        Item One
-      </TabPanel>
-      <TabPanel value={value} index={1}>
-        <CreateEventForm />
-      </TabPanel>
-      <TabPanel value={value} index={2}>
-        <RenderMyEvents />
-      </TabPanel>
+      <div style={{ overflowY: "auto", height: "100%" }}>
+        <TabPanel value={value} index={0}>
+          Item One
+        </TabPanel>
+        <TabPanel value={value} index={1}>
+          <CreateEventForm />
+        </TabPanel>
+        <TabPanel value={value} index={2}>
+          <RenderMyEvents />
+        </TabPanel>
+      </div>
     </Card>
   );
 };
