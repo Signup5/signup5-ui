@@ -1,3 +1,4 @@
+import { format } from 'date-fns'
 import DateFnsUtils from "@date-io/date-fns";
 import { Button, Card, CardActions, CardContent, IconButton, InputAdornment, List, Snackbar, TextField } from "@material-ui/core";
 import EventOutlinedIcon from "@material-ui/icons/EventOutlined";
@@ -106,13 +107,14 @@ export const CreateEventForm: FC<Props> = () => {
   };
 
   const handleSubmit = () => {
+
     setIsEventSubmitted(true);
     if (title.length > 0 && date_of_event != null && time_of_event != null) {
       const dateString = date_of_event
-        ? dateToLocalDateString(date_of_event)
+      ? format(date_of_event, "yyyy-MM-dd")
         : "";
       const timeString = time_of_event
-        ? time_of_event.toLocaleTimeString().substring(0, 5)
+        ? format(time_of_event, "HH:mm")
         : "";
 
       const invitations: Array<InvitationInput> = [];
