@@ -39,7 +39,7 @@ export const GET_EVENT_BY_ID = gql`
 
 export const GET_EVENTS_BY_HOST_ID = gql`
   query getEventsByHostId($id: Int!) {
-    getEventsByHostId(id: $id) {
+    events: getEventsByHostId(id: $id) {
       id
       host {
         id

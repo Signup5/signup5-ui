@@ -1,34 +1,23 @@
 import DateFnsUtils from "@date-io/date-fns";
-import {
-    Button,
-    Card,
-    CardActions,
-    CardContent,
-    IconButton,
-    InputAdornment,
-    List,
-    Snackbar,
-    TextField
-} from "@material-ui/core";
+import { Button, Card, CardActions, CardContent, IconButton, InputAdornment, List, Snackbar, TextField } from "@material-ui/core";
 import EventOutlinedIcon from "@material-ui/icons/EventOutlined";
+import KeyboardReturnIcon from "@material-ui/icons/KeyboardReturn";
 import PeopleAltOutlinedIcon from "@material-ui/icons/PeopleAltOutlined";
 import RoomOutlinedIcon from "@material-ui/icons/RoomOutlined";
 import ScheduleIcon from "@material-ui/icons/Schedule";
 import SubjectIcon from "@material-ui/icons/Subject";
-import MuiAlert, {AlertProps} from "@material-ui/lab/Alert";
-import {KeyboardDatePicker, KeyboardTimePicker, MuiPickersUtilsProvider} from "@material-ui/pickers";
-import React, {ChangeEvent, FC, useEffect, useState} from "react";
-import {useMutation} from "react-apollo";
-import {useSelector} from "react-redux";
-import {useHistory} from "react-router-dom";
+import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
+import { KeyboardDatePicker, KeyboardTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
+import React, { ChangeEvent, FC, useEffect, useState } from "react";
+import { useMutation } from "react-apollo";
+import { useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
 import Classes from "../../../App.module.css";
-import {CREATE_EVENT} from "../../../Store/GQL";
-import {InitialState} from "../../../Store/Reducers/rootReducer";
-import {EventInput, InvitationInput, Person} from "../../../Types";
-import {dateToLocalDateString, emailRegEx} from "../../../Utility";
-import {RenderGuest} from "./RenderGuest";
-import KeyboardReturnIcon from "@material-ui/icons/KeyboardReturn";
-import {Class} from "@material-ui/icons";
+import { CREATE_EVENT } from "../../../Store/GQL";
+import { InitialState } from "../../../Store/Reducers/rootReducer";
+import { EventInput, InvitationInput, Person } from "../../../Types";
+import { dateToLocalDateString, emailRegEx } from "../../../Utility";
+import { RenderGuest } from "./RenderGuest";
 
 function Alert(props: AlertProps) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -125,7 +114,7 @@ export const CreateEventForm: FC<Props> = () => {
       const timeString = time_of_event
         ? time_of_event.toLocaleTimeString().substring(0, 5)
         : "";
-console.log(dateString);
+
       const invitations: Array<InvitationInput> = [];
 
       guestList.forEach(email => {

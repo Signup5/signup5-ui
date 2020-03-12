@@ -1,14 +1,15 @@
-import React from 'react';
-import { makeStyles, Theme } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
-import {CreateEventForm} from "./CreateEvent";
-import {Card} from "@material-ui/core";
-import {GET_EVENTS_BY_HOST_ID, SET_ATTENDANCE} from "../../Store/GQL";
-import {useMutation} from "@apollo/react-hooks";
+import React from "react";
+import { makeStyles, Theme } from "@material-ui/core/styles";
+import AppBar from "@material-ui/core/AppBar";
+import Tabs from "@material-ui/core/Tabs";
+import Tab from "@material-ui/core/Tab";
+import Typography from "@material-ui/core/Typography";
+import Box from "@material-ui/core/Box";
+import { CreateEventForm } from "./CreateEvent";
+import { Card } from "@material-ui/core";
+import { GET_EVENTS_BY_HOST_ID, SET_ATTENDANCE } from "../../Store/GQL";
+import { useMutation } from "@apollo/react-hooks";
+import { RenderMyEvents } from "./RenderMyEvents";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -18,8 +19,6 @@ interface TabPanelProps {
 
 function TabPanel(props: TabPanelProps) {
   const { children, value, index, ...other } = props;
-
-
 
   return (
     <Typography
@@ -38,15 +37,15 @@ function TabPanel(props: TabPanelProps) {
 function a11yProps(index: any) {
   return {
     id: `simple-tab-${index}`,
-    'aria-controls': `simple-tabpanel-${index}`,
+    "aria-controls": `simple-tabpanel-${index}`
   };
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     flexGrow: 1,
-    backgroundColor: theme.palette.background.paper,
-  },
+    backgroundColor: theme.palette.background.paper
+  }
 }));
 
 export const Dashboard: React.FC = () => {
@@ -60,7 +59,12 @@ export const Dashboard: React.FC = () => {
   return (
     <Card className={classes.root}>
       <AppBar position="static" color="default">
-        <Tabs value={value} onChange={handleChange} aria-label="simple tabs example" indicatorColor="primary">
+        <Tabs
+          value={value}
+          onChange={handleChange}
+          aria-label="simple tabs example"
+          indicatorColor="primary"
+        >
           <Tab label="Dashboard" {...a11yProps(0)} />
           <Tab label="Create event" {...a11yProps(1)} />
           <Tab label="My events" {...a11yProps(2)} />
@@ -70,12 +74,11 @@ export const Dashboard: React.FC = () => {
         Item One
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <CreateEventForm/>
-
+        <CreateEventForm />
       </TabPanel>
       <TabPanel value={value} index={2}>
-
+        <RenderMyEvents />
       </TabPanel>
     </Card>
   );
-}
+};

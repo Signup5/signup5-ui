@@ -38,7 +38,6 @@ const App: FC = () => {
           </Route>
           <Route path="/create_event">
             <CreateEventForm/>
-
           </Route>
         </BrowserRouter>
       </div>
