@@ -30,6 +30,7 @@ import {
   MuiPickersUtilsProvider
 } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
+import parse from "date-fns/parse";
 
 interface Props {
   event: Event;
@@ -40,8 +41,12 @@ export const RenderEvent: FC<Props> = props => {
   const [severity, setSeverity] = useState<
     "success" | "info" | "warning" | "error" | undefined
   >(undefined);
-  const [date_of_event, setDate_of_event] = useState<Date | null>(null);
-  const [time_of_event, setTime_of_event] = useState<Date | null>(null);
+
+  const initTime = parse(props.event.time_of_event, "HH:mm:ss", new Date());
+  const [date_of_event, setDate_of_event] = useState<Date | null>(new Date(props.event.date_of_event));
+  const [time_of_event, setTime_of_event] = useState<Date | null>(new Date(initTime));
+
+
 
   const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
     if (reason === "clickaway") {
@@ -168,7 +173,7 @@ export const RenderEvent: FC<Props> = props => {
                       margin="normal"
                       id="date-picker-dialog"
                       format="yyyy-MM-dd"
-                      value={event.date_of_event}
+                      value={date_of_event}
                       onChange={onDateChange}
                       style={{ flexGrow: 9.5 }}
                       // maxDate={maxDate}
@@ -190,7 +195,7 @@ export const RenderEvent: FC<Props> = props => {
                       margin="normal"
                       placeholder="Time of event"
                       id="time-picker"
-                      value={event.time_of_event}
+                      value={time_of_event}
                       onChange={onTimeChange}
                       // error={isEventSubmitted && !time_of_event}
                       // helperText={
