@@ -39,6 +39,7 @@ export const RenderInvitation: FC<Props> = props => {
   });
 
   const setAttendanceHandler = (e: Attendance) => {
+    console.log(Attendance[e])
     setAttendance({
       variables: {
         attendance: Attendance[e],

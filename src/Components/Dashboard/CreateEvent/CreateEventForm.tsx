@@ -52,7 +52,7 @@ export const CreateEventForm: FC<Props> = () => {
   const stateProps = useSelector<InitialState, StateProps>(
     (state: InitialState) => {
       return {
-        host: {id: state.person.id}
+        host: {...state.person}
       };
     }
   );
@@ -129,7 +129,9 @@ export const CreateEventForm: FC<Props> = () => {
       });
 
       const eventInput: EventInput = {
-        host: {id: stateProps.host.id},
+        host: {
+          ...stateProps.host
+        },
         title: title,
         description: description,
         date_of_event: dateString,

@@ -2,9 +2,9 @@ import {emailRegEx} from "../Utility";
 
 export type Person = {
   id: number;
-  first_name?: string;
-  last_name?: string;
-  email?: string;
+  first_name: string;
+  last_name: string;
+  email: string;
 };
 
 export enum Attendance {
@@ -56,9 +56,9 @@ export interface GuestInput {
 
 export interface HostInput {
   id: number;
-  email?: string;
-  first_name?: string;
-  last_name?: string;
+  email: string;
+  first_name: string;
+  last_name: string;
 }
 
 export type QueryResponse = {
