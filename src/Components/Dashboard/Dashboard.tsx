@@ -8,6 +8,7 @@ import Typography from "@material-ui/core/Typography";
 import React from "react";
 import { CreateEventForm } from "./CreateEvent";
 import { RenderMyEvents } from "./RenderMyEvents";
+import { RenderInvitationList } from "./RenderInvitationList";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -72,7 +73,10 @@ export const Dashboard: React.FC = () => {
       </AppBar>
       <div style={{ overflowY: "auto", height: "100%" }}>
         <TabPanel value={value} index={0}>
-          Item One
+          <div style={{display: "flex"}}>
+            <div style={{flexGrow: 10}}></div>
+            <RenderInvitationList/>
+        </div>
         </TabPanel>
         <TabPanel value={value} index={1}>
           <CreateEventForm />

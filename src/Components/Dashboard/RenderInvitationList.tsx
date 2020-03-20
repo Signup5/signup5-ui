@@ -29,7 +29,7 @@ export const RenderInvitationList: FC<Props> = () => {
 
   if (response.loading) return <p>Loading...</p>;
   if (response.error) {
-    return <p>ERROR</p>;
+    return <p>No events found.</p>;
   }
 
   const invitations: Array<Invitation> = response.data.invitations;
@@ -41,8 +41,8 @@ export const RenderInvitationList: FC<Props> = () => {
   };
 
   return (
-    <div>
-      <h2>Your invitations</h2> <br/>
+    <div style={{flexGrow: 2}}>
+      <h4>Your invitations</h4>
       {render()}
     </div>
   );

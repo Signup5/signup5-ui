@@ -34,7 +34,7 @@ const App: FC = () => {
           </Route>
           <Route path="/dashboard">
             <Dashboard />
-            <RenderInvitationList/>
+            
           </Route>
           <Route path="/create_event">
             <CreateEventForm/>

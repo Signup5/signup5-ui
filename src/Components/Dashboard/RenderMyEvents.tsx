@@ -28,7 +28,7 @@ export const RenderMyEvents: FC<Props> = () => {
 
   if (response.loading) return <p>Loading...</p>;
   if (response.error) {
-    return <p>ERROR</p>;
+    return <p>No events found!</p>;
   }
 
   const events: Array<Event> = response.data.events;
