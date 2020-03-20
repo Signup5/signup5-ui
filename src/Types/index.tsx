@@ -27,6 +27,7 @@ export type Event = {
   description: string;
   date_of_event: string;
   time_of_event: string;
+  duration: number;
   location: string;
 };
 
@@ -36,8 +37,10 @@ export interface EventInput {
   description?: string;
   date_of_event: string;
   time_of_event: string;
+  duration: number;
   location: string;
   invitations?: Array<InvitationInput>;
+
 }
 
 export interface InvitationInput {
@@ -66,7 +69,6 @@ export type QueryResponse = {
   error?: any;
   data?: any;
 };
-
 
 export class Credentials {
   private email: string;

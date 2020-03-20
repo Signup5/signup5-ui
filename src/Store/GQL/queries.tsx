@@ -33,6 +33,8 @@ export const GET_EVENT_BY_ID = gql`
       description
       date_of_event
       time_of_event
+      duration
+      location
     }
   }
 `;
@@ -51,6 +53,7 @@ export const GET_EVENTS_BY_HOST_ID = gql`
       description
       date_of_event
       time_of_event
+      duration
       location
       invitations {
         id
