@@ -1,10 +1,10 @@
 import {useQuery} from "@apollo/react-hooks";
-import React, {FC} from "react";
-import {GET_INVITATIONS_BY_GUEST_ID} from "../../Store/GQL";
+import React, {FC, useState} from "react";
 import {Invitation, Person, QueryResponse} from "../../Types";
 import {RenderInvitation} from "./RenderInvitation";
 import {InitialState} from "../../Store/Reducers/rootReducer";
 import {useSelector} from "react-redux";
+import {GET_UPCOMING_UNREPLIED_INVITATIONS_BY_GUEST_ID} from "../../Store/GQL";
 
 interface Props {
 }
@@ -14,6 +14,8 @@ interface StateProps {
 }
 
 export const RenderInvitationList: FC<Props> = () => {
+  // const [invitations, setInvitations] = useState<Array<Invitation>>([]);
+
   const stateProps = useSelector<InitialState, StateProps>(
     (state: InitialState) => {
       return {
@@ -21,10 +23,11 @@ export const RenderInvitationList: FC<Props> = () => {
       };
     }
   );
-  const response: QueryResponse = useQuery(GET_INVITATIONS_BY_GUEST_ID, {
+
+  const response: QueryResponse = useQuery(GET_UPCOMING_UNREPLIED_INVITATIONS_BY_GUEST_ID, {
     variables: {
       id: stateProps.person.id
-    }
+    },
   });
 
   if (response.loading) return <p>Loading...</p>;
@@ -32,10 +35,10 @@ export const RenderInvitationList: FC<Props> = () => {
     return <p>No events found.</p>;
   }
 
-  const invitations: Array<Invitation> = response.data.invitations;
-
+  // setInvitations(response.data.invitations);
+const invitations: Array<Invitation> = response.data.invitations;
   const render = () => {
-    return invitations.map((invitation, index) => {
+    return invitations.map((invitation:Invitation, index:number) => {
       return <RenderInvitation key={index} invitation={invitation}/>;
     });
   };

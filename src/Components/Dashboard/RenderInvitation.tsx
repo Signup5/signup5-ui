@@ -1,23 +1,22 @@
-import { useMutation, useQuery } from "@apollo/react-hooks";
+import {useMutation, useQuery} from "@apollo/react-hooks";
 import {
   Button,
-  ButtonGroup,
+  Divider,
   ExpansionPanel,
+  ExpansionPanelActions,
   ExpansionPanelDetails,
   ExpansionPanelSummary,
-  FormControlLabel,
   Snackbar,
-  Typography,
-  Divider,
-  ExpansionPanelActions
+  Typography
 } from "@material-ui/core";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import Alert from "@material-ui/lab/Alert";
-import React, { FC, useState } from "react";
-import { SET_ATTENDANCE } from "../../Store/GQL";
-import { GET_EVENT_BY_ID } from "../../Store/GQL";
-import { Attendance, Event, Invitation, QueryResponse } from "../../Types";
-import { Theme, createStyles, makeStyles } from "@material-ui/core/styles";
+import React, {FC, useState} from "react";
+import {GET_EVENT_BY_ID, SET_ATTENDANCE} from "../../Store/GQL";
+import {Attendance, Event, Invitation, QueryResponse} from "../../Types";
+import {createStyles, makeStyles, Theme} from "@material-ui/core/styles";
+import CircularProgress from "@material-ui/core/CircularProgress";
+
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -70,22 +69,21 @@ interface Props {
 export const RenderInvitation: FC<Props> = props => {
   const [open, setOpen] = useState<boolean>(false);
   const [responseMessage, setResponseMessage] = useState<string>("");
-  const [severity, setSeverity] = useState<
-    "success" | "info" | "warning" | "error" | undefined
-  >(undefined);
+  const [severity, setSeverity] = useState<"success" | "info" | "warning" | "error" | undefined>(undefined);
 
   const classes = useStyles();
 
-  const [setAttendance] = useMutation(SET_ATTENDANCE, {
+  const [setAttendance, {loading}] = useMutation(SET_ATTENDANCE, {
     onError(err) {
       setResponseMessage(err.message);
       setSeverity("error");
       setOpen(true);
     },
-    onCompleted({ response }) {
+    onCompleted({response}) {
       setResponseMessage(response.message);
       setSeverity("success");
       setOpen(true);
+
     }
   });
 
@@ -122,7 +120,7 @@ export const RenderInvitation: FC<Props> = props => {
     <>
       <ExpansionPanel>
         <ExpansionPanelSummary
-          expandIcon={<ExpandMoreIcon />}
+          expandIcon={<ExpandMoreIcon/>}
           aria-controls="panel1c-content"
           id="panel1c-header"
         >
@@ -138,22 +136,23 @@ export const RenderInvitation: FC<Props> = props => {
         <ExpansionPanelDetails className={classes.details}>
           <Typography className={classes.descriptionHeading}>
             {event.description}
-            <br />
+            <br/>
             <a href="#secondary-heading-and-columns" className={classes.link}>
               Read more
             </a>
             <p className={classes.secondaryHeading}>{event.location}</p>
           </Typography>
         </ExpansionPanelDetails>
-        <Divider />
+        <Divider/>
         <ExpansionPanelActions>
+          {loading?<CircularProgress />: ""}
           <Button size="small" color="primary" onClick={() => setAttendanceHandler(Attendance.ATTENDING)}>
             Yes
           </Button>
           <Button size="small" color="default" onClick={() => setAttendanceHandler(Attendance.MAYBE)}>
             Maybe
           </Button>
-          <Button size="small" color="secondary"onClick={() => setAttendanceHandler(Attendance.NOT_ATTENDING)}>
+          <Button size="small" color="secondary" onClick={() => setAttendanceHandler(Attendance.NOT_ATTENDING)}>
             No
           </Button>
         </ExpansionPanelActions>

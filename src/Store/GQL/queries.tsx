@@ -11,9 +11,9 @@ export const GET_PERSON_BY_EMAIL = gql`
   }
 `;
 
-export const GET_INVITATIONS_BY_GUEST_ID = gql`
-  query getInvitationsByGuestId($id: Int!) {
-    invitations: getInvitationsByGuestId(id: $id) {
+export const GET_UPCOMING_UNREPLIED_INVITATIONS_BY_GUEST_ID = gql`
+  query getUpcomingUnRepliedInvitationsByGuestId($id: Int!) {
+    invitations: getUpcomingUnRepliedInvitationsByGuestId(id: $id) {
       id
       event_id
       attendance
@@ -67,5 +67,4 @@ export const GET_EVENTS_BY_HOST_ID = gql`
       }
     }
   }
-
 `;

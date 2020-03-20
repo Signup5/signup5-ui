@@ -6,7 +6,6 @@ import SignupLogo from "./Components/Icons/SignupLogo";
 import LoginForm from "./Components/LoginForm";
 import {InitialState} from "./Store/Reducers/rootReducer";
 import {Person} from "./Types";
-import {RenderInvitationList} from "./Components/Dashboard/RenderInvitationList";
 import {CreateEventForm} from "./Components/Dashboard/CreateEvent";
 import {Dashboard} from "./Components/Dashboard";
 
