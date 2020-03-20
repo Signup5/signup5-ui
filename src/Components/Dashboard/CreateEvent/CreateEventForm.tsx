@@ -1,16 +1,18 @@
-import {format} from 'date-fns'
 import DateFnsUtils from "@date-io/date-fns";
 import {
   Button,
   Card,
   CardActions,
-  CardContent, FormControl,
+  CardContent,
+  FormControl,
   IconButton,
-  InputAdornment, InputLabel,
-  List, Select,
+  InputAdornment,
+  InputLabel,
+  List,
+  MenuItem,
+  Select,
   Snackbar,
-  TextField,
-  MenuItem
+  TextField
 } from "@material-ui/core";
 import EventOutlinedIcon from "@material-ui/icons/EventOutlined";
 import KeyboardReturnIcon from "@material-ui/icons/KeyboardReturn";
@@ -31,6 +33,7 @@ import {EventInput, InvitationInput, Person} from "../../../Types";
 import {emailRegEx} from "../../../Utility";
 import {RenderGuest} from "./RenderGuest";
 import {zonedTimeToUtc} from "date-fns-tz"
+import {format} from "date-fns";
 
 function Alert(props: AlertProps) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -123,7 +126,7 @@ export const CreateEventForm: FC<Props> = () => {
 
   const onDurationChange = (e: ChangeEvent<{ value: unknown }>) => {
     setDuration(Number(e.target.value));
-  }
+  };
 
   const handleSubmit = () => {
 

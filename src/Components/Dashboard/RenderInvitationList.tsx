@@ -1,5 +1,5 @@
 import {useQuery} from "@apollo/react-hooks";
-import React, {FC, useState} from "react";
+import React, {FC, useEffect, useState} from "react";
 import {Invitation, Person, QueryResponse} from "../../Types";
 import {RenderInvitation} from "./RenderInvitation";
 import {InitialState} from "../../Store/Reducers/rootReducer";
@@ -14,7 +14,11 @@ interface StateProps {
 }
 
 export const RenderInvitationList: FC<Props> = () => {
-  // const [invitations, setInvitations] = useState<Array<Invitation>>([]);
+  const [invitations, setInvitations] = useState<Array<Invitation>>([]);
+
+  const removeInvitation = (invitation: Invitation) => {
+    setInvitations(invitations.filter(i => i.id !== invitation.id))
+  };
 
   const stateProps = useSelector<InitialState, StateProps>(
     (state: InitialState) => {
@@ -30,16 +34,21 @@ export const RenderInvitationList: FC<Props> = () => {
     },
   });
 
+  useEffect(() => {
+    if (!response.loading && response.data)
+      setInvitations(response.data.invitations);
+  }, [response.loading, response.data]);
+
   if (response.loading) return <p>Loading...</p>;
   if (response.error) {
     return <p>No events found.</p>;
   }
 
   // setInvitations(response.data.invitations);
-const invitations: Array<Invitation> = response.data.invitations;
+// const invitations: Array<Invitation> = response.data.invitations;
   const render = () => {
     return invitations.map((invitation:Invitation, index:number) => {
-      return <RenderInvitation key={index} invitation={invitation}/>;
+      return <RenderInvitation key={index} invitation={invitation} removeInvitation={removeInvitation}/>;
     });
   };
 

@@ -64,12 +64,14 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface Props {
   invitation: Invitation;
+  removeInvitation: (invitation: Invitation) => void
 }
 
 export const RenderInvitation: FC<Props> = props => {
   const [open, setOpen] = useState<boolean>(false);
   const [responseMessage, setResponseMessage] = useState<string>("");
   const [severity, setSeverity] = useState<"success" | "info" | "warning" | "error" | undefined>(undefined);
+  const [selectedAttendance, setSelectedAttendance] = useState<Attendance>(Attendance.NO_RESPONSE);
 
   const classes = useStyles();
 
@@ -83,12 +85,14 @@ export const RenderInvitation: FC<Props> = props => {
       setResponseMessage(response.message);
       setSeverity("success");
       setOpen(true);
-
+      if (selectedAttendance !== Attendance.MAYBE) {
+        props.removeInvitation(props.invitation);
+      }
     }
   });
 
   const setAttendanceHandler = (e: Attendance) => {
-    console.log(Attendance[e]);
+    setSelectedAttendance(e);
     setAttendance({
       variables: {
         attendance: Attendance[e],
@@ -145,7 +149,7 @@ export const RenderInvitation: FC<Props> = props => {
         </ExpansionPanelDetails>
         <Divider/>
         <ExpansionPanelActions>
-          {loading?<CircularProgress />: ""}
+          {loading ? <CircularProgress/> : ""}
           <Button size="small" color="primary" onClick={() => setAttendanceHandler(Attendance.ATTENDING)}>
             Yes
           </Button>
