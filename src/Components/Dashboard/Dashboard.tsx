@@ -1,14 +1,15 @@
-import { Card } from "@material-ui/core";
+import {Card, Grid} from "@material-ui/core";
 import AppBar from "@material-ui/core/AppBar";
 import Box from "@material-ui/core/Box";
-import { makeStyles, Theme } from "@material-ui/core/styles";
+import {makeStyles, Theme} from "@material-ui/core/styles";
 import Tab from "@material-ui/core/Tab";
 import Tabs from "@material-ui/core/Tabs";
 import Typography from "@material-ui/core/Typography";
 import React from "react";
-import { CreateEventForm } from "./CreateEvent";
-import { RenderMyEvents } from "./RenderMyEvents";
-import { RenderInvitationList } from "./RenderInvitationList";
+import {CreateEventForm} from "./CreateEvent";
+import {RenderMyEvents} from "./RenderMyEvents";
+import {RenderInvitationList} from "./RenderInvitationList";
+import {Calendar} from "./Calendar";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -17,7 +18,7 @@ interface TabPanelProps {
 }
 
 function TabPanel(props: TabPanelProps) {
-  const { children, value, index, ...other } = props;
+  const {children, value, index, ...other} = props;
 
   return (
     <Typography
@@ -71,20 +72,28 @@ export const Dashboard: React.FC = () => {
           <Tab label="My events" {...a11yProps(2)} />
         </Tabs>
       </AppBar>
-      <div style={{ overflowY: "auto", height: "100%" }}>
+      <div style={{overflowY: "auto", height: "100%"}}>
         <TabPanel value={value} index={0}>
-          <div style={{display: "flex"}}>
-            <div style={{flexGrow: 10}}></div>
-            <RenderInvitationList/>
-        </div>
-        </TabPanel>
-        <TabPanel value={value} index={1}>
-          <CreateEventForm />
-        </TabPanel>
-        <TabPanel value={value} index={2}>
-          <RenderMyEvents />
-        </TabPanel>
-      </div>
-    </Card>
-  );
+          <Grid item xs={12}>
+            <Grid container>
+              <Grid item xs={8}>
+                <Calendar/>
+              </Grid>
+              <Grid item xs={4}>
+                <RenderInvitationList/>
+              </Grid>
+            </Grid>
+          </Grid>
+    </TabPanel>
+  <TabPanel value={value} index={1}>
+    <CreateEventForm/>
+  </TabPanel>
+  <TabPanel value={value} index={2}>
+    <RenderMyEvents/>
+  </TabPanel>
+</div>
+</
+  Card >
+)
+  ;
 };

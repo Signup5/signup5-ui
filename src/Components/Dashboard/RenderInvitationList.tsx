@@ -53,7 +53,7 @@ export const RenderInvitationList: FC<Props> = () => {
   };
 
   return (
-    <div style={{flexGrow: 2}}>
+    <div style={{flexGrow: 6}}>
       <h4>Your invitations</h4>
       {render()}
     </div>

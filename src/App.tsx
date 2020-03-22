@@ -33,7 +33,6 @@ const App: FC = () => {
           </Route>
           <Route path="/dashboard">
             <Dashboard />
-            
           </Route>
           <Route path="/create_event">
             <CreateEventForm/>

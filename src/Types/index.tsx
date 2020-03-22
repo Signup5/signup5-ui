@@ -23,6 +23,7 @@ export type Invitation = {
 
 export type Event = {
   id: number;
+  host: Person
   title: string;
   description: string;
   date_of_event: string;
@@ -69,6 +70,24 @@ export type QueryResponse = {
   error?: any;
   data?: any;
 };
+
+export class LocalDateTime {
+  private year: string;
+  private month: string;
+  private day: string;
+  private time: string;
+
+  constructor(year: string, month: string, day: string, time: string) {
+    this.year = year;
+    this.month = month;
+    this.day = day;
+    this.time = time;
+}
+
+  get dateAndTime(): string {
+    return `${this.year}-${this.month}-${this.day}T${this.time}`
+  }
+}
 
 export class Credentials {
   private email: string;
