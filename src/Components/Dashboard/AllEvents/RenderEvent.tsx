@@ -7,7 +7,9 @@ import {
   ExpansionPanelSummary,
   Fab,
   Grid,
+  InputAdornment,
   Snackbar,
+  TextField,
   Typography,
   withStyles
 } from "@material-ui/core";
@@ -22,8 +24,10 @@ import {createStyles, makeStyles, Theme} from "@material-ui/core/styles";
 import Badge from '@material-ui/core/Badge';
 import {useSelector} from "react-redux";
 import EditIcon from '@material-ui/icons/Edit';
+import {RenderEvent as EditableEvent} from "../HostedEvents"
 
 import {InitialState} from "../../../Store/Reducers/rootReducer";
+import Classes from "../../../App.module.css";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -91,6 +95,7 @@ export const RenderEvent: FC<Props> = props => {
   const [open, setOpen] = useState<boolean>(false);
   const [showFullDescription, setShowFullDescription] = useState<boolean>(false);
   const [severity, setSeverity] = useState<"success" | "info" | "warning" | "error" | undefined>(undefined);
+  const [editable, setEditable] = useState<boolean>(false);
 
   const stateProps = useSelector<InitialState, StateProps>(
     (state: InitialState) => {
@@ -122,6 +127,98 @@ export const RenderEvent: FC<Props> = props => {
 
   const event: Event = props.event;
 
+
+  const displayedEvent = () => {
+    return <Grid container spacing={3}>
+      {/*description start*/}
+      <Grid container item xs={12} spacing={3}>
+        <Grid item>
+          <SubjectIcon/>
+        </Grid>
+        <Grid item xs={11}>
+          {editable ? <TextField
+            className={Classes.TextField}
+            id="description"
+            label="Description"
+            multiline
+            rowsMax="10"
+
+
+            variant="outlined"
+            inputProps={{maxLength: "5000"}}
+            style={{flexGrow: 20}}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  5/50
+                </InputAdornment>
+              )
+            }}
+          /> : <Typography className={classes.contentText}>
+            {showFullDescription ? event.description : event.description.substr(0, 10) + "..."}
+          </Typography>}
+
+          <Button size="small"
+                  onClick={() => setShowFullDescription(!showFullDescription)}> {showFullDescription ? "Show less" : "Show more"}
+          </Button>
+        </Grid>
+      </Grid>
+      {/*description end*/}
+
+      {/*location start*/}
+      <Grid container item xs={12} spacing={3}>
+        <Grid item>
+          <LocationOnOutlinedIcon/>
+        </Grid>
+        <Grid item xs={11}>
+          <Typography className={classes.contentText}>
+            {event.location}
+          </Typography>
+
+        </Grid>
+      </Grid>
+      {/*location end*/}
+
+      {/**invitation summary start*/}
+      <Grid container item xs={12} spacing={3}>
+        <Grid item>
+          <PeopleAltOutlinedIcon/>
+        </Grid>
+        <Grid item xs={11}>
+          <Typography className={classes.contentText}>
+            <StyledBadge badgeContent={invitationSummary("ATTENDING")} color="primary"
+                         style={{marginLeft: "18px"}}>
+              <Button size="small">
+                Attending
+              </Button>
+            </StyledBadge>
+            <StyledBadge badgeContent={invitationSummary("MAYBE")} color="primary" style={{marginLeft: "18px"}}>
+              <Button size="small">
+                Maybe
+              </Button>
+            </StyledBadge>
+            <StyledBadge badgeContent={invitationSummary("NOT_ATTENDING")} color="primary"
+                         style={{marginLeft: "18px"}}>
+              <Button size="small">
+                Not Attending
+              </Button>
+            </StyledBadge>
+            <StyledBadge badgeContent={invitationSummary("NO_RESPONSE")} color="secondary"
+                         style={{marginLeft: "18px"}}>
+              <Button size="small">
+                No Response
+              </Button>
+            </StyledBadge>
+          </Typography>
+
+        </Grid>
+      </Grid>
+      {/**invitation summary end*/}
+
+    </Grid>
+  };
+
+
   return (
     <>
       <ExpansionPanel>
@@ -140,74 +237,7 @@ export const RenderEvent: FC<Props> = props => {
           </div>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails className={classes.details}>
-          <Grid container spacing={3}>
-            {/*description start*/}
-            <Grid container item xs={12} spacing={3}>
-              <Grid item>
-                <SubjectIcon/>
-              </Grid>
-              <Grid item xs={11}>
-                <Typography className={classes.contentText}>
-                  {showFullDescription ? event.description : event.description.substr(0, 10) + "..."}
-                </Typography>
-                <Button size="small"
-                        onClick={() => setShowFullDescription(!showFullDescription)}> {showFullDescription ? "Show less" : "Show more"}
-                </Button>
-              </Grid>
-            </Grid>
-            {/*description end*/}
-
-            {/*location start*/}
-            <Grid container item xs={12} spacing={3}>
-              <Grid item>
-                <LocationOnOutlinedIcon/>
-              </Grid>
-              <Grid item xs={11}>
-                <Typography className={classes.contentText}>
-                  {event.location}
-                </Typography>
-
-              </Grid>
-            </Grid>
-            {/*location end*/}
-
-            {/**invitation summary start*/}
-            <Grid container item xs={12} spacing={3}>
-              <Grid item>
-                <PeopleAltOutlinedIcon/>
-              </Grid>
-              <Grid item xs={11}>
-                <Typography className={classes.contentText}>
-                  <StyledBadge badgeContent={invitationSummary("ATTENDING")} color="primary"
-                               style={{marginLeft: "18px"}}>
-                    <Button size="small">
-                      Attending
-                    </Button>
-                  </StyledBadge>
-                  <StyledBadge badgeContent={invitationSummary("MAYBE")} color="primary" style={{marginLeft: "18px"}}>
-                    <Button size="small">
-                      Maybe
-                    </Button>
-                  </StyledBadge>
-                  <StyledBadge badgeContent={invitationSummary("NOT_ATTENDING")} color="primary"
-                               style={{marginLeft: "18px"}}>
-                    <Button size="small">
-                      Not Attending
-                    </Button>
-                  </StyledBadge>
-                  <StyledBadge badgeContent={invitationSummary("NO_RESPONSE")} color="secondary"
-                               style={{marginLeft: "18px"}}>
-                    <Button size="small">
-                      No Response
-                    </Button>
-                  </StyledBadge>
-                </Typography>
-
-              </Grid>
-            </Grid>
-            {/**invitation summary end*/}
-
-          </Grid>
+          {editable ? <EditableEvent event={event}/> : displayedEvent()}
         </ExpansionPanelDetails>
         <Divider/>
         <ExpansionPanelActions>
@@ -224,6 +254,9 @@ export const RenderEvent: FC<Props> = props => {
               <Button size="small" color="secondary">
                 No
               </Button>
+              <Button onClick={() => setEditable(!editable)}>
+                TESTING
+              </Button>
             </>
           }
         </ExpansionPanelActions>
@@ -232,5 +265,5 @@ export const RenderEvent: FC<Props> = props => {
         <Alert onClose={handleClose} severity={severity}></Alert>
       </Snackbar>
     </>
-  );
-};
+  )
+}
