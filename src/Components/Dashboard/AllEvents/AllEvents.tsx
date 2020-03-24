@@ -5,6 +5,7 @@ import { GET_HOSTED_AND_INVITED_EVENTS_BY_PERSON_ID } from "../../../Store/GQL";
 import { InitialState } from "../../../Store/Reducers/rootReducer";
 import { Event, Person, QueryResponse } from "../../../Types";
 import { RenderEvent } from "./RenderEvent";
+import LinearProgress from '@material-ui/core/LinearProgress';
 
 interface Props {}
 
@@ -27,14 +28,11 @@ export const AllEvents: FC<Props> = () => {
     }
   });
 
-  if (response.loading) return <p>Loading...</p>;
+  if (response.loading) return  <LinearProgress />;
   if (response.error) {
-    return <p>No events found!</p>;
+    return <h3>No events found!</h3>;
   }
-
   const events: Array<Event> = response.data.events;
-
-  console.log(stateProps.person);
 
   const render = () => {
     return events.map((event, index) => {
@@ -43,8 +41,9 @@ export const AllEvents: FC<Props> = () => {
   };
 
   return (
-    <div>
-      <ul style={{ margin: "0px", padding: "0px" }}>{render()}</ul>
+    <div style={{flexGrow: 6}}>
+      <h3>Events</h3>
+      {render()}
     </div>
   );
 };

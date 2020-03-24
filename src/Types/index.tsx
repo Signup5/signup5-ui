@@ -30,6 +30,7 @@ export type Event = {
   time_of_event: string;
   duration: number;
   location: string;
+  invitations: Array<Invitation>
 };
 
 export interface EventInput {
@@ -41,7 +42,6 @@ export interface EventInput {
   duration: number;
   location: string;
   invitations?: Array<InvitationInput>;
-
 }
 
 export interface InvitationInput {

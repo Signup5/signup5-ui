@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme: Theme) =>
       fontSize: theme.typography.pxToRem(15),
       color: theme.palette.text.secondary
     },
-    descriptionHeading: {
+    contentText: {
       fontSize: theme.typography.pxToRem(15)
     },
     icon: {
@@ -138,7 +138,7 @@ export const RenderInvitation: FC<Props> = props => {
           </div>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails className={classes.details}>
-          <Typography className={classes.descriptionHeading}>
+          <Typography className={classes.contentText}>
             {event.description}
             <br/>
             <a href="#secondary-heading-and-columns" className={classes.link}>
