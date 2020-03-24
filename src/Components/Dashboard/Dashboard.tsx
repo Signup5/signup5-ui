@@ -7,9 +7,9 @@ import Tabs from "@material-ui/core/Tabs";
 import Typography from "@material-ui/core/Typography";
 import React from "react";
 import {CreateEventForm} from "./CreateEvent";
-import {RenderMyEvents} from "./RenderMyEvents";
-import {RenderInvitationList} from "./RenderInvitationList";
-import {Calendar} from "./Calendar";
+import {HostedEvents} from "./HostedEvents";
+import {AllEvents} from "./AllEvents";
+import {InvitationList} from "./Invitations";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -17,8 +17,11 @@ interface TabPanelProps {
   value: any;
 }
 
+
+
 function TabPanel(props: TabPanelProps) {
   const {children, value, index, ...other} = props;
+
 
   return (
     <Typography
@@ -46,7 +49,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: 0,
     margin: 0,
     flexGrow: 1,
-    backgroundColor: theme.palette.background.paper
+    backgroundColor: theme.palette.background.paper,
   }
 }));
 
@@ -77,10 +80,12 @@ export const Dashboard: React.FC = () => {
           <Grid item xs={12}>
             <Grid container>
               <Grid item xs={8}>
-                <Calendar/>
+                <AllEvents />
               </Grid>
               <Grid item xs={4}>
-                <RenderInvitationList/>
+                <div style={{marginLeft: "23px"}}>
+                  <InvitationList/>
+                </div>
               </Grid>
             </Grid>
           </Grid>
@@ -89,7 +94,7 @@ export const Dashboard: React.FC = () => {
     <CreateEventForm/>
   </TabPanel>
   <TabPanel value={value} index={2}>
-    <RenderMyEvents/>
+    <HostedEvents/>
   </TabPanel>
 </div>
 </

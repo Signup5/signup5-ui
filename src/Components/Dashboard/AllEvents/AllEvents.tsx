@@ -1,9 +1,9 @@
 import { useQuery } from "@apollo/react-hooks";
 import React, { FC } from "react";
 import { useSelector } from "react-redux";
-import { GET_EVENTS_BY_HOST_ID } from "../../Store/GQL";
-import { InitialState } from "../../Store/Reducers/rootReducer";
-import { Event, Person, QueryResponse } from "../../Types";
+import { GET_HOSTED_AND_INVITED_EVENTS_BY_PERSON_ID } from "../../../Store/GQL";
+import { InitialState } from "../../../Store/Reducers/rootReducer";
+import { Event, Person, QueryResponse } from "../../../Types";
 import { RenderEvent } from "./RenderEvent";
 
 interface Props {}
@@ -12,7 +12,7 @@ interface StateProps {
   person: Person;
 }
 
-export const RenderMyEvents: FC<Props> = () => {
+export const AllEvents: FC<Props> = () => {
   const stateProps = useSelector<InitialState, StateProps>(
     (state: InitialState) => {
       return {
@@ -20,7 +20,8 @@ export const RenderMyEvents: FC<Props> = () => {
       };
     }
   );
-  const response: QueryResponse = useQuery(GET_EVENTS_BY_HOST_ID, {
+
+  const response: QueryResponse = useQuery(GET_HOSTED_AND_INVITED_EVENTS_BY_PERSON_ID, {
     variables: {
       id: stateProps.person.id
     }

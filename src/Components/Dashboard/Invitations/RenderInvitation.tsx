@@ -12,8 +12,8 @@ import {
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import Alert from "@material-ui/lab/Alert";
 import React, {FC, useState} from "react";
-import {GET_EVENT_BY_ID, SET_ATTENDANCE} from "../../Store/GQL";
-import {Attendance, Event, Invitation, QueryResponse} from "../../Types";
+import {GET_EVENT_BY_ID, SET_ATTENDANCE} from "../../../Store/GQL";
+import {Attendance, Event, Invitation, QueryResponse} from "../../../Types";
 import {createStyles, makeStyles, Theme} from "@material-ui/core/styles";
 import CircularProgress from "@material-ui/core/CircularProgress";
 

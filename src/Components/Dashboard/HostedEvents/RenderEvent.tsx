@@ -15,8 +15,8 @@ import {
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import Alert from "@material-ui/lab/Alert";
 import React, { FC, useState } from "react";
-import { Event, Invitation } from "../../Types";
-import Classes from "../../App.module.css";
+import { Event, Invitation } from "../../../Types";
+import Classes from "../../../App.module.css";
 import EventOutlinedIcon from "@material-ui/icons/EventOutlined";
 import KeyboardReturnIcon from "@material-ui/icons/KeyboardReturn";
 import PeopleAltOutlinedIcon from "@material-ui/icons/PeopleAltOutlined";
