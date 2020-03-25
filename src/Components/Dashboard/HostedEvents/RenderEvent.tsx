@@ -1,10 +1,12 @@
 import {
-  Button, FormControl,
+  Button,
+  FormControl,
   Grid,
   IconButton,
   InputAdornment,
   InputLabel,
-  List, MenuItem,
+  List,
+  MenuItem,
   Select,
   Snackbar,
   TextField
@@ -35,14 +37,17 @@ interface Props {
   event: Event;
   discard: Dispatch<SetStateAction<boolean>>;
 }
+
 interface StateProps {
   host: Person
 }
+
 export const RenderEvent: FC<Props> = props => {
   const event: Event = props.event;
   const time = new Date();
-  time.setHours(Number(event.time_of_event.substr(0,2)),Number(event.time_of_event.substr(3,2)),Number(event.time_of_event.substr(6,2)));
-
+  time.setHours(Number(event.time_of_event.substr(0, 2)),
+    Number(event.time_of_event.substr(3, 2)),
+    Number(event.time_of_event.substr(6, 2)));
 
   const [title, setTitle] = useState<string>(event.title);
   const [description, setDescription] = useState<string>(event.description);
@@ -56,7 +61,6 @@ export const RenderEvent: FC<Props> = props => {
   const [emailError, setEmailError] = useState<string>("");
   const [isEventSubmitted, setIsEventSubmitted] = useState<boolean>(false);
   const [duration, setDuration] = useState<number>(event.duration);
-
   const [open, setOpen] = useState<boolean>(false);
   const [responseMessage, setResponseMessage] = useState<string>("");
   const [severity, setSeverity] = useState<"success" | "info" | "warning" | "error" | undefined>(undefined);
@@ -105,7 +109,7 @@ export const RenderEvent: FC<Props> = props => {
 
   const onTimeChange = (time: Date | null) => {
     const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    console.log(zonedTimeToUtc(time? time: new Date(), timezone));
+    console.log(zonedTimeToUtc(time ? time : new Date(), timezone));
     setTime_of_event(time);
   };
 
@@ -126,7 +130,6 @@ export const RenderEvent: FC<Props> = props => {
   };
 
   const handleSubmit = () => {
-
     setIsEventSubmitted(true);
     if (title.length > 0 && date_of_event != null && time_of_event != null) {
       const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -389,7 +392,6 @@ export const RenderEvent: FC<Props> = props => {
                     onChange={onDurationChange}
                     label="Duration"
                   >
-
                     <MenuItem value={15}>15m</MenuItem>
                     <MenuItem value={30}>30m</MenuItem>
                     <MenuItem value={45}>45m</MenuItem>
@@ -465,7 +467,7 @@ export const RenderEvent: FC<Props> = props => {
             disabled={true}
             onClick={handleSubmit}
           >
-            save draft
+            save
           </Button>
         </Grid>
         <Grid item>

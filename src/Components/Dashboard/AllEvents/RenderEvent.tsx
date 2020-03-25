@@ -183,8 +183,7 @@ export const RenderEvent: FC<Props> = props => {
 
   function invitationSummary(attendance: string) {
     return event.invitations.filter(i => {
-      if (i.attendance.toString() === attendance)
-        return i;
+      return i.attendance.toString() === attendance
     }).length
   }
 

@@ -4,7 +4,6 @@ import {useSelector} from "react-redux";
 import {GET_EVENTS_BY_HOST_ID} from "../../../Store/GQL";
 import {InitialState} from "../../../Store/Reducers/rootReducer";
 import {Event, Person, QueryResponse} from "../../../Types";
-import {RenderEvent} from "./RenderEvent";
 
 interface Props {}
 
@@ -37,7 +36,8 @@ export const HostedEvents: FC<Props> = () => {
   console.log(stateProps.person);
 
   const render = () => {
-    return events.map((event, index) => {return ""      // return <RenderEvent key={index} event={event} />;
+    return events.map((event, index) => {
+      return ""
     });
   };
 

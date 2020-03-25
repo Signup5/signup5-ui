@@ -1,6 +1,6 @@
-import React, {FC} from "react";
+import React, {FC, useEffect} from "react";
 import {useSelector} from "react-redux";
-import {BrowserRouter, Route} from "react-router-dom";
+import {Route, useHistory} from "react-router-dom";
 import Classes from "./App.module.css";
 import SignupLogo from "./Components/Icons/SignupLogo";
 import LoginForm from "./Components/LoginForm";
@@ -13,31 +13,36 @@ interface StateProps {
   person: Person;
 }
 
+
 const App: FC = () => {
-  useSelector<InitialState, StateProps>((state: InitialState) => {
+  const {person} = useSelector<InitialState, StateProps>((state: InitialState) => {
     return {
       person: state.person
     };
   });
+
+  const history = useHistory();
+
+  useEffect(() => {
+    if (!person.id) history.push("")
+
+  },[person, history]);
 
   return (
     <div className={Classes.App}>
       <div className={Classes.AppHeader}>
         <SignupLogo/>
       </div>
-      {/*<div className={Classes.AppSidebar}/>*/}
       <div className={Classes.AppMainContent}>
-        <BrowserRouter>
           <Route exact path="/">
             <LoginForm/>
           </Route>
           <Route path="/dashboard">
-            <Dashboard />
+            <Dashboard/>
           </Route>
           <Route path="/create_event">
             <CreateEventForm/>
           </Route>
-        </BrowserRouter>
       </div>
 
       <div className={Classes.AppFooter}/>

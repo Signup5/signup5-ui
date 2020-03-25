@@ -7,7 +7,6 @@ import Tabs from "@material-ui/core/Tabs";
 import Typography from "@material-ui/core/Typography";
 import React from "react";
 import {CreateEventForm} from "./CreateEvent";
-import {HostedEvents} from "./HostedEvents";
 import {AllEvents} from "./AllEvents";
 import {InvitationList} from "./Invitations";
 
@@ -94,9 +93,6 @@ export const Dashboard: React.FC = () => {
     </TabPanel>
   <TabPanel value={value} index={1}>
     <CreateEventForm/>
-  </TabPanel>
-  <TabPanel value={value} index={2}>
-    <HostedEvents/>
   </TabPanel>
 </div>
 </
