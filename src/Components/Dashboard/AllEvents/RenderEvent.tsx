@@ -304,7 +304,7 @@ export const RenderEvent: FC<Props> = props => {
           </div>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails className={classes.details}>
-          {editable ? <EditableEvent event={event}/> : displayedEvent()}
+          {editable ? <EditableEvent event={event} discard={setEditable}/> : displayedEvent()}
         </ExpansionPanelDetails>
         {hostMenu()}
         {guestMenu()}
