@@ -5,7 +5,6 @@ import {
   ExpansionPanelActions,
   ExpansionPanelDetails,
   ExpansionPanelSummary,
-  Fab,
   Grid,
   InputAdornment,
   Snackbar,
@@ -23,7 +22,12 @@ import PeopleAltOutlinedIcon from '@material-ui/icons/PeopleAltOutlined';
 import {createStyles, makeStyles, Theme} from "@material-ui/core/styles";
 import Badge from '@material-ui/core/Badge';
 import {useSelector} from "react-redux";
-import EditIcon from '@material-ui/icons/Edit';
+import SpeedDial from '@material-ui/lab/SpeedDial';
+import SpeedDialIcon from '@material-ui/lab/SpeedDialIcon';
+import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
+import CancelOutlinedIcon from '@material-ui/icons/CancelOutlined';
+import SpeedDialAction from '@material-ui/lab/SpeedDialAction';
+import PersonAddOutlinedIcon from '@material-ui/icons/PersonAddOutlined';
 import {RenderEvent as EditableEvent} from "../HostedEvents"
 
 import {InitialState} from "../../../Store/Reducers/rootReducer";
@@ -33,6 +37,17 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       width: "100%"
+    },
+    speedDial: {
+      position: 'absolute',
+      '&.MuiSpeedDial-directionUp, &.MuiSpeedDial-directionLeft': {
+        bottom: theme.spacing(2),
+        right: theme.spacing(2),
+      },
+      '&.MuiSpeedDial-directionDown, &.MuiSpeedDial-directionRight': {
+        top: theme.spacing(2),
+        left: theme.spacing(2),
+      },
     },
     heading: {
       fontWeight: "bold",
@@ -83,6 +98,7 @@ const StyledBadge = withStyles((theme: Theme) =>
   }),
 )(Badge);
 
+
 interface Props {
   event: Event;
 }
@@ -92,10 +108,12 @@ interface StateProps {
 }
 
 export const RenderEvent: FC<Props> = props => {
-  const [open, setOpen] = useState<boolean>(false);
+  const [snackbarOpen, setSnackbarOpen] = useState<boolean>(false);
   const [showFullDescription, setShowFullDescription] = useState<boolean>(false);
   const [severity, setSeverity] = useState<"success" | "info" | "warning" | "error" | undefined>(undefined);
   const [editable, setEditable] = useState<boolean>(false);
+  const [open, setOpen] = useState(false);
+
 
   const stateProps = useSelector<InitialState, StateProps>(
     (state: InitialState) => {
@@ -104,30 +122,81 @@ export const RenderEvent: FC<Props> = props => {
       };
     }
   );
+  const actions = [
+    {icon: <EditOutlinedIcon/>, name: 'Edit event', click: () => setEditable(!editable)},
+    {icon: <PersonAddOutlinedIcon/>, name: 'Add guest(s)', click: () => alert("add person")},
+    {icon: <CancelOutlinedIcon color="secondary"/>, name: 'Cancel event', click: () => alert("cancel event")},
+  ];
+
+  const hostMenu = () => {
+    return !editable && event.host.id === stateProps.person.id ?
+      <SpeedDial
+        ariaLabel="SpeedDial example"
+        className={classes.speedDial}
+        icon={<SpeedDialIcon/>}
+        onClose={handleSpeedDialClose}
+        onOpen={handleSpeedDialOpen}
+        open={open}
+        direction={"left"}
+      >
+        {actions.map(action => (
+          <SpeedDialAction
+            key={action.name}
+            icon={action.icon}
+            tooltipTitle={action.name}
+            onClick={action.click}
+          />
+        ))}
+      </SpeedDial> : ""
+  };
+
+  const guestMenu = () => {
+    return event.host.id !== stateProps.person.id ?
+      <>
+        <Divider/>
+        <ExpansionPanelActions>
+          <Button size="small" color="primary">
+            Yes
+          </Button>
+          <Button size="small" color="default">
+            Maybe
+          </Button>
+          <Button size="small" color="secondary">
+            No
+          </Button>
+        </ExpansionPanelActions>
+      </>
+      :
+      <></>
+  };
 
 
   const classes = useStyles();
 
-
-  const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
+  const handleSnackbarClose = (event?: React.SyntheticEvent, reason?: string) => {
     if (reason === "clickaway") {
       return;
     }
-    setOpen(false);
+    setSnackbarOpen(false);
   };
+
 
   function invitationSummary(attendance: string) {
     return event.invitations.filter(i => {
       if (i.attendance.toString() === attendance)
         return i;
     }).length
-
   }
-
 
   const event: Event = props.event;
 
+  const handleSpeedDialClose = () => {
+    setOpen(false);
+  };
 
+  const handleSpeedDialOpen = () => {
+    setOpen(true);
+  };
   const displayedEvent = () => {
     return <Grid container spacing={3}>
       {/*description start*/}
@@ -142,7 +211,6 @@ export const RenderEvent: FC<Props> = props => {
             label="Description"
             multiline
             rowsMax="10"
-
 
             variant="outlined"
             inputProps={{maxLength: "5000"}}
@@ -218,7 +286,6 @@ export const RenderEvent: FC<Props> = props => {
     </Grid>
   };
 
-
   return (
     <>
       <ExpansionPanel>
@@ -239,30 +306,12 @@ export const RenderEvent: FC<Props> = props => {
         <ExpansionPanelDetails className={classes.details}>
           {editable ? <EditableEvent event={event}/> : displayedEvent()}
         </ExpansionPanelDetails>
-        <Divider/>
-        <ExpansionPanelActions>
-          {event.host.id === stateProps.person.id ? <Fab color="primary" size="small" aria-label="edit">
-              <EditIcon/>
-            </Fab> :
-            <>
-              <Button size="small" color="primary">
-                Yes
-              </Button>
-              <Button size="small" color="default">
-                Maybe
-              </Button>
-              <Button size="small" color="secondary">
-                No
-              </Button>
-              <Button onClick={() => setEditable(!editable)}>
-                TESTING
-              </Button>
-            </>
-          }
-        </ExpansionPanelActions>
+        {hostMenu()}
+        {guestMenu()}
+
       </ExpansionPanel>
-      <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-        <Alert onClose={handleClose} severity={severity}></Alert>
+      <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleSnackbarClose}>
+        <Alert onClose={handleSnackbarClose} severity={severity}></Alert>
       </Snackbar>
     </>
   )

@@ -46,9 +46,11 @@ function a11yProps(index: any) {
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
+    display: "flex",
+    flexDirection: "column",
+    flex: 1,
     padding: 0,
     margin: 0,
-    flexGrow: 1,
     backgroundColor: theme.palette.background.paper,
   }
 }));
@@ -75,7 +77,7 @@ export const Dashboard: React.FC = () => {
           <Tab label="My events" {...a11yProps(2)} />
         </Tabs>
       </AppBar>
-      <div style={{overflowY: "auto", height: "100%"}}>
+      <div style={{overflowY: "auto", flex: 1}}>
         <TabPanel value={value} index={0}>
           <Grid item xs={12}>
             <Grid container>

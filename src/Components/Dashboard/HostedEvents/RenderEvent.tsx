@@ -270,6 +270,17 @@ export const RenderEvent: FC<Props> = props => {
             save and notify guests
           </Button>
         </Grid>
+        <Grid item>
+          <Button
+            color="primary"
+            variant="contained"
+            type="submit"
+            disabled={true}
+            // onClick={handleSubmit}
+          >
+            discard changes
+          </Button>
+        </Grid>
       </Grid>
 
       <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>

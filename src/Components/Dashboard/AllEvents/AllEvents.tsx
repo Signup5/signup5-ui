@@ -6,6 +6,7 @@ import { InitialState } from "../../../Store/Reducers/rootReducer";
 import { Event, Person, QueryResponse } from "../../../Types";
 import { RenderEvent } from "./RenderEvent";
 import LinearProgress from '@material-ui/core/LinearProgress';
+import {Grid} from "@material-ui/core";
 
 interface Props {}
 
@@ -41,9 +42,9 @@ export const AllEvents: FC<Props> = () => {
   };
 
   return (
-    <div style={{flexGrow: 6}}>
+    <Grid item xs={12}>
       <h3>Events</h3>
       {render()}
-    </div>
+    </Grid>
   );
 };
