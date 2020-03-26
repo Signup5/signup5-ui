@@ -13,7 +13,7 @@ import {
 } from "@material-ui/core";
 import Alert from "@material-ui/lab/Alert";
 import React, {ChangeEvent, Dispatch, FC, SetStateAction, useEffect, useState} from "react";
-import {Event, EventInput, InvitationInput, Person} from "../../../Types";
+import {Event, InvitationInput, Person, UpdateEventInput} from "../../../Types";
 import Classes from "../../../App.module.css";
 import EventOutlinedIcon from "@material-ui/icons/EventOutlined";
 import PeopleAltOutlinedIcon from "@material-ui/icons/PeopleAltOutlined";
@@ -23,10 +23,10 @@ import SubjectIcon from "@material-ui/icons/Subject";
 import {KeyboardDatePicker, KeyboardTimePicker, MuiPickersUtilsProvider} from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
 import {useHistory} from "react-router-dom";
-import {useSelector} from "react-redux";
-import {InitialState} from "../../../Store/Reducers/rootReducer";
+import {useDispatch, useSelector} from "react-redux";
+import {InitialState, RootDispatcher} from "../../../Store/Reducers/rootReducer";
 import {useMutation} from "react-apollo";
-import {CREATE_EVENT} from "../../../Store/GQL";
+import {UPDATE_EVENT} from "../../../Store/GQL";
 import {zonedTimeToUtc} from "date-fns-tz";
 import {format} from "date-fns";
 import {emailRegEx} from "../../../Utility";
@@ -36,6 +36,7 @@ import KeyboardReturnIcon from "@material-ui/icons/KeyboardReturn";
 interface Props {
   event: Event;
   discard: Dispatch<SetStateAction<boolean>>;
+
 }
 
 interface StateProps {
@@ -55,7 +56,7 @@ export const RenderEvent: FC<Props> = props => {
   const [time_of_event, setTime_of_event] = useState<Date | null>(time);
   const [location, setLocation] = useState<string>(event.location);
   const [guestEmail, setGuestEmail] = useState<string>("");
-  const [guestList, setGuestList] = useState<Array<string>>([]);
+  const [guestList, setGuestList] = useState<Array<string>>(event.invitations.map(e => { return e.guest.email }));
   const [isGuestSubmitted, setIsGuestSubmitted] = useState<boolean>(false);
   const [displayEmailError, setDisplayEmailError] = useState<boolean>(false);
   const [emailError, setEmailError] = useState<string>("");
@@ -64,6 +65,9 @@ export const RenderEvent: FC<Props> = props => {
   const [open, setOpen] = useState<boolean>(false);
   const [responseMessage, setResponseMessage] = useState<string>("");
   const [severity, setSeverity] = useState<"success" | "info" | "warning" | "error" | undefined>(undefined);
+
+  const dispatch = useDispatch();
+  const rootDispatcher = new RootDispatcher(dispatch);
 
   const history = useHistory();
   const stateProps = useSelector<InitialState, StateProps>(
@@ -74,7 +78,7 @@ export const RenderEvent: FC<Props> = props => {
     }
   );
 
-  const [createEvent] = useMutation(CREATE_EVENT, {
+  const [updateEvent] = useMutation(UPDATE_EVENT, {
     onError(err) {
       const message = err.graphQLErrors[0].message;
       if (message.includes("'date_of_event'"))
@@ -129,7 +133,7 @@ export const RenderEvent: FC<Props> = props => {
     setDuration(Number(e.target.value));
   };
 
-  const handleSubmit = () => {
+  const saveEvent = (isDraft: boolean) => {
     setIsEventSubmitted(true);
     if (title.length > 0 && date_of_event != null && time_of_event != null) {
       const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -152,7 +156,8 @@ export const RenderEvent: FC<Props> = props => {
         invitations.push(invitation);
       });
 
-      const eventInput: EventInput = {
+      const updateEventInput: UpdateEventInput = {
+        id: event.id,
         host: {
           ...stateProps.host
         },
@@ -162,9 +167,11 @@ export const RenderEvent: FC<Props> = props => {
         time_of_event: timeString,
         duration: duration,
         location: location,
-        invitations: invitations
+        invitations: invitations,
+        isDraft: isDraft
       };
-      createEvent({variables: {eventInput}});
+      updateEvent({variables: {updateEventInput}});
+
       setIsEventSubmitted(false);
     }
   };
@@ -444,9 +451,9 @@ export const RenderEvent: FC<Props> = props => {
             }}
           />
         </Grid>
+
       </Grid>
       {/*guest row end*/}
-
       <List
         dense={true}
         style={{
@@ -457,6 +464,7 @@ export const RenderEvent: FC<Props> = props => {
         {renderGuestList()}
       </List>
 
+
       {/*button row start*/}
       <Grid container item spacing={3} justify="flex-end">
         <Grid item>
@@ -464,8 +472,7 @@ export const RenderEvent: FC<Props> = props => {
             color="primary"
             variant="contained"
             type="submit"
-            disabled={true}
-            onClick={handleSubmit}
+            onClick={() => saveEvent(true)}
           >
             save
           </Button>
@@ -475,8 +482,7 @@ export const RenderEvent: FC<Props> = props => {
             color="primary"
             variant="contained"
             type="submit"
-            disabled={true}
-            onClick={handleSubmit}
+            onClick={() => saveEvent(false)}
           >
             save and notify guests
           </Button>

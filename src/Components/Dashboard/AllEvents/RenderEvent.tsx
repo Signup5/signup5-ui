@@ -14,7 +14,7 @@ import {
 } from "@material-ui/core";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import Alert from "@material-ui/lab/Alert";
-import React, {FC, useState} from "react";
+import React, {Dispatch, FC, SetStateAction, useState} from "react";
 import {Event, Person} from "../../../Types";
 import SubjectIcon from '@material-ui/icons/Subject';
 import LocationOnOutlinedIcon from '@material-ui/icons/LocationOnOutlined';
@@ -303,7 +303,7 @@ export const RenderEvent: FC<Props> = props => {
           </div>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails className={classes.details}>
-          {editable ? <EditableEvent event={event} discard={setEditable}/> : displayedEvent()}
+          {editable ? <EditableEvent event={event} discard={setEditable} /> : displayedEvent()}
         </ExpansionPanelDetails>
         {hostMenu()}
         {guestMenu()}

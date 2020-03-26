@@ -5,7 +5,7 @@ import {makeStyles, Theme} from "@material-ui/core/styles";
 import Tab from "@material-ui/core/Tab";
 import Tabs from "@material-ui/core/Tabs";
 import Typography from "@material-ui/core/Typography";
-import React from "react";
+import React, {ChangeEvent, FC, useState} from "react";
 import {CreateEventForm} from "./CreateEvent";
 import {AllEvents} from "./AllEvents";
 import {InvitationList} from "./Invitations";
@@ -54,11 +54,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-export const Dashboard: React.FC = () => {
+export const Dashboard: FC = () => {
   const classes = useStyles();
-  const [value, setValue] = React.useState(0);
+  const [value, setValue] = useState(0);
 
-  const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
+  const handleChange = (event: ChangeEvent<{}>, newValue: number) => {
     setValue(newValue);
   };
 
@@ -73,7 +73,6 @@ export const Dashboard: React.FC = () => {
         >
           <Tab label="Dashboard" {...a11yProps(0)} />
           <Tab label="Create event" {...a11yProps(1)} />
-          <Tab label="My events" {...a11yProps(2)} />
         </Tabs>
       </AppBar>
       <div style={{overflowY: "auto", flex: 1}}>

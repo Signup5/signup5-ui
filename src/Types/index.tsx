@@ -31,6 +31,7 @@ export type Event = {
   duration: number;
   location: string;
   invitations: Array<Invitation>
+  isDraft: boolean
 };
 
 export interface EventInput {
@@ -42,6 +43,20 @@ export interface EventInput {
   duration: number;
   location: string;
   invitations?: Array<InvitationInput>;
+  isDraft: boolean;
+}
+
+export interface UpdateEventInput {
+  id: number;
+  host: HostInput;
+  title: string;
+  description?: string;
+  date_of_event: string;
+  time_of_event: string;
+  duration: number;
+  location: string;
+  invitations?: Array<InvitationInput>;
+  isDraft: boolean;
 }
 
 export interface InvitationInput {
@@ -70,24 +85,6 @@ export type QueryResponse = {
   error?: any;
   data?: any;
 };
-
-export class LocalDateTime {
-  private year: string;
-  private month: string;
-  private day: string;
-  private time: string;
-
-  constructor(year: string, month: string, day: string, time: string) {
-    this.year = year;
-    this.month = month;
-    this.day = day;
-    this.time = time;
-}
-
-  get dateAndTime(): string {
-    return `${this.year}-${this.month}-${this.day}T${this.time}`
-  }
-}
 
 export class Credentials {
   private email: string;

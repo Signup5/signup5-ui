@@ -162,7 +162,8 @@ export const CreateEventForm: FC<Props> = () => {
         time_of_event: timeString,
         duration: duration,
         location: location,
-        invitations: invitations
+        invitations: invitations,
+        isDraft: false
       };
       createEvent({variables: {eventInput}});
       setIsEventSubmitted(false);
