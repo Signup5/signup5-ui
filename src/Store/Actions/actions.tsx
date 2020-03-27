@@ -12,3 +12,7 @@ export const updateEvent = (event: Event) => {
 export const updateEvents = (events: Array<Event>) => {
   return {type: actionTypes.UPDATE_EVENTS, payload: events};
 };
+
+export const cancelEvent = (event: Event) => {
+  return {type: actionTypes.CANCEL_EVENT, payload: event};
+};

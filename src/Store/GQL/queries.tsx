@@ -35,6 +35,7 @@ export const GET_EVENT_BY_ID = gql`
       time_of_event
       duration
       location
+      isDraft
     }
   }
 `;
@@ -55,6 +56,7 @@ export const GET_HOSTED_AND_INVITED_EVENTS_BY_PERSON_ID = gql`
       time_of_event
       duration
       location
+      isDraft
       invitations {
         id
         guest {
@@ -85,6 +87,7 @@ export const GET_EVENTS_BY_HOST_ID = gql`
       time_of_event
       duration
       location
+      isDraft
       invitations {
         id
         guest {

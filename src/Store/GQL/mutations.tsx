@@ -21,7 +21,36 @@ export const CREATE_EVENT = gql`
 
 export const UPDATE_EVENT = gql`
   mutation($updateEventInput: UpdateEventInput!) {
-    response: updateEvent(input: $updateEventInput) {
+    event: updateEvent(input: $updateEventInput) {
+      id
+      host {
+        id
+        email
+        first_name
+        last_name
+      }
+      title
+      description
+      date_of_event
+      time_of_event
+      duration
+      location
+      isDraft
+      invitations {
+        guest {
+          email
+          first_name
+          last_name
+        }
+        attendance
+      }
+    }
+  }
+`;
+
+export const CANCEL_EVENT = gql`
+  mutation($event_id: Int!) {
+    response: cancelEvent(event_id: $event_id) {
       message
     }
   }

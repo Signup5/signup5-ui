@@ -9,5 +9,6 @@ export {
 export {
   CREATE_EVENT,
   SET_ATTENDANCE,
-  UPDATE_EVENT
+  UPDATE_EVENT,
+  CANCEL_EVENT
 } from "./mutations"

@@ -21,17 +21,19 @@ import LocationOnOutlinedIcon from '@material-ui/icons/LocationOnOutlined';
 import PeopleAltOutlinedIcon from '@material-ui/icons/PeopleAltOutlined';
 import {createStyles, makeStyles, Theme} from "@material-ui/core/styles";
 import Badge from '@material-ui/core/Badge';
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import SpeedDial from '@material-ui/lab/SpeedDial';
 import SpeedDialIcon from '@material-ui/lab/SpeedDialIcon';
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import CancelOutlinedIcon from '@material-ui/icons/CancelOutlined';
 import SpeedDialAction from '@material-ui/lab/SpeedDialAction';
 import PersonAddOutlinedIcon from '@material-ui/icons/PersonAddOutlined';
-import {RenderEvent as EditableEvent} from "../HostedEvents"
+import {EditableEvent} from "./EditableEvent"
 
-import {InitialState} from "../../../Store/Reducers/rootReducer";
+import {InitialState, RootDispatcher, rootReducer} from "../../../Store/Reducers/rootReducer";
 import Classes from "../../../App.module.css";
+import {useMutation} from "react-apollo";
+import {CANCEL_EVENT, UPDATE_EVENT} from "../../../Store/GQL";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -87,6 +89,7 @@ const useStyles = makeStyles((theme: Theme) =>
     }
   })
 );
+
 const StyledBadge = withStyles((theme: Theme) =>
   createStyles({
     badge: {
@@ -97,7 +100,6 @@ const StyledBadge = withStyles((theme: Theme) =>
     },
   }),
 )(Badge);
-
 
 interface Props {
   event: Event;
@@ -113,7 +115,7 @@ export const RenderEvent: FC<Props> = props => {
   const [severity, setSeverity] = useState<"success" | "info" | "warning" | "error" | undefined>(undefined);
   const [editable, setEditable] = useState<boolean>(false);
   const [open, setOpen] = useState(false);
-
+  const [responseMessage, setResponseMessage] = useState<string>("");
 
   const stateProps = useSelector<InitialState, StateProps>(
     (state: InitialState) => {
@@ -122,10 +124,36 @@ export const RenderEvent: FC<Props> = props => {
       };
     }
   );
+
+  const [cancelEvent] = useMutation(CANCEL_EVENT, {
+    variables: {
+      event_id: props.event.id
+    },
+    onError(err) {
+      setResponseMessage("Something went wrong!");
+      setSeverity("error");
+      setOpen(true);
+    },
+    onCompleted({response}) {
+      console.log(response)
+      setResponseMessage(response.message);
+      setSeverity("success");
+      setOpen(true);
+      rootDispatcher.cancelEvent(props.event);
+    }
+  });
+
+  const dispatch = useDispatch();
+  const rootDispatcher = new RootDispatcher(dispatch);
+
   const actions = [
-    {icon: <EditOutlinedIcon/>, disabled: false, name: 'Edit event', click: () => setEditable(!editable)},
-    {icon: <PersonAddOutlinedIcon />, disabled: true, name: 'Add guest(s)', click: () => alert("Under construction")},
-    {icon: <CancelOutlinedIcon color="secondary"/>, disabled: true, name: 'Cancel event', click: () => alert("Under construction")},
+    {icon: <EditOutlinedIcon/>, name: 'Edit event', click: () => setEditable(!editable)},
+    {icon: <PersonAddOutlinedIcon/>, name: 'Add guest(s)', click: () => alert("Under construction")},
+    {
+      icon: <CancelOutlinedIcon color="secondary"/>,
+      name: 'Cancel event',
+      click: () => cancelEvent()
+    }
   ];
 
   const hostMenu = () => {
@@ -220,7 +248,7 @@ export const RenderEvent: FC<Props> = props => {
           /> : <Typography className={classes.contentText}>
             {showFullDescription ? event.description : event.description.substr(0, 400) + (event.description.length > 400 ? "..." : "")}
           </Typography>}
-          { event.description.length < 400 ? "" :
+          {event.description.length < 400 ? "" :
             <Button size="small"
                     onClick={() => setShowFullDescription(!showFullDescription)}> {showFullDescription ? "Show less" : "Show more"}
             </Button>}

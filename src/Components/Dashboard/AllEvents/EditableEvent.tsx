@@ -42,7 +42,7 @@ interface StateProps {
   host: Person
 }
 
-export const RenderEvent: FC<Props> = props => {
+export const EditableEvent: FC<Props> = props => {
   const event: Event = props.event;
   const time = new Date();
   time.setHours(Number(event.time_of_event.substr(0, 2)),
@@ -80,21 +80,17 @@ export const RenderEvent: FC<Props> = props => {
 
   const [updateEvent] = useMutation(UPDATE_EVENT, {
     onError(err) {
-      const message = err.graphQLErrors[0].message;
-      if (message.includes("'date_of_event'"))
-        setResponseMessage("You have entered an invalid date!");
-      else if (message.includes("'time_of_event'"))
-        setResponseMessage("You have entered an invalid time!");
-      else setResponseMessage(message);
+      setResponseMessage("Something went wrong!");
       setSeverity("error");
       setOpen(true);
     },
-    onCompleted({response}) {
-      setResponseMessage(response.message);
+    onCompleted({event}) {
+      setResponseMessage("Event was successfully updated!");
       setSeverity("success");
       setOpen(true);
       props.setEditable(false);
       rootDispatcher.updateEvent(event);
+      console.log(event)
     }
   });
 
@@ -173,7 +169,6 @@ export const RenderEvent: FC<Props> = props => {
         isDraft: isDraft
       };
 
-      // setSubmittedEvent(updateEventInput);
       updateEvent({variables: {updateEventInput}});
       setIsEventSubmitted(false);
     }
@@ -467,7 +462,6 @@ export const RenderEvent: FC<Props> = props => {
         {renderGuestList()}
       </List>
 
-
       {/*button row start*/}
       <Grid container item spacing={3} justify="flex-end">
         <Grid item>
@@ -508,7 +502,5 @@ export const RenderEvent: FC<Props> = props => {
         </Alert>
       </Snackbar>
     </Grid>
-
-
   );
 };
