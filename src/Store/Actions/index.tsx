@@ -1,1 +1,1 @@
-export {updatePerson, updateEvents} from "./actions";
+export {updatePerson, updateEvent, updateEvents} from "./actions";

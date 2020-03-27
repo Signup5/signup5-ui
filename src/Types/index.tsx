@@ -34,18 +34,6 @@ export type Event = {
   isDraft: boolean
 };
 
-export interface EventInput {
-  host: HostInput;
-  title: string;
-  description?: string;
-  date_of_event: string;
-  time_of_event: string;
-  duration: number;
-  location: string;
-  invitations?: Array<InvitationInput>;
-  isDraft: boolean;
-}
-
 export interface UpdateEventInput {
   id: number;
   host: HostInput;
@@ -58,6 +46,20 @@ export interface UpdateEventInput {
   invitations?: Array<InvitationInput>;
   isDraft: boolean;
 }
+
+export interface EventInput {
+  host: HostInput;
+  title: string;
+  description?: string;
+  date_of_event: string;
+  time_of_event: string;
+  duration: number;
+  location: string;
+  invitations?: Array<InvitationInput>;
+  isDraft: boolean;
+}
+
+
 
 export interface InvitationInput {
   id?: number;

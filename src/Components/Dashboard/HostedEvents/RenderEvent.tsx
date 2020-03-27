@@ -35,8 +35,7 @@ import KeyboardReturnIcon from "@material-ui/icons/KeyboardReturn";
 
 interface Props {
   event: Event;
-  discard: Dispatch<SetStateAction<boolean>>;
-
+  setEditable: Dispatch<SetStateAction<boolean>>;
 }
 
 interface StateProps {
@@ -65,6 +64,7 @@ export const RenderEvent: FC<Props> = props => {
   const [open, setOpen] = useState<boolean>(false);
   const [responseMessage, setResponseMessage] = useState<string>("");
   const [severity, setSeverity] = useState<"success" | "info" | "warning" | "error" | undefined>(undefined);
+  const [submittedEvent, setSubmittedEvent] = useState<Event>(event);
 
   const dispatch = useDispatch();
   const rootDispatcher = new RootDispatcher(dispatch);
@@ -93,6 +93,8 @@ export const RenderEvent: FC<Props> = props => {
       setResponseMessage(response.message);
       setSeverity("success");
       setOpen(true);
+      props.setEditable(false);
+      rootDispatcher.updateEvent(event);
     }
   });
 
@@ -170,8 +172,9 @@ export const RenderEvent: FC<Props> = props => {
         invitations: invitations,
         isDraft: isDraft
       };
-      updateEvent({variables: {updateEventInput}});
 
+      // setSubmittedEvent(updateEventInput);
+      updateEvent({variables: {updateEventInput}});
       setIsEventSubmitted(false);
     }
   };
@@ -492,7 +495,7 @@ export const RenderEvent: FC<Props> = props => {
             color="primary"
             variant="contained"
             type="submit"
-            onClick={() => props.discard(false)}
+            onClick={() => props.setEditable(false)}
           >
             discard changes
           </Button>

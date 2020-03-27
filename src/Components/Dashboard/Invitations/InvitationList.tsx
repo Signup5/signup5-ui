@@ -44,8 +44,6 @@ export const InvitationList: FC<Props> = () => {
     return <p>No invitations found.</p>;
   }
 
-  // setInvitations(response.data.invitations);
-// const invitations: Array<RenderInvitation> = response.data.invitations;
   const render = () => {
     return invitations.map((invitation:Invitation, index:number) => {
       return <RenderInvitation key={index} invitation={invitation} removeInvitation={removeInvitation}/>;

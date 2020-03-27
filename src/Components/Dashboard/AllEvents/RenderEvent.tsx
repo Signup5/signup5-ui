@@ -123,9 +123,9 @@ export const RenderEvent: FC<Props> = props => {
     }
   );
   const actions = [
-    {icon: <EditOutlinedIcon/>, name: 'Edit event', click: () => setEditable(!editable)},
-    {icon: <PersonAddOutlinedIcon/>, name: 'Add guest(s)', click: () => alert("add person")},
-    {icon: <CancelOutlinedIcon color="secondary"/>, name: 'Cancel event', click: () => alert("cancel event")},
+    {icon: <EditOutlinedIcon/>, disabled: false, name: 'Edit event', click: () => setEditable(!editable)},
+    {icon: <PersonAddOutlinedIcon />, disabled: true, name: 'Add guest(s)', click: () => alert("Under construction")},
+    {icon: <CancelOutlinedIcon color="secondary"/>, disabled: true, name: 'Cancel event', click: () => alert("Under construction")},
   ];
 
   const hostMenu = () => {
@@ -155,13 +155,13 @@ export const RenderEvent: FC<Props> = props => {
       <>
         <Divider/>
         <ExpansionPanelActions>
-          <Button size="small" color="primary">
+          <Button disabled size="small" color="primary">
             Yes
           </Button>
-          <Button size="small" color="default">
+          <Button disabled size="small" color="default">
             Maybe
           </Button>
-          <Button size="small" color="secondary">
+          <Button disabled size="small" color="secondary">
             No
           </Button>
         </ExpansionPanelActions>
@@ -169,7 +169,6 @@ export const RenderEvent: FC<Props> = props => {
       :
       <></>
   };
-
 
   const classes = useStyles();
 
@@ -179,7 +178,6 @@ export const RenderEvent: FC<Props> = props => {
     }
     setSnackbarOpen(false);
   };
-
 
   function invitationSummary(attendance: string) {
     return event.invitations.filter(i => {
@@ -210,10 +208,8 @@ export const RenderEvent: FC<Props> = props => {
             label="Description"
             multiline
             rowsMax="10"
-
             variant="outlined"
             inputProps={{maxLength: "5000"}}
-            style={{flexGrow: 20}}
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
@@ -222,12 +218,13 @@ export const RenderEvent: FC<Props> = props => {
               )
             }}
           /> : <Typography className={classes.contentText}>
-            {showFullDescription ? event.description : event.description.substr(0, 10) + "..."}
+            {showFullDescription ? event.description : event.description.substr(0, 400) + (event.description.length > 400 ? "..." : "")}
           </Typography>}
+          { event.description.length < 400 ? "" :
+            <Button size="small"
+                    onClick={() => setShowFullDescription(!showFullDescription)}> {showFullDescription ? "Show less" : "Show more"}
+            </Button>}
 
-          <Button size="small"
-                  onClick={() => setShowFullDescription(!showFullDescription)}> {showFullDescription ? "Show less" : "Show more"}
-          </Button>
         </Grid>
       </Grid>
       {/*description end*/}
@@ -303,7 +300,7 @@ export const RenderEvent: FC<Props> = props => {
           </div>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails className={classes.details}>
-          {editable ? <EditableEvent event={event} discard={setEditable} /> : displayedEvent()}
+          {editable ? <EditableEvent event={event} setEditable={setEditable}/> : displayedEvent()}
         </ExpansionPanelDetails>
         {hostMenu()}
         {guestMenu()}

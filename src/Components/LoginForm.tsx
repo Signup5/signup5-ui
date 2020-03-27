@@ -40,7 +40,10 @@ const LoginForm: FC<Props> = () => {
     userCredentials.setEmail(email);
     userCredentials.setPassword(password);
     setUpdateState(!updateState);
-    getPerson();
+    if (userCredentials.isEmailValidFormat() && userCredentials.isPasswordValidFormat()) {
+      getPerson();
+    }
+
   };
 
   const changeDisplayEmailError = () => {
@@ -77,7 +80,6 @@ const LoginForm: FC<Props> = () => {
       email: userCredentials.getEmail()
     },
     onCompleted() {
-      console.log("test");
       rootDispatcher.updatePerson(data.person);
       history.push("/dashboard");
     }

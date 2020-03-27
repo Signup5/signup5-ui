@@ -5,11 +5,13 @@ import * as ActionType from "../Actions/actionTypes";
 export interface InitialState {
   person: Person;
   events: Array<Event>;
+  event: Event;
 }
 
 export const initialState: InitialState = {
   person: {} as Person,
-  events: []
+  events: [],
+  event: {} as Event
 };
 
 export interface DispatchAction extends Action {
@@ -24,6 +26,15 @@ export const rootReducer: Reducer<InitialState, DispatchAction> = (
     case ActionType.UPDATE_PERSON:
       return {...state, person: action.payload.person || {} as Person};
 
+    case ActionType.UPDATE_EVENT:
+      return {
+        ...state,
+        events: state.events.map(e => {
+          if (e.id === action.payload.event?.id)
+            return action.payload.event
+          return e
+        })
+      }
     case ActionType.UPDATE_EVENTS:
       return {...state, events: action.payload.events || []};
 
@@ -44,4 +55,8 @@ export class RootDispatcher {
 
   updateEvents = (events: Array<Event>) =>
     this.dispatch({type: ActionType.UPDATE_EVENTS, payload: {events}});
+
+  updateEvent = (event: Event) => {
+    this.dispatch({type: ActionType.UPDATE_EVENT, payload: {event}})
+  }
 }
