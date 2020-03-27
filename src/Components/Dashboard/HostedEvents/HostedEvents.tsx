@@ -1,10 +1,9 @@
-import { useQuery } from "@apollo/react-hooks";
-import React, { FC } from "react";
-import { useSelector } from "react-redux";
-import { GET_EVENTS_BY_HOST_ID } from "../../Store/GQL";
-import { InitialState } from "../../Store/Reducers/rootReducer";
-import { Event, Person, QueryResponse } from "../../Types";
-import { RenderEvent } from "./RenderEvent";
+import {useQuery} from "@apollo/react-hooks";
+import React, {FC} from "react";
+import {useSelector} from "react-redux";
+import {GET_EVENTS_BY_HOST_ID} from "../../../Store/GQL";
+import {InitialState} from "../../../Store/Reducers/rootReducer";
+import {Event, Person, QueryResponse} from "../../../Types";
 
 interface Props {}
 
@@ -12,7 +11,7 @@ interface StateProps {
   person: Person;
 }
 
-export const RenderMyEvents: FC<Props> = () => {
+export const HostedEvents: FC<Props> = () => {
   const stateProps = useSelector<InitialState, StateProps>(
     (state: InitialState) => {
       return {
@@ -20,6 +19,7 @@ export const RenderMyEvents: FC<Props> = () => {
       };
     }
   );
+
   const response: QueryResponse = useQuery(GET_EVENTS_BY_HOST_ID, {
     variables: {
       id: stateProps.person.id
@@ -28,7 +28,7 @@ export const RenderMyEvents: FC<Props> = () => {
 
   if (response.loading) return <p>Loading...</p>;
   if (response.error) {
-    return <p>ERROR</p>;
+    return <p>No events found!</p>;
   }
 
   const events: Array<Event> = response.data.events;
@@ -37,7 +37,7 @@ export const RenderMyEvents: FC<Props> = () => {
 
   const render = () => {
     return events.map((event, index) => {
-      return <RenderEvent key={index} event={event} />;
+      return ""
     });
   };
 

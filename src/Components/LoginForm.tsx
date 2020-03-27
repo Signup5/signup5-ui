@@ -5,7 +5,12 @@ import React, {ChangeEvent, FC, FormEvent, useEffect, useState} from "react";
 import Classes from "../App.module.css";
 import {Credentials} from "../Types/index";
 import {emailRegEx} from "../Utility";
-import ValidatePersonCredentials from "./ValidatePersonCredentials";
+import {useDispatch} from "react-redux";
+import {RootDispatcher} from "../Store/Reducers/rootReducer";
+import {useHistory} from "react-router-dom";
+import {useLazyQuery} from "@apollo/react-hooks";
+import {GET_PERSON_BY_EMAIL} from "../Store/GQL";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 interface Props {
 }
@@ -35,6 +40,7 @@ const LoginForm: FC<Props> = () => {
     userCredentials.setEmail(email);
     userCredentials.setPassword(password);
     setUpdateState(!updateState);
+    getPerson();
   };
 
   const changeDisplayEmailError = () => {
@@ -46,6 +52,7 @@ const LoginForm: FC<Props> = () => {
       }
     }
   };
+
   const changeDisplayPasswordError = () => {
     if (isFormSubmitted) {
       if (password.length <= 3) {
@@ -59,6 +66,21 @@ const LoginForm: FC<Props> = () => {
   useEffect(() => {
     changeDisplayEmailError();
     changeDisplayPasswordError();
+  });
+
+  const dispatch = useDispatch();
+  const rootDispatcher = new RootDispatcher(dispatch);
+  const history = useHistory();
+
+  const [getPerson, {loading, error, data}] = useLazyQuery(GET_PERSON_BY_EMAIL, {
+    variables: {
+      email: userCredentials.getEmail()
+    },
+    onCompleted() {
+      console.log("test");
+      rootDispatcher.updatePerson(data.person);
+      history.push("/dashboard");
+    }
   });
 
   return (
@@ -118,15 +140,8 @@ const LoginForm: FC<Props> = () => {
           Sign in
         </Button>
       </form>
-      {userCredentials.isEmailValidFormat() &&
-      userCredentials.isPasswordValidFormat() ? (
-        <ValidatePersonCredentials
-          email={userCredentials.getEmail()}
-          password={userCredentials.getPassword()}
-        />
-      ) : (
-        ""
-      )}
+      {error ? <p>Email and/or password did not match!</p> : ""}
+      {loading ? <CircularProgress/> : ""}
     </Card>
   );
 };

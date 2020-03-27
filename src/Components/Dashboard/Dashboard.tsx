@@ -1,13 +1,14 @@
-import { Card } from "@material-ui/core";
+import {Card, Grid} from "@material-ui/core";
 import AppBar from "@material-ui/core/AppBar";
 import Box from "@material-ui/core/Box";
-import { makeStyles, Theme } from "@material-ui/core/styles";
+import {makeStyles, Theme} from "@material-ui/core/styles";
 import Tab from "@material-ui/core/Tab";
 import Tabs from "@material-ui/core/Tabs";
 import Typography from "@material-ui/core/Typography";
-import React from "react";
-import { CreateEventForm } from "./CreateEvent";
-import { RenderMyEvents } from "./RenderMyEvents";
+import React, {ChangeEvent, FC, useState} from "react";
+import {CreateEventForm} from "./CreateEvent";
+import {AllEvents} from "./AllEvents";
+import {InvitationList} from "./Invitations";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -15,8 +16,11 @@ interface TabPanelProps {
   value: any;
 }
 
+
+
 function TabPanel(props: TabPanelProps) {
-  const { children, value, index, ...other } = props;
+  const {children, value, index, ...other} = props;
+
 
   return (
     <Typography
@@ -41,18 +45,20 @@ function a11yProps(index: any) {
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
+    display: "flex",
+    flexDirection: "column",
+    flex: 1,
     padding: 0,
     margin: 0,
-    flexGrow: 1,
-    backgroundColor: theme.palette.background.paper
+    backgroundColor: theme.palette.background.paper,
   }
 }));
 
-export const Dashboard: React.FC = () => {
+export const Dashboard: FC = () => {
   const classes = useStyles();
-  const [value, setValue] = React.useState(0);
+  const [value, setValue] = useState(0);
 
-  const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
+  const handleChange = (event: ChangeEvent<{}>, newValue: number) => {
     setValue(newValue);
   };
 
@@ -67,20 +73,29 @@ export const Dashboard: React.FC = () => {
         >
           <Tab label="Dashboard" {...a11yProps(0)} />
           <Tab label="Create event" {...a11yProps(1)} />
-          <Tab label="My events" {...a11yProps(2)} />
         </Tabs>
       </AppBar>
-      <div style={{ overflowY: "auto", height: "100%" }}>
+      <div style={{overflowY: "auto", flex: 1}}>
         <TabPanel value={value} index={0}>
-          Item One
-        </TabPanel>
-        <TabPanel value={value} index={1}>
-          <CreateEventForm />
-        </TabPanel>
-        <TabPanel value={value} index={2}>
-          <RenderMyEvents />
-        </TabPanel>
-      </div>
-    </Card>
-  );
+          <Grid item xs={12}>
+            <Grid container>
+              <Grid item xs={8}>
+                <AllEvents />
+              </Grid>
+              <Grid item xs={4}>
+                <div style={{marginLeft: "23px"}}>
+                  <InvitationList/>
+                </div>
+              </Grid>
+            </Grid>
+          </Grid>
+    </TabPanel>
+  <TabPanel value={value} index={1}>
+    <CreateEventForm/>
+  </TabPanel>
+</div>
+</
+  Card >
+)
+  ;
 };

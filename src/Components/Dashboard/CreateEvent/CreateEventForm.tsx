@@ -1,24 +1,39 @@
-import { format } from 'date-fns'
 import DateFnsUtils from "@date-io/date-fns";
-import { Button, Card, CardActions, CardContent, IconButton, InputAdornment, List, Snackbar, TextField } from "@material-ui/core";
+import {
+  Button,
+  Card,
+  CardActions,
+  CardContent,
+  FormControl,
+  IconButton,
+  InputAdornment,
+  InputLabel,
+  List,
+  MenuItem,
+  Select,
+  Snackbar,
+  TextField
+} from "@material-ui/core";
 import EventOutlinedIcon from "@material-ui/icons/EventOutlined";
 import KeyboardReturnIcon from "@material-ui/icons/KeyboardReturn";
 import PeopleAltOutlinedIcon from "@material-ui/icons/PeopleAltOutlined";
 import RoomOutlinedIcon from "@material-ui/icons/RoomOutlined";
 import ScheduleIcon from "@material-ui/icons/Schedule";
 import SubjectIcon from "@material-ui/icons/Subject";
-import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
-import { KeyboardDatePicker, KeyboardTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
-import React, { ChangeEvent, FC, useEffect, useState } from "react";
-import { useMutation } from "react-apollo";
-import { useSelector } from "react-redux";
-import { useHistory } from "react-router-dom";
+import MuiAlert, {AlertProps} from "@material-ui/lab/Alert";
+import {KeyboardDatePicker, KeyboardTimePicker, MuiPickersUtilsProvider} from "@material-ui/pickers";
+import React, {ChangeEvent, FC, useEffect, useState} from "react";
+import {useMutation} from "react-apollo";
+import {useSelector} from "react-redux";
+import {useHistory} from "react-router-dom";
 import Classes from "../../../App.module.css";
-import { CREATE_EVENT } from "../../../Store/GQL";
-import { InitialState } from "../../../Store/Reducers/rootReducer";
-import { EventInput, InvitationInput, Person } from "../../../Types";
-import { dateToLocalDateString, emailRegEx } from "../../../Utility";
-import { RenderGuest } from "./RenderGuest";
+import {CREATE_EVENT} from "../../../Store/GQL";
+import {InitialState} from "../../../Store/Reducers/rootReducer";
+import {EventInput, InvitationInput, Person} from "../../../Types";
+import {emailRegEx} from "../../../Utility";
+import {RenderGuest} from "./RenderGuest";
+import {zonedTimeToUtc} from "date-fns-tz"
+import {format} from "date-fns";
 
 function Alert(props: AlertProps) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -43,6 +58,7 @@ export const CreateEventForm: FC<Props> = () => {
   const [displayEmailError, setDisplayEmailError] = useState<boolean>(false);
   const [emailError, setEmailError] = useState<string>("");
   const [isEventSubmitted, setIsEventSubmitted] = useState<boolean>(false);
+  const [duration, setDuration] = useState<number>(0);
 
   const [open, setOpen] = useState<boolean>(false);
   const [responseMessage, setResponseMessage] = useState<string>("");
@@ -52,7 +68,7 @@ export const CreateEventForm: FC<Props> = () => {
   const stateProps = useSelector<InitialState, StateProps>(
     (state: InitialState) => {
       return {
-        host: {id: state.person.id}
+        host: {...state.person}
       };
     }
   );
@@ -91,6 +107,8 @@ export const CreateEventForm: FC<Props> = () => {
   };
 
   const onTimeChange = (time: Date | null) => {
+    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    console.log(zonedTimeToUtc(time? time: new Date(), timezone));
     setTime_of_event(time);
   };
 
@@ -106,15 +124,21 @@ export const CreateEventForm: FC<Props> = () => {
     setGuestEmail(e.target.value);
   };
 
+  const onDurationChange = (e: ChangeEvent<{ value: unknown }>) => {
+    setDuration(Number(e.target.value));
+  };
+
   const handleSubmit = () => {
 
     setIsEventSubmitted(true);
     if (title.length > 0 && date_of_event != null && time_of_event != null) {
+      const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
       const dateString = date_of_event
-      ? format(date_of_event, "yyyy-MM-dd")
+      ? format(zonedTimeToUtc(date_of_event, timezone), "yyyy-MM-dd")
         : "";
       const timeString = time_of_event
-        ? format(time_of_event, "HH:mm")
+        ? format(zonedTimeToUtc(time_of_event, timezone), "HH:mm")
         : "";
 
       const invitations: Array<InvitationInput> = [];
@@ -129,13 +153,17 @@ export const CreateEventForm: FC<Props> = () => {
       });
 
       const eventInput: EventInput = {
-        host: {id: stateProps.host.id},
+        host: {
+          ...stateProps.host
+        },
         title: title,
         description: description,
         date_of_event: dateString,
         time_of_event: timeString,
+        duration: duration,
         location: location,
-        invitations: invitations
+        invitations: invitations,
+        isDraft: false
       };
       createEvent({variables: {eventInput}});
       setIsEventSubmitted(false);
@@ -290,7 +318,7 @@ export const CreateEventForm: FC<Props> = () => {
                 format="yyyy-MM-dd"
                 value={date_of_event}
                 onChange={onDateChange}
-                style={{flexGrow: 9.5}}
+                style={{flexGrow: 8.5}}
                 maxDate={maxDate}
                 error={isEventSubmitted && !date_of_event}
                 helperText={
@@ -300,7 +328,9 @@ export const CreateEventForm: FC<Props> = () => {
                 minDate={today}
                 minDateMessage="Date is in the past."
               />
+              {/*spacer*/}
               <div style={{flexGrow: 1}}></div>
+
               <KeyboardTimePicker
                 required
                 autoOk
@@ -321,10 +351,32 @@ export const CreateEventForm: FC<Props> = () => {
                 KeyboardButtonProps={{
                   "aria-label": "change time"
                 }}
-                style={{flexGrow: 9.5}}
+                style={{flexGrow: 8.5}}
               />
-            </MuiPickersUtilsProvider>
+              {/*spacer*/}
+              <div style={{flexGrow: 1}}></div>
+              <FormControl variant="outlined" style={{flexGrow: 1, marginTop: "16px"}}>
+                <InputLabel id="demo-simple-select-outlined-label">Duration</InputLabel>
+                <Select
+                  labelId="demo-simple-select-outlined-label"
+                  id="demo-simple-select-outlined"
+                  value={duration}
+                  onChange={onDurationChange}
+                  label="Duration"
+                >
+
+                  <MenuItem value={15}>15m</MenuItem>
+                  <MenuItem value={30}>30m</MenuItem>
+                  <MenuItem value={45}>45m</MenuItem>
+                  <MenuItem value={60}>1h</MenuItem>
+                  <MenuItem value={90}>1h30m</MenuItem>
+                  <MenuItem value={120}>2h</MenuItem>
+                </Select>
+              </FormControl>
+            </MuiPickersUtilsProvider >
+
           </div>
+
 
           <div style={{display: "flex"}}>
             <PeopleAltOutlinedIcon

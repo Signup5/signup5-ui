@@ -2,9 +2,9 @@ import {emailRegEx} from "../Utility";
 
 export type Person = {
   id: number;
-  first_name?: string;
-  last_name?: string;
-  email?: string;
+  first_name: string;
+  last_name: string;
+  email: string;
 };
 
 export enum Attendance {
@@ -23,11 +23,15 @@ export type Invitation = {
 
 export type Event = {
   id: number;
+  host: Person
   title: string;
   description: string;
   date_of_event: string;
   time_of_event: string;
+  duration: number;
   location: string;
+  invitations: Array<Invitation>
+  isDraft: boolean
 };
 
 export interface EventInput {
@@ -36,8 +40,23 @@ export interface EventInput {
   description?: string;
   date_of_event: string;
   time_of_event: string;
+  duration: number;
   location: string;
   invitations?: Array<InvitationInput>;
+  isDraft: boolean;
+}
+
+export interface UpdateEventInput {
+  id: number;
+  host: HostInput;
+  title: string;
+  description?: string;
+  date_of_event: string;
+  time_of_event: string;
+  duration: number;
+  location: string;
+  invitations?: Array<InvitationInput>;
+  isDraft: boolean;
 }
 
 export interface InvitationInput {
@@ -56,9 +75,9 @@ export interface GuestInput {
 
 export interface HostInput {
   id: number;
-  email?: string;
-  first_name?: string;
-  last_name?: string;
+  email: string;
+  first_name: string;
+  last_name: string;
 }
 
 export type QueryResponse = {
@@ -66,7 +85,6 @@ export type QueryResponse = {
   error?: any;
   data?: any;
 };
-
 
 export class Credentials {
   private email: string;

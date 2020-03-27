@@ -1,13 +1,15 @@
 import {Action, Dispatch, Reducer} from "redux";
-import {Person} from "../../Types";
+import {Person, Event} from "../../Types";
 import * as ActionType from "../Actions/actionTypes";
 
 export interface InitialState {
   person: Person;
+  events: Array<Event>;
 }
 
 export const initialState: InitialState = {
-  person: {} as Person
+  person: {} as Person,
+  events: []
 };
 
 export interface DispatchAction extends Action {
@@ -20,7 +22,10 @@ export const rootReducer: Reducer<InitialState, DispatchAction> = (
 ) => {
   switch (action.type) {
     case ActionType.UPDATE_PERSON:
-      return {...state, person: action.payload.person || ({} as Person)};
+      return {...state, person: action.payload.person || {} as Person};
+
+    case ActionType.UPDATE_EVENTS:
+      return {...state, events: action.payload.events || []};
 
     default:
       return state;
@@ -36,4 +41,7 @@ export class RootDispatcher {
 
   updatePerson = (person: Person) =>
     this.dispatch({type: ActionType.UPDATE_PERSON, payload: {person}});
+
+  updateEvents = (events: Array<Event>) =>
+    this.dispatch({type: ActionType.UPDATE_EVENTS, payload: {events}});
 }
