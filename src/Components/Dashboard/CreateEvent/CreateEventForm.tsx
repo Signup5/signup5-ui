@@ -107,7 +107,6 @@ export const CreateEventForm: FC<Props> = () => {
   };
 
   const onTimeChange = (time: Date | null) => {
-    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     setTime_of_event(time);
   };
 
