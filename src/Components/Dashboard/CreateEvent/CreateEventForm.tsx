@@ -58,7 +58,7 @@ export const CreateEventForm: FC<Props> = () => {
   const [displayEmailError, setDisplayEmailError] = useState<boolean>(false);
   const [emailError, setEmailError] = useState<string>("");
   const [isEventSubmitted, setIsEventSubmitted] = useState<boolean>(false);
-  const [duration, setDuration] = useState<number>(0);
+  const [duration, setDuration] = useState<number>(60);
 
   const [open, setOpen] = useState<boolean>(false);
   const [responseMessage, setResponseMessage] = useState<string>("");
@@ -99,7 +99,7 @@ export const CreateEventForm: FC<Props> = () => {
   };
 
   const onTitleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setTitle(e.target.value);
+    setTitle(e.target.value.trim());
   };
 
   const onDateChange = (date: Date | null) => {
@@ -108,20 +108,19 @@ export const CreateEventForm: FC<Props> = () => {
 
   const onTimeChange = (time: Date | null) => {
     const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    console.log(zonedTimeToUtc(time? time: new Date(), timezone));
     setTime_of_event(time);
   };
 
   const onDescriptionChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setDescription(e.target.value);
+    setDescription(e.target.value.trim());
   };
 
   const onLocationChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setLocation(e.target.value);
+    setLocation(e.target.value.trim());
   };
 
   const onGuestEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setGuestEmail(e.target.value);
+    setGuestEmail(e.target.value.trim());
   };
 
   const onDurationChange = (e: ChangeEvent<{ value: unknown }>) => {
@@ -129,7 +128,6 @@ export const CreateEventForm: FC<Props> = () => {
   };
 
   const handleSubmit = () => {
-
     setIsEventSubmitted(true);
     if (title.length > 0 && date_of_event != null && time_of_event != null) {
       const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;

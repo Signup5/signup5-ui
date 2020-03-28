@@ -44,8 +44,6 @@ const App: FC = () => {
             <CreateEventForm/>
           </Route>
       </div>
-
-      <div className={Classes.AppFooter}/>
     </div>
   );
 };

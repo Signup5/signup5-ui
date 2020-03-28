@@ -1,4 +1,4 @@
-import {Card, Grid} from "@material-ui/core";
+import {Card, Grid, Divider} from "@material-ui/core";
 import AppBar from "@material-ui/core/AppBar";
 import Box from "@material-ui/core/Box";
 import {makeStyles, Theme} from "@material-ui/core/styles";
@@ -16,11 +16,8 @@ interface TabPanelProps {
   value: any;
 }
 
-
-
 function TabPanel(props: TabPanelProps) {
   const {children, value, index, ...other} = props;
-
 
   return (
     <Typography
@@ -80,7 +77,7 @@ export const Dashboard: FC = () => {
           <Grid item xs={12}>
             <Grid container>
               <Grid item xs={8}>
-                <AllEvents />
+                <AllEvents/>
               </Grid>
               <Grid item xs={4}>
                 <div style={{marginLeft: "23px"}}>
@@ -89,13 +86,13 @@ export const Dashboard: FC = () => {
               </Grid>
             </Grid>
           </Grid>
-    </TabPanel>
-  <TabPanel value={value} index={1}>
-    <CreateEventForm/>
-  </TabPanel>
-</div>
-</
-  Card >
-)
-  ;
+        </TabPanel>
+        <TabPanel value={value} index={1}>
+          <CreateEventForm/>
+        </TabPanel>
+      </div>
+    </
+      Card>
+  )
+    ;
 };

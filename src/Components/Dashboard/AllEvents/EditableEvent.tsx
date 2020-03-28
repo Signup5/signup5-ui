@@ -100,7 +100,7 @@ export const EditableEvent: FC<Props> = props => {
   };
 
   const onTitleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setTitle(e.target.value);
+    setTitle(e.target.value.trim());
   };
 
   const onDateChange = (date: Date | null) => {
@@ -109,20 +109,19 @@ export const EditableEvent: FC<Props> = props => {
 
   const onTimeChange = (time: Date | null) => {
     const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    console.log(zonedTimeToUtc(time ? time : new Date(), timezone));
     setTime_of_event(time);
   };
 
   const onDescriptionChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setDescription(e.target.value);
+    setDescription(e.target.value.trim());
   };
 
   const onLocationChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setLocation(e.target.value);
+    setLocation(e.target.value.trim());
   };
 
   const onGuestEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setGuestEmail(e.target.value);
+    setGuestEmail(e.target.value.trim());
   };
 
   const onDurationChange = (e: ChangeEvent<{ value: unknown }>) => {
