@@ -4,7 +4,7 @@ import {
   Card,
   CardActions,
   CardContent,
-  FormControl,
+  FormControl, Grid,
   IconButton,
   InputAdornment,
   InputLabel,
@@ -24,11 +24,11 @@ import MuiAlert, {AlertProps} from "@material-ui/lab/Alert";
 import {KeyboardDatePicker, KeyboardTimePicker, MuiPickersUtilsProvider} from "@material-ui/pickers";
 import React, {ChangeEvent, FC, useEffect, useState} from "react";
 import {useMutation} from "react-apollo";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {useHistory} from "react-router-dom";
 import Classes from "../../../App.module.css";
 import {CREATE_EVENT} from "../../../Store/GQL";
-import {InitialState} from "../../../Store/Reducers/rootReducer";
+import {InitialState, RootDispatcher} from "../../../Store/Reducers/rootReducer";
 import {EventInput, InvitationInput, Person} from "../../../Types";
 import {emailRegEx} from "../../../Utility";
 import {RenderGuest} from "./RenderGuest";
@@ -73,21 +73,20 @@ export const CreateEventForm: FC<Props> = () => {
     }
   );
 
+  const dispatch = useDispatch();
+  const rootDispatcher = new RootDispatcher(dispatch);
+
   const [createEvent] = useMutation(CREATE_EVENT, {
     onError(err) {
-      const message = err.graphQLErrors[0].message;
-      if (message.includes("'date_of_event'"))
-        setResponseMessage("You have entered an invalid date!");
-      else if (message.includes("'time_of_event'"))
-        setResponseMessage("You have entered an invalid time!");
-      else setResponseMessage(message);
+      setResponseMessage("Something went wrong!");
       setSeverity("error");
       setOpen(true);
     },
-    onCompleted({response}) {
-      setResponseMessage(response.message);
+    onCompleted({event}) {
+      setResponseMessage("Event successfully created!");
       setSeverity("success");
       setOpen(true);
+      rootDispatcher.createEvent(event);
     }
   });
 
@@ -99,7 +98,7 @@ export const CreateEventForm: FC<Props> = () => {
   };
 
   const onTitleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setTitle(e.target.value.trim());
+    setTitle(e.target.value);
   };
 
   const onDateChange = (date: Date | null) => {
@@ -107,20 +106,19 @@ export const CreateEventForm: FC<Props> = () => {
   };
 
   const onTimeChange = (time: Date | null) => {
-    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     setTime_of_event(time);
   };
 
   const onDescriptionChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setDescription(e.target.value.trim());
+    setDescription(e.target.value);
   };
 
   const onLocationChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setLocation(e.target.value.trim());
+    setLocation(e.target.value);
   };
 
   const onGuestEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setGuestEmail(e.target.value.trim());
+    setGuestEmail(e.target.value);
   };
 
   const onDurationChange = (e: ChangeEvent<{ value: unknown }>) => {
@@ -133,7 +131,7 @@ export const CreateEventForm: FC<Props> = () => {
       const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
       const dateString = date_of_event
-      ? format(zonedTimeToUtc(date_of_event, timezone), "yyyy-MM-dd")
+        ? format(zonedTimeToUtc(date_of_event, timezone), "yyyy-MM-dd")
         : "";
       const timeString = time_of_event
         ? format(zonedTimeToUtc(time_of_event, timezone), "HH:mm")
@@ -371,7 +369,7 @@ export const CreateEventForm: FC<Props> = () => {
                   <MenuItem value={120}>2h</MenuItem>
                 </Select>
               </FormControl>
-            </MuiPickersUtilsProvider >
+            </MuiPickersUtilsProvider>
 
           </div>
 
@@ -419,15 +417,30 @@ export const CreateEventForm: FC<Props> = () => {
           </div>
         </CardContent>
         <CardActions>
-          <Button
-            color="primary"
-            variant="contained"
-            type="submit"
-            onClick={handleSubmit}
-            style={{marginLeft: "auto"}}
-          >
-            create event
-          </Button>
+          <Grid container item spacing={3} justify="flex-end">
+            <Grid item>
+              <Button
+                color="primary"
+                disabled
+                variant="contained"
+                type="submit"
+                onClick={handleSubmit}
+                style={{paddingRight: "12px"}}
+              >
+                save as draft
+              </Button>
+            </Grid>
+            <Grid item>
+              <Button
+                color="primary"
+                variant="contained"
+                type="submit"
+                onClick={handleSubmit}
+              >
+                save and notify guests
+              </Button>
+            </Grid>
+          </Grid>
         </CardActions>
       </Card>
       <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>

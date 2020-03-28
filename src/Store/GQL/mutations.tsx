@@ -13,8 +13,29 @@ export const SET_ATTENDANCE = gql`
 
 export const CREATE_EVENT = gql`
   mutation($eventInput: EventInput!) {
-    response: createEvent(input: $eventInput) {
-      message
+    event: createEvent(input: $eventInput) {
+     id
+      host {
+        id
+        email
+        first_name
+        last_name
+      }
+      title
+      description
+      date_of_event
+      time_of_event
+      duration
+      location
+      isDraft
+      invitations {
+        guest {
+          email
+          first_name
+          last_name
+        }
+        attendance
+      }
     }
   }
 `;

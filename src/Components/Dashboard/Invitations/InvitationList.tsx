@@ -1,5 +1,5 @@
 import {useQuery} from "@apollo/react-hooks";
-import React, {FC, useEffect, useState} from "react";
+import React, {Dispatch, FC, SetStateAction, useEffect, useState} from "react";
 import {Invitation, Person, QueryResponse} from "../../../Types";
 import {RenderInvitation} from "./RenderInvitation";
 import {InitialState} from "../../../Store/Reducers/rootReducer";
@@ -7,13 +7,16 @@ import {useSelector} from "react-redux";
 import {GET_UPCOMING_UNREPLIED_INVITATIONS_BY_GUEST_ID} from "../../../Store/GQL";
 
 interface Props {
+  setSnackbarOpen: Dispatch<SetStateAction<boolean>>;
+  setSnackbarMessage: Dispatch<SetStateAction<string>>;
+  setSnackbarSeverity: Dispatch<SetStateAction<"success" | "info" | "warning" | "error" | undefined>>;
 }
 
 interface StateProps {
   person: Person;
 }
 
-export const InvitationList: FC<Props> = () => {
+export const InvitationList: FC<Props> = (props) => {
   const [invitations, setInvitations] = useState<Array<Invitation>>([]);
 
   const removeInvitation = (invitation: Invitation) => {
@@ -46,7 +49,13 @@ export const InvitationList: FC<Props> = () => {
 
   const render = () => {
     return invitations.map((invitation:Invitation, index:number) => {
-      return <RenderInvitation key={index} invitation={invitation} removeInvitation={removeInvitation}/>;
+      return <RenderInvitation
+        key={index}
+        invitation={invitation}
+        removeInvitation={removeInvitation}
+        setSnackbarOpen={props.setSnackbarOpen}
+        setSnackbarSeverity={props.setSnackbarSeverity}
+        setSnackbarMessage={props.setSnackbarMessage}/>;
     });
   };
 

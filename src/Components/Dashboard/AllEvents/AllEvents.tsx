@@ -1,5 +1,5 @@
 import {useQuery} from "@apollo/react-hooks";
-import React, {FC} from "react";
+import React, {Dispatch, FC, SetStateAction} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {GET_HOSTED_AND_INVITED_EVENTS_BY_PERSON_ID} from "../../../Store/GQL";
 import {InitialState, RootDispatcher} from "../../../Store/Reducers/rootReducer";
@@ -9,6 +9,9 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 import {Grid} from "@material-ui/core";
 
 interface Props {
+  setSnackbarOpen: Dispatch<SetStateAction<boolean>>;
+  setSnackbarMessage: Dispatch<SetStateAction<string>>;
+  setSnackbarSeverity: Dispatch<SetStateAction<"success" | "info" | "warning" | "error" | undefined>>;
 }
 
 interface StateProps {
@@ -16,7 +19,7 @@ interface StateProps {
   events: Array<Event>
 }
 
-export const AllEvents: FC<Props> = () => {
+export const AllEvents: FC<Props> = (props) => {
   const dispatch = useDispatch();
   const rootDispatcher = new RootDispatcher(dispatch);
 
@@ -44,7 +47,7 @@ export const AllEvents: FC<Props> = () => {
 
   const render = () => {
     return events.map((event, index) => {
-      return <RenderEvent key={index} event={event} />;
+      return <RenderEvent key={index} event={event} setSnackbarOpen={props.setSnackbarOpen} setSnackbarSeverity={props.setSnackbarSeverity} setSnackbarMessage={props.setSnackbarMessage} />;
     });
   };
 

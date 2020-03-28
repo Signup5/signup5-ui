@@ -8,10 +8,8 @@ import {
   List,
   MenuItem,
   Select,
-  Snackbar,
   TextField
 } from "@material-ui/core";
-import Alert from "@material-ui/lab/Alert";
 import React, {ChangeEvent, Dispatch, FC, SetStateAction, useEffect, useState} from "react";
 import {Event, InvitationInput, Person, UpdateEventInput} from "../../../Types";
 import Classes from "../../../App.module.css";
@@ -36,6 +34,9 @@ import KeyboardReturnIcon from "@material-ui/icons/KeyboardReturn";
 interface Props {
   event: Event;
   setEditable: Dispatch<SetStateAction<boolean>>;
+  setSnackbarOpen: Dispatch<SetStateAction<boolean>>;
+  setSnackbarMessage: Dispatch<SetStateAction<string>>;
+  setSnackbarSeverity: Dispatch<SetStateAction<"success" | "info" | "warning" | "error" | undefined>>;
 }
 
 interface StateProps {
@@ -55,15 +56,14 @@ export const EditableEvent: FC<Props> = props => {
   const [time_of_event, setTime_of_event] = useState<Date | null>(time);
   const [location, setLocation] = useState<string>(event.location);
   const [guestEmail, setGuestEmail] = useState<string>("");
-  const [guestList, setGuestList] = useState<Array<string>>(event.invitations.map(e => { return e.guest.email }));
+  const [guestList, setGuestList] = useState<Array<string>>(event.invitations.map(e => {
+    return e.guest.email
+  }));
   const [isGuestSubmitted, setIsGuestSubmitted] = useState<boolean>(false);
   const [displayEmailError, setDisplayEmailError] = useState<boolean>(false);
   const [emailError, setEmailError] = useState<string>("");
   const [isEventSubmitted, setIsEventSubmitted] = useState<boolean>(false);
   const [duration, setDuration] = useState<number>(event.duration);
-  const [open, setOpen] = useState<boolean>(false);
-  const [responseMessage, setResponseMessage] = useState<string>("");
-  const [severity, setSeverity] = useState<"success" | "info" | "warning" | "error" | undefined>(undefined);
 
   const dispatch = useDispatch();
   const rootDispatcher = new RootDispatcher(dispatch);
@@ -79,25 +79,18 @@ export const EditableEvent: FC<Props> = props => {
 
   const [updateEvent] = useMutation(UPDATE_EVENT, {
     onError(err) {
-      setResponseMessage("Something went wrong!");
-      setSeverity("error");
-      setOpen(true);
+      props.setSnackbarMessage("Something went wrong!");
+      props.setSnackbarSeverity("error");
+      props.setSnackbarOpen(true);
     },
     onCompleted({event}) {
-      setResponseMessage("Event was successfully updated!");
-      setSeverity("success");
-      setOpen(true);
+      props.setSnackbarMessage("Event was successfully updated");
+      props.setSnackbarSeverity("success");
+      props.setSnackbarOpen(true);
       props.setEditable(false);
       rootDispatcher.updateEvent(event);
     }
   });
-
-  const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    setOpen(false);
-  };
 
   const onTitleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setTitle(e.target.value.trim());
@@ -108,7 +101,6 @@ export const EditableEvent: FC<Props> = props => {
   };
 
   const onTimeChange = (time: Date | null) => {
-    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     setTime_of_event(time);
   };
 
@@ -493,12 +485,6 @@ export const EditableEvent: FC<Props> = props => {
           </Button>
         </Grid>
       </Grid>
-
-      <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-        <Alert onClose={handleClose} severity={severity}>
-          {responseMessage}
-        </Alert>
-      </Snackbar>
     </Grid>
   );
 };

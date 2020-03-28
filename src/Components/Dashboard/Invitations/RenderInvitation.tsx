@@ -6,12 +6,10 @@ import {
   ExpansionPanelActions,
   ExpansionPanelDetails,
   ExpansionPanelSummary,
-  Snackbar,
   Typography
 } from "@material-ui/core";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import Alert from "@material-ui/lab/Alert";
-import React, {FC, useState} from "react";
+import React, {Dispatch, FC, SetStateAction, useState} from "react";
 import {GET_EVENT_BY_ID, SET_ATTENDANCE} from "../../../Store/GQL";
 import {Attendance, Event, Invitation, QueryResponse} from "../../../Types";
 import {createStyles, makeStyles, Theme} from "@material-ui/core/styles";
@@ -64,27 +62,26 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface Props {
   invitation: Invitation;
-  removeInvitation: (invitation: Invitation) => void
+  removeInvitation: (invitation: Invitation) => void;
+  setSnackbarOpen: Dispatch<SetStateAction<boolean>>;
+  setSnackbarMessage: Dispatch<SetStateAction<string>>;
+  setSnackbarSeverity: Dispatch<SetStateAction<"success" | "info" | "warning" | "error" | undefined>>;
 }
 
 export const RenderInvitation: FC<Props> = props => {
-  const [open, setOpen] = useState<boolean>(false);
-  const [responseMessage, setResponseMessage] = useState<string>("");
-  const [severity, setSeverity] = useState<"success" | "info" | "warning" | "error" | undefined>(undefined);
-  const [selectedAttendance, setSelectedAttendance] = useState<Attendance>(Attendance.NO_RESPONSE);
-
   const classes = useStyles();
+  const [selectedAttendance, setSelectedAttendance] = useState<Attendance>(Attendance.NO_RESPONSE);
 
   const [setAttendance, {loading}] = useMutation(SET_ATTENDANCE, {
     onError(err) {
-      setResponseMessage(err.message);
-      setSeverity("error");
-      setOpen(true);
+      props.setSnackbarMessage(err.message);
+      props.setSnackbarSeverity("error");
+      props.setSnackbarOpen(true);
     },
     onCompleted({response}) {
-      setResponseMessage(response.message);
-      setSeverity("success");
-      setOpen(true);
+      props.setSnackbarMessage(response.message);
+      props.setSnackbarSeverity("success");
+      props.setSnackbarOpen(true);
       if (selectedAttendance !== Attendance.MAYBE) {
         props.removeInvitation(props.invitation);
       }
@@ -99,12 +96,6 @@ export const RenderInvitation: FC<Props> = props => {
         invitation_id: props.invitation.id
       }
     });
-  };
-  const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    setOpen(false);
   };
 
   const response: QueryResponse = useQuery(GET_EVENT_BY_ID, {
@@ -133,7 +124,7 @@ export const RenderInvitation: FC<Props> = props => {
           </div>
           <div className={classes.column}>
             <Typography className={classes.secondaryHeading}>
-              {event.date_of_event} - {event.time_of_event.substring(0,5)}
+              {event.date_of_event} - {event.time_of_event.substring(0, 5)}
             </Typography>
           </div>
         </ExpansionPanelSummary>
@@ -161,12 +152,6 @@ export const RenderInvitation: FC<Props> = props => {
           </Button>
         </ExpansionPanelActions>
       </ExpansionPanel>
-
-      <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-        <Alert onClose={handleClose} severity={severity}>
-          {responseMessage}
-        </Alert>
-      </Snackbar>
     </>
   );
 };
