@@ -1,19 +1,18 @@
-import {Button, Card, Grid, TextField} from "@material-ui/core";
+import { Button, Card, Grid, TextField } from "@material-ui/core";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import LockIcon from "@material-ui/icons/Lock";
-import React, {ChangeEvent, FC, FormEvent, useEffect, useState} from "react";
+import React, { ChangeEvent, FC, FormEvent, useEffect, useState } from "react";
 import Classes from "../App.module.css";
-import {Credentials} from "../Types/index";
-import {emailRegEx} from "../Utility";
-import {useDispatch} from "react-redux";
-import {RootDispatcher} from "../Store/Reducers/rootReducer";
-import {useHistory} from "react-router-dom";
-import {useLazyQuery} from "@apollo/react-hooks";
-import {GET_PERSON_BY_EMAIL} from "../Store/GQL";
+import { Credentials } from "../Types/index";
+import { emailRegEx } from "../Utility";
+import { useDispatch } from "react-redux";
+import { RootDispatcher } from "../Store/Reducers/rootReducer";
+import { useHistory } from "react-router-dom";
+import { useLazyQuery } from "@apollo/react-hooks";
+import { GET_PERSON_BY_EMAIL } from "../Store/GQL";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
-interface Props {
-}
+interface Props {}
 
 const LoginForm: FC<Props> = () => {
   const [email, setEmail] = useState<string>("");
@@ -40,10 +39,16 @@ const LoginForm: FC<Props> = () => {
     userCredentials.setEmail(email);
     userCredentials.setPassword(password);
     setUpdateState(!updateState);
-    if (userCredentials.isEmailValidFormat() && userCredentials.isPasswordValidFormat()) {
+    if (
+      userCredentials.isEmailValidFormat() &&
+      userCredentials.isPasswordValidFormat()
+    ) {
       getPerson();
     }
+  };
 
+  const changePassword = () => {
+    history.push("/forgotPassword");
   };
 
   const changeDisplayEmailError = () => {
@@ -75,15 +80,18 @@ const LoginForm: FC<Props> = () => {
   const rootDispatcher = new RootDispatcher(dispatch);
   const history = useHistory();
 
-  const [getPerson, {loading, error, data}] = useLazyQuery(GET_PERSON_BY_EMAIL, {
-    variables: {
-      email: userCredentials.getEmail()
-    },
-    onCompleted() {
-      rootDispatcher.updatePerson(data.person);
-      history.push("/dashboard");
+  const [getPerson, { loading, error, data }] = useLazyQuery(
+    GET_PERSON_BY_EMAIL,
+    {
+      variables: {
+        email: userCredentials.getEmail()
+      },
+      onCompleted() {
+        rootDispatcher.updatePerson(data.person);
+        history.push("/dashboard");
+      }
     }
-  });
+  );
 
   return (
     <Card className={Classes.MainPaper}>
@@ -91,7 +99,7 @@ const LoginForm: FC<Props> = () => {
         <h2>Sign in</h2>
         <Grid container spacing={1} alignItems="flex-start">
           <Grid item xs={1}>
-            <AccountCircle style={{marginTop: "16px"}}/>
+            <AccountCircle style={{ marginTop: "16px" }} />
           </Grid>
           <Grid item xs={11}>
             <TextField
@@ -108,10 +116,10 @@ const LoginForm: FC<Props> = () => {
           </Grid>
         </Grid>
 
-        <br/>
+        <br />
         <Grid container spacing={1} alignItems="flex-end">
           <Grid item xs={1}>
-            <LockIcon/>
+            <LockIcon />
           </Grid>
           <Grid item xs={11}>
             <TextField
@@ -131,7 +139,7 @@ const LoginForm: FC<Props> = () => {
             />
           </Grid>
         </Grid>
-        <br/>
+        <br />
         <Button
           className={Classes.Button}
           color="primary"
@@ -141,9 +149,19 @@ const LoginForm: FC<Props> = () => {
         >
           Sign in
         </Button>
+        <Button
+          style={{ marginLeft: "10px" }}
+          className={Classes.Button}
+          color="primary"
+          variant="contained"
+          type="submit"
+          onClick={() => history.push("/password/forgot")}
+        >
+          Forgot password
+        </Button>
       </form>
       {error ? <p>Email and/or password did not match!</p> : ""}
-      {loading ? <CircularProgress/> : ""}
+      {loading ? <CircularProgress /> : ""}
     </Card>
   );
 };
