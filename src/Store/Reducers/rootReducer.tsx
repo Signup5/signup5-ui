@@ -9,7 +9,7 @@ export interface InitialState {
 
 export const initialState: InitialState = {
   person: {} as Person,
-  events: [],
+  events: []
 };
 
 export interface DispatchAction extends Action {
@@ -40,6 +40,12 @@ export const rootReducer: Reducer<InitialState, DispatchAction> = (
         })
       }
 
+    case ActionType.CREATE_EVENT:
+      return {
+        ...state,
+        events: [...state.events, action.payload.event]
+      };
+
     case ActionType.UPDATE_EVENTS:
       return {...state, events: action.payload.events || []};
 
@@ -61,11 +67,12 @@ export class RootDispatcher {
   updateEvents = (events: Array<Event>) =>
     this.dispatch({type: ActionType.UPDATE_EVENTS, payload: {events}});
 
-  updateEvent = (event: Event) => {
-    this.dispatch({type: ActionType.UPDATE_EVENT, payload: {event}})
-  }
+  updateEvent = (event: Event) =>
+    this.dispatch({type: ActionType.UPDATE_EVENT, payload: {event}});
 
-  cancelEvent = (event: Event) => {
-    this.dispatch({type: ActionType.CANCEL_EVENT, payload: {event}})
-  }
+  createEvent = (event: Event) =>
+    this.dispatch({type: ActionType.CREATE_EVENT, payload: {event}});
+
+  cancelEvent = (event: Event) =>
+    this.dispatch({type: ActionType.CANCEL_EVENT, payload: {event}});
 }

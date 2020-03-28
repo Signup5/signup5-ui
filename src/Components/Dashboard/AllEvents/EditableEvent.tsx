@@ -37,7 +37,6 @@ interface Props {
   setSnackbarOpen: Dispatch<SetStateAction<boolean>>;
   setSnackbarMessage: Dispatch<SetStateAction<string>>;
   setSnackbarSeverity: Dispatch<SetStateAction<"success" | "info" | "warning" | "error" | undefined>>;
-
 }
 
 interface StateProps {
