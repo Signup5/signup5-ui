@@ -222,6 +222,7 @@ export const RenderEvent: FC<Props> = props => {
   const handleSpeedDialOpen = () => {
     setOpen(true);
   };
+
   const displayedEvent = () => {
     return <Grid container spacing={3}>
       {/*description start*/}
@@ -323,7 +324,7 @@ export const RenderEvent: FC<Props> = props => {
           </div>
           <div className={classes.column}>
             <Typography className={classes.secondaryHeading}>
-              {event.date_of_event} - {event.time_of_event}
+              {event.date_of_event} - {event.time_of_event.substring(0,5)}
             </Typography>
           </div>
         </ExpansionPanelSummary>

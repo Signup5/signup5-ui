@@ -64,7 +64,6 @@ export const EditableEvent: FC<Props> = props => {
   const [open, setOpen] = useState<boolean>(false);
   const [responseMessage, setResponseMessage] = useState<string>("");
   const [severity, setSeverity] = useState<"success" | "info" | "warning" | "error" | undefined>(undefined);
-  const [submittedEvent, setSubmittedEvent] = useState<Event>(event);
 
   const dispatch = useDispatch();
   const rootDispatcher = new RootDispatcher(dispatch);
@@ -90,7 +89,6 @@ export const EditableEvent: FC<Props> = props => {
       setOpen(true);
       props.setEditable(false);
       rootDispatcher.updateEvent(event);
-      console.log(event)
     }
   });
 
@@ -139,6 +137,7 @@ export const EditableEvent: FC<Props> = props => {
       const dateString = date_of_event
         ? format(zonedTimeToUtc(date_of_event, timezone), "yyyy-MM-dd")
         : "";
+
       const timeString = time_of_event
         ? format(zonedTimeToUtc(time_of_event, timezone), "HH:mm")
         : "";
