@@ -1,6 +1,6 @@
 import React, { FC, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { Route, useHistory } from "react-router-dom";
+import { Route, useHistory, Switch } from "react-router-dom";
 import Classes from "./App.module.css";
 import SignupLogo from "./Components/Icons/SignupLogo";
 import LoginForm from "./Components/LoginForm";
@@ -33,19 +33,21 @@ const App: FC = () => {
         <SignupLogo />
       </div>
       <div className={Classes.AppMainContent}>
-        <Route exact path="/">
-          <LoginForm />
-        </Route>
-        <ProtectedRoute path="/dashboard" Component={Dashboard} />
-        <ProtectedRoute path="/create_event" Component={CreateEventForm} />
-        <Route
-          path="/password/new/:token"
-          render={props => <ResetPassword {...props} />}
-        />
-        <Route path="/password/forgot">
-          <PasswordLink />
-        </Route>
-        <ProtectedRoute path="/test" component={Dashboard} />
+        <Switch>
+          <Route exact path="/">
+            <LoginForm />
+          </Route>
+          <ProtectedRoute path="/dashboard" Component={Dashboard} />
+          <ProtectedRoute path="/create_event" Component={CreateEventForm} />
+          <Route
+            path="/password/new/:token"
+            render={props => <ResetPassword {...props} />}
+          />
+          <Route path="/password/forgot">
+            <PasswordLink />
+          </Route>
+          <ProtectedRoute path="/test" component={Dashboard} />
+        </Switch>
       </div>
     </div>
   );

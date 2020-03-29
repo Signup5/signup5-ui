@@ -58,7 +58,8 @@ const LoginForm: FC<Props> = () => {
 
   const loginSuccess = (result: responseData) => {
     localStorage.setItem("token", result.jwt);
-    getPerson();
+    history.push("/dashboard");
+    //getPerson();
   };
 
   const loginFail = () => {

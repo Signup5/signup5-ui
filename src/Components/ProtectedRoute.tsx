@@ -1,31 +1,47 @@
 import React, { ChangeEvent, FC, FormEvent, useState } from "react";
-import { Route, Redirect, RouteProps } from "react-router-dom";
+import { Route, Redirect } from "react-router-dom";
 import jwt from "jsonwebtoken";
 
-export const ProtectedRoute: React.SFC<RouteProps> = ({
-  component: Component,
-  ...rest
-}: {
-  component: React.ComponentType<RouteProps>;
-}) => {
+interface Props {
+  [x: string]: any;
+}
+interface ParentCompProps {
+  childComp?: React.ReactNode;
+}
+export const ProtectedRoute: FC<Props> = props => {
+  const { Component } = props;
   const token = localStorage.getItem("token");
+
   const verifyToken = () => {
     if (token === null) {
       return false;
     }
     try {
-      jwt.verify(token, "hohohju");
+      console.log(token);
+
+      jwt.verify(token, "hohohju", { algorithms: ["HS512"] });
     } catch (error) {
+      console.log(error);
       return false;
     }
     return true;
   };
+
   const result = verifyToken();
+  console.log(result);
   return (
     <Route
-      {...rest}
       render={props =>
-        result ? <Component {...props} /> : <Redirect to="/" />
+        result ? (
+          <Component />
+        ) : (
+          <Redirect
+            to={{
+              pathname: "/",
+              state: { from: props.location }
+            }}
+          />
+        )
       }
     />
   );
