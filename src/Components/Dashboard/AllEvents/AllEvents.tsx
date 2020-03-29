@@ -37,7 +37,7 @@ export const AllEvents: FC<Props> = (props) => {
       id: person.id
     }, onCompleted() {
       rootDispatcher.updateEvents(response.data.events);
-    }
+    }, fetchPolicy: "cache-and-network",
   });
 
   if (response.loading) return  <LinearProgress />;

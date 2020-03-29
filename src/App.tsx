@@ -16,15 +16,15 @@ interface StateProps {
 }
 
 const App: FC = () => {
-  const { person } = useSelector<InitialState, StateProps>(
-    (state: InitialState) => {
-      return {
-        person: state.person
-      };
-    }
-  );
-
-  const history = useHistory();
+  // const { person } = useSelector<InitialState, StateProps>(
+  //   (state: InitialState) => {
+  //     return {
+  //       person: state.person
+  //     };
+  //   }
+  // );
+  //
+  // const history = useHistory();
 
   return (
     <div className={Classes.App}>

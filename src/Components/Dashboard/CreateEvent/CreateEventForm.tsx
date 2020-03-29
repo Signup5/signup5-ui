@@ -125,7 +125,7 @@ export const CreateEventForm: FC<Props> = () => {
     setDuration(Number(e.target.value));
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = (isDraft: boolean) => {
     setIsEventSubmitted(true);
     if (title.length > 0 && date_of_event != null && time_of_event != null) {
       const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -159,7 +159,7 @@ export const CreateEventForm: FC<Props> = () => {
         duration: duration,
         location: location,
         invitations: invitations,
-        isDraft: false
+        isDraft: isDraft
       };
       createEvent({variables: {eventInput}});
       setIsEventSubmitted(false);
@@ -421,10 +421,9 @@ export const CreateEventForm: FC<Props> = () => {
             <Grid item>
               <Button
                 color="primary"
-                disabled
                 variant="contained"
                 type="submit"
-                onClick={handleSubmit}
+                onClick={() => handleSubmit(true)}
                 style={{paddingRight: "12px"}}
               >
                 save as draft
@@ -435,7 +434,7 @@ export const CreateEventForm: FC<Props> = () => {
                 color="primary"
                 variant="contained"
                 type="submit"
-                onClick={handleSubmit}
+                onClick={() => handleSubmit(false)}
               >
                 save and notify guests
               </Button>

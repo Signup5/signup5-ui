@@ -32,7 +32,8 @@ const useStyles = makeStyles((theme: Theme) =>
       color: theme.palette.text.secondary
     },
     contentText: {
-      fontSize: theme.typography.pxToRem(15)
+      fontSize: theme.typography.pxToRem(15),
+      whiteSpace: "pre-wrap"
     },
     icon: {
       verticalAlign: "bottom",
@@ -91,9 +92,10 @@ export const NonEditableEvent: FC<Props> = props => {
   const descriptionArea = () => {
     return <>
       <Typography className={classes.contentText}>
-        {showFullDescription ? event.description : event.description.substr(0, 400) + (event.description.length > 400 ? "..." : "")}
+        {/*{event.description}*/}
+          {showFullDescription ? event.description : event.description.substr(0, 200) + (event.description.length > 200 ? "..." : "")}
       </Typography>
-      {event.description.length < 400 ? "" :
+      {event.description.length < 200 ? "" :
         <Button size="small"
                 onClick={() => setShowFullDescription(!showFullDescription)}> {showFullDescription ? "Show less" : "Show more"}
         </Button>}
