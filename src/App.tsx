@@ -10,6 +10,7 @@ import { InitialState } from "./Store/Reducers/rootReducer";
 import { Person } from "./Types";
 import { CreateEventForm } from "./Components/Dashboard/CreateEvent";
 import { Dashboard } from "./Components/Dashboard";
+import { ProtectedRoute } from "./Components/ProtectedRoute";
 
 interface StateProps {
   person: Person;
@@ -35,19 +36,16 @@ const App: FC = () => {
         <Route exact path="/">
           <LoginForm />
         </Route>
-        <Route path="/dashboard">
-          <Dashboard />
-        </Route>
-        <Route path="/create_event">
-          <CreateEventForm />
-        </Route>
+        <ProtectedRoute path="/dashboard" Component={Dashboard} />
+        <ProtectedRoute path="/create_event" Component={CreateEventForm} />
         <Route
           path="/password/new/:token"
           render={props => <ResetPassword {...props} />}
         />
         <Route path="/password/forgot">
-          <PasswordLink></PasswordLink>
+          <PasswordLink />
         </Route>
+        <ProtectedRoute path="/test" component={Dashboard} />
       </div>
     </div>
   );

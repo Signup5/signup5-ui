@@ -11,8 +11,12 @@ import { useHistory } from "react-router-dom";
 import { useLazyQuery } from "@apollo/react-hooks";
 import { GET_PERSON_BY_EMAIL } from "../Store/GQL";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import axios from "axios";
 
 interface Props {}
+interface responseData {
+  jwt: string;
+}
 
 const LoginForm: FC<Props> = () => {
   const [email, setEmail] = useState<string>("");
@@ -39,46 +43,27 @@ const LoginForm: FC<Props> = () => {
     userCredentials.setEmail(email);
     userCredentials.setPassword(password);
     setUpdateState(!updateState);
-    if (
-      userCredentials.isEmailValidFormat() &&
-      userCredentials.isPasswordValidFormat()
-    ) {
-      getPerson();
-    }
+    axios
+      .post("/login", {
+        email: email,
+        password: password
+      })
+      .then(result => loginSuccess(result.data))
+      .catch(error => loginFail());
   };
-
-  const changePassword = () => {
-    history.push("/forgotPassword");
-  };
-
-  const changeDisplayEmailError = () => {
-    if (isFormSubmitted) {
-      if (!email.match(emailRegEx)) {
-        setDisplayEmailError(true);
-      } else {
-        setDisplayEmailError(false);
-      }
-    }
-  };
-
-  const changeDisplayPasswordError = () => {
-    if (isFormSubmitted) {
-      if (password.length <= 3) {
-        setDisplayPasswordError(true);
-      } else {
-        setDisplayPasswordError(false);
-      }
-    }
-  };
-
-  useEffect(() => {
-    changeDisplayEmailError();
-    changeDisplayPasswordError();
-  });
 
   const dispatch = useDispatch();
   const rootDispatcher = new RootDispatcher(dispatch);
   const history = useHistory();
+
+  const loginSuccess = (result: responseData) => {
+    localStorage.setItem("token", result.jwt);
+    getPerson();
+  };
+
+  const loginFail = () => {
+    setDisplayEmailError(true);
+  };
 
   const [getPerson, { loading, error, data }] = useLazyQuery(
     GET_PERSON_BY_EMAIL,
@@ -110,7 +95,7 @@ const LoginForm: FC<Props> = () => {
               name="email"
               type="email"
               error={displayEmailError}
-              helperText={displayEmailError ? "Not a valid email!" : ""}
+              helperText={displayEmailError ? "Email or password wrong!" : ""}
               value={email}
             />
           </Grid>

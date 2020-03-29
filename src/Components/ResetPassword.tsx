@@ -47,7 +47,7 @@ const ResetPassword: FC<Props> = props => {
         token: token
       })
       .then(() => resetPasswordSucess())
-      .catch(error => resetPasswordFail(error));
+      .catch(error => resetPasswordFail(error.response.data));
   };
   return (
     <div>
