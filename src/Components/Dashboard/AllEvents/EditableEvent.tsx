@@ -93,7 +93,7 @@ export const EditableEvent: FC<Props> = props => {
   });
 
   const onTitleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setTitle(e.target.value.trim());
+    setTitle(e.target.value);
   };
 
   const onDateChange = (date: Date | null) => {
@@ -105,15 +105,15 @@ export const EditableEvent: FC<Props> = props => {
   };
 
   const onDescriptionChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setDescription(e.target.value.trim());
+    setDescription(e.target.value);
   };
 
   const onLocationChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setLocation(e.target.value.trim());
+    setLocation(e.target.value);
   };
 
   const onGuestEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setGuestEmail(e.target.value.trim());
+    setGuestEmail(e.target.value);
   };
 
   const onDurationChange = (e: ChangeEvent<{ value: unknown }>) => {
@@ -149,12 +149,12 @@ export const EditableEvent: FC<Props> = props => {
         host: {
           ...stateProps.host
         },
-        title: title,
-        description: description,
+        title: title.trim(),
+        description: description.trim(),
         date_of_event: dateString,
         time_of_event: timeString,
         duration: duration,
-        location: location,
+        location: location.trim(),
         invitations: invitations,
         isDraft: isDraft
       };
@@ -233,7 +233,7 @@ export const EditableEvent: FC<Props> = props => {
     <Grid container spacing={1}>
       {/*title row start*/}
       <Grid container item spacing={3}>
-        <Grid xs={true} style={{padding: "0 12px 0 14px"}}>
+        <Grid item xs={true} style={{padding: "0 12px 0 14px"}}>
           <TextField
             size="medium"
             required
