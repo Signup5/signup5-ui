@@ -1,17 +1,16 @@
 import { Button, Card, Grid, TextField } from "@material-ui/core";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import LockIcon from "@material-ui/icons/Lock";
-import React, { ChangeEvent, FC, FormEvent, useEffect, useState } from "react";
+import React, { ChangeEvent, FC, FormEvent, useState } from "react";
 import Classes from "../App.module.css";
 import { Credentials } from "../Types/index";
-import { emailRegEx } from "../Utility";
 import { useDispatch } from "react-redux";
 import { RootDispatcher } from "../Store/Reducers/rootReducer";
 import { useHistory } from "react-router-dom";
 import { useLazyQuery } from "@apollo/react-hooks";
 import { GET_PERSON_BY_EMAIL } from "../Store/GQL";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import axios from "axios";
+import signupApi from "../api/signupApi";
 
 interface Props {}
 interface responseData {
@@ -43,11 +42,8 @@ const LoginForm: FC<Props> = () => {
     userCredentials.setEmail(email);
     userCredentials.setPassword(password);
     setUpdateState(!updateState);
-    axios
-      .post("/login", {
-        email: email,
-        password: password
-      })
+    signupApi
+      .post("/login", { email: email, password: password })
       .then(result => loginSuccess(result.data))
       .catch(error => loginFail());
   };
@@ -59,7 +55,7 @@ const LoginForm: FC<Props> = () => {
   const loginSuccess = (result: responseData) => {
     localStorage.setItem("token", result.jwt);
     history.push("/dashboard");
-    //getPerson();
+    getPerson();
   };
 
   const loginFail = () => {
