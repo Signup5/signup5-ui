@@ -1,12 +1,9 @@
-import React, { ChangeEvent, FC, FormEvent, useState } from "react";
+import React, { FC } from "react";
 import { Route, Redirect } from "react-router-dom";
 import jwt from "jsonwebtoken";
 
 interface Props {
   [x: string]: any;
-}
-interface ParentCompProps {
-  childComp?: React.ReactNode;
 }
 export const ProtectedRoute: FC<Props> = props => {
   const { Component } = props;
@@ -17,8 +14,6 @@ export const ProtectedRoute: FC<Props> = props => {
       return false;
     }
     try {
-      console.log(token);
-
       jwt.verify(token, "hohohju", { algorithms: ["HS512"] });
     } catch (error) {
       console.log(error);
@@ -28,7 +23,6 @@ export const ProtectedRoute: FC<Props> = props => {
   };
 
   const result = verifyToken();
-  console.log(result);
   return (
     <Route
       render={props =>

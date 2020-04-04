@@ -14,20 +14,15 @@ import * as serviceWorker from "./serviceWorker";
 import { store } from "./Store";
 import { BrowserRouter as Router } from "react-router-dom";
 
-const httpLink = new HttpLink({ uri: process.env.REACT_APP_API_URI });
+const httpLink = new HttpLink({ uri: "http://localhost:8080/graphql" });
 
 const authLink = new ApolloLink((operation, forward) => {
-  // Retrieve the authorization token from local storage.
   const token = localStorage.getItem("token");
-
-  // Use the setContext method to set the HTTP headers.
   operation.setContext({
     headers: {
       authorization: token ? `Bearer ${token}` : ""
     }
   });
-
-  // Call the next link in the middleware chain.
   return forward(operation);
 });
 

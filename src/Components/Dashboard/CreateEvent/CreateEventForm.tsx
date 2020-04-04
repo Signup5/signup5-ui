@@ -4,7 +4,8 @@ import {
   Card,
   CardActions,
   CardContent,
-  FormControl, Grid,
+  FormControl,
+  Grid,
   IconButton,
   InputAdornment,
   InputLabel,
@@ -20,27 +21,32 @@ import PeopleAltOutlinedIcon from "@material-ui/icons/PeopleAltOutlined";
 import RoomOutlinedIcon from "@material-ui/icons/RoomOutlined";
 import ScheduleIcon from "@material-ui/icons/Schedule";
 import SubjectIcon from "@material-ui/icons/Subject";
-import MuiAlert, {AlertProps} from "@material-ui/lab/Alert";
-import {KeyboardDatePicker, KeyboardTimePicker, MuiPickersUtilsProvider} from "@material-ui/pickers";
-import React, {ChangeEvent, FC, useEffect, useState} from "react";
-import {useMutation} from "react-apollo";
-import {useDispatch, useSelector} from "react-redux";
-import {useHistory} from "react-router-dom";
+import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
+import {
+  KeyboardDatePicker,
+  KeyboardTimePicker,
+  MuiPickersUtilsProvider
+} from "@material-ui/pickers";
+import React, { ChangeEvent, FC, useState } from "react";
+import { useMutation } from "react-apollo";
+import { useDispatch, useSelector } from "react-redux";
 import Classes from "../../../App.module.css";
-import {CREATE_EVENT} from "../../../Store/GQL";
-import {InitialState, RootDispatcher} from "../../../Store/Reducers/rootReducer";
-import {EventInput, InvitationInput, Person} from "../../../Types";
-import {emailRegEx} from "../../../Utility";
-import {RenderGuest} from "./RenderGuest";
-import {zonedTimeToUtc} from "date-fns-tz"
-import {format} from "date-fns";
+import { CREATE_EVENT } from "../../../Store/GQL";
+import {
+  InitialState,
+  RootDispatcher
+} from "../../../Store/Reducers/rootReducer";
+import { EventInput, InvitationInput, Person } from "../../../Types";
+import { emailRegEx } from "../../../Utility";
+import { RenderGuest } from "./RenderGuest";
+import { zonedTimeToUtc } from "date-fns-tz";
+import { format } from "date-fns";
 
 function Alert(props: AlertProps) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
-interface Props {
-}
+interface Props {}
 
 interface StateProps {
   host: Person;
@@ -54,7 +60,6 @@ export const CreateEventForm: FC<Props> = () => {
   const [location, setLocation] = useState<string>("");
   const [guestEmail, setGuestEmail] = useState<string>("");
   const [guestList, setGuestList] = useState<Array<string>>([]);
-  const [isGuestSubmitted, setIsGuestSubmitted] = useState<boolean>(false);
   const [displayEmailError, setDisplayEmailError] = useState<boolean>(false);
   const [emailError, setEmailError] = useState<string>("");
   const [isEventSubmitted, setIsEventSubmitted] = useState<boolean>(false);
@@ -62,13 +67,14 @@ export const CreateEventForm: FC<Props> = () => {
 
   const [open, setOpen] = useState<boolean>(false);
   const [responseMessage, setResponseMessage] = useState<string>("");
-  const [severity, setSeverity] = useState<"success" | "info" | "warning" | "error" | undefined>(undefined);
+  const [severity, setSeverity] = useState<
+    "success" | "info" | "warning" | "error" | undefined
+  >(undefined);
 
-  const history = useHistory();
   const stateProps = useSelector<InitialState, StateProps>(
     (state: InitialState) => {
       return {
-        host: {...state.person}
+        host: { ...state.person }
       };
     }
   );
@@ -82,7 +88,7 @@ export const CreateEventForm: FC<Props> = () => {
       setSeverity("error");
       setOpen(true);
     },
-    onCompleted({event}) {
+    onCompleted({ event }) {
       setResponseMessage("Event successfully created!");
       setSeverity("success");
       setOpen(true);
@@ -161,14 +167,13 @@ export const CreateEventForm: FC<Props> = () => {
         invitations: invitations,
         isDraft: isDraft
       };
-      createEvent({variables: {eventInput}});
+      createEvent({ variables: { eventInput } });
       setIsEventSubmitted(false);
     }
   };
 
   const addToGuestList = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
-      setIsGuestSubmitted(true);
       const guests: Array<string> = guestList;
 
       const lowerCaseGuestList = guestList.map(email => {
@@ -182,24 +187,10 @@ export const CreateEventForm: FC<Props> = () => {
           setGuestList(guests);
           setDisplayEmailError(false);
           setEmailError("");
-          setIsGuestSubmitted(false);
         } else {
           setEmailError("Guest already invited");
           setDisplayEmailError(true);
-          setIsGuestSubmitted(false);
         }
-      }
-    }
-  };
-
-  const changeDisplayEmailError = () => {
-    if (isGuestSubmitted) {
-      if (!guestEmail.match(emailRegEx)) {
-        setDisplayEmailError(true);
-        setEmailError("Invalid email");
-      } else {
-        setDisplayEmailError(false);
-        setEmailError("");
       }
     }
   };
@@ -223,13 +214,6 @@ export const CreateEventForm: FC<Props> = () => {
   const today = new Date();
   const maxDate = new Date().setFullYear(today.getFullYear() + 3);
 
-  useEffect(() => {
-    if (!stateProps.host.id) {
-      history.push("");
-    }
-    changeDisplayEmailError();
-  });
-
   return (
     <div className={Classes.MainPaper}>
       <Card className={Classes.Card}>
@@ -241,7 +225,7 @@ export const CreateEventForm: FC<Props> = () => {
             id="title"
             placeholder="Add Title *"
             type="text"
-            style={{width: "100%"}}
+            style={{ width: "100%" }}
             autoComplete="off"
             value={title}
             error={isEventSubmitted && title.length === 0}
@@ -249,7 +233,7 @@ export const CreateEventForm: FC<Props> = () => {
               isEventSubmitted && title.length === 0 ? "Required!" : ""
             }
             onChange={onTitleChange}
-            inputProps={{minLength: "1", maxLength: "140"}}
+            inputProps={{ minLength: "1", maxLength: "140" }}
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
@@ -259,9 +243,9 @@ export const CreateEventForm: FC<Props> = () => {
             }}
           />
 
-          <div style={{display: "flex"}}>
+          <div style={{ display: "flex" }}>
             <SubjectIcon
-              style={{marginTop: "26px", marginRight: "14px", flexGrow: 0}}
+              style={{ marginTop: "26px", marginRight: "14px", flexGrow: 0 }}
             />
 
             <TextField
@@ -273,8 +257,8 @@ export const CreateEventForm: FC<Props> = () => {
               value={description}
               onChange={onDescriptionChange}
               variant="outlined"
-              inputProps={{maxLength: "5000"}}
-              style={{flexGrow: 20}}
+              inputProps={{ maxLength: "5000" }}
+              style={{ flexGrow: 20 }}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
@@ -284,23 +268,23 @@ export const CreateEventForm: FC<Props> = () => {
               }}
             />
           </div>
-          <div style={{display: "flex"}}>
+          <div style={{ display: "flex" }}>
             <RoomOutlinedIcon
-              style={{marginTop: "26px", marginRight: "14px", flexGrow: 0}}
+              style={{ marginTop: "26px", marginRight: "14px", flexGrow: 0 }}
             />
             <TextField
               className={Classes.TextField}
               id="location"
               label="Location"
-              style={{flexGrow: 20}}
+              style={{ flexGrow: 20 }}
               value={location}
               onChange={onLocationChange}
               variant="filled"
             />
           </div>
-          <div style={{display: "flex"}}>
+          <div style={{ display: "flex" }}>
             <EventOutlinedIcon
-              style={{marginTop: "26px", marginRight: "14px", flexGrow: 0}}
+              style={{ marginTop: "26px", marginRight: "14px", flexGrow: 0 }}
             />
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
               <KeyboardDatePicker
@@ -314,7 +298,7 @@ export const CreateEventForm: FC<Props> = () => {
                 format="yyyy-MM-dd"
                 value={date_of_event}
                 onChange={onDateChange}
-                style={{flexGrow: 8.5}}
+                style={{ flexGrow: 8.5 }}
                 maxDate={maxDate}
                 error={isEventSubmitted && !date_of_event}
                 helperText={
@@ -325,7 +309,7 @@ export const CreateEventForm: FC<Props> = () => {
                 minDateMessage="Date is in the past."
               />
               {/*spacer*/}
-              <div style={{flexGrow: 1}}></div>
+              <div style={{ flexGrow: 1 }}></div>
 
               <KeyboardTimePicker
                 required
@@ -343,16 +327,21 @@ export const CreateEventForm: FC<Props> = () => {
                   isEventSubmitted && !time_of_event ? "Required!" : ""
                 }
                 ampm={false}
-                keyboardIcon={<ScheduleIcon/>}
+                keyboardIcon={<ScheduleIcon />}
                 KeyboardButtonProps={{
                   "aria-label": "change time"
                 }}
-                style={{flexGrow: 8.5}}
+                style={{ flexGrow: 8.5 }}
               />
               {/*spacer*/}
-              <div style={{flexGrow: 1}}></div>
-              <FormControl variant="outlined" style={{flexGrow: 1, marginTop: "16px"}}>
-                <InputLabel id="demo-simple-select-outlined-label">Duration</InputLabel>
+              <div style={{ flexGrow: 1 }}></div>
+              <FormControl
+                variant="outlined"
+                style={{ flexGrow: 1, marginTop: "16px" }}
+              >
+                <InputLabel id="demo-simple-select-outlined-label">
+                  Duration
+                </InputLabel>
                 <Select
                   labelId="demo-simple-select-outlined-label"
                   id="demo-simple-select-outlined"
@@ -360,7 +349,6 @@ export const CreateEventForm: FC<Props> = () => {
                   onChange={onDurationChange}
                   label="Duration"
                 >
-
                   <MenuItem value={15}>15m</MenuItem>
                   <MenuItem value={30}>30m</MenuItem>
                   <MenuItem value={45}>45m</MenuItem>
@@ -370,19 +358,17 @@ export const CreateEventForm: FC<Props> = () => {
                 </Select>
               </FormControl>
             </MuiPickersUtilsProvider>
-
           </div>
 
-
-          <div style={{display: "flex"}}>
+          <div style={{ display: "flex" }}>
             <PeopleAltOutlinedIcon
-              style={{marginTop: "26px", marginRight: "14px", flexGrow: 0}}
+              style={{ marginTop: "26px", marginRight: "14px", flexGrow: 0 }}
             />
             <TextField
               className={Classes.TextField}
               id="addGuest"
               label="Add guest"
-              style={{flexGrow: 20}}
+              style={{ flexGrow: 20 }}
               value={guestEmail}
               onKeyUp={addToGuestList}
               onChange={onGuestEmailChange}
@@ -394,7 +380,7 @@ export const CreateEventForm: FC<Props> = () => {
                   <InputAdornment position="end">
                     {guestEmail.match(emailRegEx) ? (
                       <IconButton color="primary">
-                        <KeyboardReturnIcon/>
+                        <KeyboardReturnIcon />
                       </IconButton>
                     ) : (
                       ""
@@ -424,7 +410,7 @@ export const CreateEventForm: FC<Props> = () => {
                 variant="contained"
                 type="submit"
                 onClick={() => handleSubmit(true)}
-                style={{paddingRight: "12px"}}
+                style={{ paddingRight: "12px" }}
               >
                 save as draft
               </Button>

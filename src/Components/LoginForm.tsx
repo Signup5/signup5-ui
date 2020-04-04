@@ -7,23 +7,23 @@ import { Credentials } from "../Types/index";
 import { useDispatch } from "react-redux";
 import { RootDispatcher } from "../Store/Reducers/rootReducer";
 import { useHistory } from "react-router-dom";
-import { useLazyQuery } from "@apollo/react-hooks";
-import { GET_PERSON_BY_EMAIL } from "../Store/GQL";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import signupApi from "../api/signupApi";
+import { Person } from "../Types";
 
 interface Props {}
 interface responseData {
   jwt: string;
+  person: Person;
 }
 
 const LoginForm: FC<Props> = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [userCredentials] = useState<Credentials>(new Credentials("", ""));
-  const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
   const [updateState, setUpdateState] = useState<boolean>(false);
   const [displayEmailError, setDisplayEmailError] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const [displayPasswordError, setDisplayPasswordError] = useState<boolean>(
     false
   );
@@ -38,10 +38,10 @@ const LoginForm: FC<Props> = () => {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setIsFormSubmitted(true);
     userCredentials.setEmail(email);
     userCredentials.setPassword(password);
     setUpdateState(!updateState);
+    setLoading(true);
     signupApi
       .post("/login", { email: email, password: password })
       .then(result => loginSuccess(result.data))
@@ -54,26 +54,15 @@ const LoginForm: FC<Props> = () => {
 
   const loginSuccess = (result: responseData) => {
     localStorage.setItem("token", result.jwt);
+    rootDispatcher.updatePerson(result.person);
+    setLoading(false);
     history.push("/dashboard");
-    getPerson();
   };
 
   const loginFail = () => {
     setDisplayEmailError(true);
+    setLoading(false);
   };
-
-  const [getPerson, { loading, error, data }] = useLazyQuery(
-    GET_PERSON_BY_EMAIL,
-    {
-      variables: {
-        email: userCredentials.getEmail()
-      },
-      onCompleted() {
-        rootDispatcher.updatePerson(data.person);
-        history.push("/dashboard");
-      }
-    }
-  );
 
   return (
     <Card className={Classes.MainPaper}>
@@ -118,6 +107,7 @@ const LoginForm: FC<Props> = () => {
                   : ""
               }
               value={password}
+              autoComplete="on"
             />
           </Grid>
         </Grid>
@@ -142,7 +132,7 @@ const LoginForm: FC<Props> = () => {
           Forgot password
         </Button>
       </form>
-      {error ? <p>Email and/or password did not match!</p> : ""}
+      {displayEmailError ? <p>Email and/or password did not match!</p> : ""}
       {loading ? <CircularProgress /> : ""}
     </Card>
   );
