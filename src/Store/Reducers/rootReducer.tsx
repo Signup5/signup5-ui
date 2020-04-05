@@ -16,6 +16,11 @@ export const initialState: InitialState = {
   events: []
 };
 
+export const emptyState: InitialState = {
+  person: {} as Person,
+  events: []
+};
+
 export interface DispatchAction extends Action {
   payload: any;
 }
@@ -29,7 +34,7 @@ export const rootReducer: Reducer<InitialState, DispatchAction> = (
       return {...state, person: action.payload.person || {} as Person};
 
     case ActionType.LOGOUT:
-      return {...initialState};
+      return {...emptyState};
 
     case ActionType.CANCEL_EVENT:
       return {

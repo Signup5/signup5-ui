@@ -27,6 +27,7 @@ export const LoginForm: FC<Props> = () => {
   const [updateState, setUpdateState] = useState<boolean>(false);
   const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
   const [displayEmailError, setDisplayEmailError] = useState<boolean>(false);
+  const [displayLoginError, setDisplayLoginError] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [displayPasswordError, setDisplayPasswordError] = useState<boolean>(
     false
@@ -49,10 +50,10 @@ export const LoginForm: FC<Props> = () => {
     setLoading(true);
     signupApi
       .post("/login", {email: email, password: password})
-      .then(result => loginSuccess(result.data))
-      .catch(error => loginFail());
+      .then(result =>  loginSuccess(result.data))
+      .catch(() => loginFail());
   };
-
+  //
   const dispatch = useDispatch();
   const rootDispatcher = new RootDispatcher(dispatch);
   const history = useHistory();
@@ -66,7 +67,7 @@ export const LoginForm: FC<Props> = () => {
   };
 
   const loginFail = () => {
-    setDisplayEmailError(true);
+    setDisplayLoginError(true);
     setLoading(false);
   };
 
@@ -164,7 +165,7 @@ export const LoginForm: FC<Props> = () => {
           Forgot password
         </Button>
       </form>
-      {displayEmailError ? <p>Email and/or password did not match!</p> : ""}
+      {displayLoginError ? <p>Email and/or password did not match!</p> : ""}
       {loading ? <CircularProgress/> : ""}
     </Card>
   );

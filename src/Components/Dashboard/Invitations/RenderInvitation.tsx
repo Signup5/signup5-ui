@@ -137,8 +137,10 @@ export const RenderInvitation: FC<Props> = props => {
           <a href="#secondary-heading-and-columns" className={classes.link}>
             Read more
           </a>
-          <p className={classes.secondaryHeading}>{event.location}</p>
+          <br />
+          <span className={classes.secondaryHeading}>{event.location}</span>
         </Typography>
+
       </ExpansionPanelDetails>
       <Divider />
       <ExpansionPanelActions>
