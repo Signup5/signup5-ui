@@ -143,7 +143,7 @@ export const RenderEvent: FC<Props> = props => {
   };
 
   const menu = () => {
-    return !editable && event.host.id === stateProps.person.id ?
+    return !editable && event.host.id == stateProps.person.id ?
       <SpeedDial
         ariaLabel="SpeedDial example"
         className={classes.speedDial}

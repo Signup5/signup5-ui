@@ -32,6 +32,7 @@ export type Event = {
   location: string;
   invitations: Array<Invitation>
   isDraft: boolean
+  isCanceled: boolean
 };
 
 export interface UpdateEventInput {
@@ -57,6 +58,7 @@ export interface EventInput {
   location: string;
   invitations?: Array<InvitationInput>;
   isDraft: boolean;
+  isCanceled: boolean;
 }
 
 

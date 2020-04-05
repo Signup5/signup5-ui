@@ -17,7 +17,6 @@ export const ProtectedRoute: FC<Props> = props => {
     try {
       jwt.verify(token, "hohohju", {algorithms: ["HS512"]});
     } catch (error) {
-      console.log(error);
       return false;
     }
     return true;
