@@ -27,6 +27,9 @@ const App: FC = () => {
     localStorage.setItem("token", "");
     history.push("/");
   };
+
+
+
   return (
     <div className={Classes.App}>
       <div className={Classes.AppHeader}>

@@ -28,7 +28,7 @@ const ValidatePersonCredentials: FC<Props> = props => {
     return <p>Email and/or password did not match!</p>;
   }
 
-  rootDispatcher.updatePerson(response.data.person);
+  rootDispatcher.login(response.data.person);
 
   return null;
   // history.push("/dashboard");

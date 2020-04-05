@@ -60,7 +60,7 @@ const LoginForm: FC<Props> = () => {
   const loginSuccess = (result: responseData) => {
     localStorage.setItem("token", result.jwt);
     localStorage.setItem("person", JSON.stringify(result.person));
-    rootDispatcher.updatePerson(result.person);
+    rootDispatcher.login(result.person);
     setLoading(false);
     history.push("/dashboard");
   };

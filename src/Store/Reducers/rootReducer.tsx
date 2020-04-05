@@ -25,8 +25,11 @@ export const rootReducer: Reducer<InitialState, DispatchAction> = (
   action
 ) => {
   switch (action.type) {
-    case ActionType.UPDATE_PERSON:
+    case ActionType.LOGIN:
       return {...state, person: action.payload.person || {} as Person};
+
+    case ActionType.LOGOUT:
+      return {...initialState};
 
     case ActionType.CANCEL_EVENT:
       return {
@@ -39,10 +42,10 @@ export const rootReducer: Reducer<InitialState, DispatchAction> = (
         ...state,
         events: state.events.map(event => {
           if (event.id === action.payload.event?.id)
-            return action.payload.event
+            return action.payload.event;
           return event
         })
-      }
+      };
 
     case ActionType.CREATE_EVENT:
       return {
@@ -65,8 +68,11 @@ export class RootDispatcher {
     this.dispatch = dispatch;
   }
 
-  updatePerson = (person: Person) =>
-    this.dispatch({type: ActionType.UPDATE_PERSON, payload: {person}});
+  login = (person: Person) =>
+    this.dispatch({type: ActionType.LOGIN, payload: {person}});
+
+  logout = () =>
+    this.dispatch({type: ActionType.LOGOUT, payload: {}});
 
   updateEvents = (events: Array<Event>) =>
     this.dispatch({type: ActionType.UPDATE_EVENTS, payload: {events}});

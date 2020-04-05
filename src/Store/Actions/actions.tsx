@@ -1,8 +1,12 @@
 import * as actionTypes from "./actionTypes";
 import {Person, Event} from "../../Types";
 
-export const updatePerson = (person: Person) => {
-  return {type: actionTypes.UPDATE_PERSON, payload: person};
+export const login = (person: Person) => {
+  return {type: actionTypes.LOGIN, payload: person};
+};
+
+export const logout = () => {
+  return {type: actionTypes.LOGOUT, payload: {}};
 };
 
 export const updateEvent = (event: Event) => {
@@ -19,4 +23,4 @@ export const cancelEvent = (event: Event) => {
 
 export const createEvent = (event: Event) => {
   return {type: actionTypes.CREATE_EVENT, payload: event};
-}
+};
