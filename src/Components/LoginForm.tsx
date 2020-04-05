@@ -1,17 +1,20 @@
-import { Button, Card, Grid, TextField } from "@material-ui/core";
+import {Button, Card, Grid, TextField} from "@material-ui/core";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import LockIcon from "@material-ui/icons/Lock";
-import React, { ChangeEvent, FC, FormEvent, useState } from "react";
+import React, {ChangeEvent, FC, FormEvent, useEffect, useState} from "react";
 import Classes from "../App.module.css";
-import { Credentials } from "../Types/index";
-import { useDispatch } from "react-redux";
-import { RootDispatcher } from "../Store/Reducers/rootReducer";
-import { useHistory } from "react-router-dom";
+import {Credentials} from "../Types/index";
+import {useDispatch} from "react-redux";
+import {RootDispatcher} from "../Store/Reducers/rootReducer";
+import {useHistory} from "react-router-dom";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import signupApi from "../api/signupApi";
-import { Person } from "../Types";
+import {Person} from "../Types";
+import {emailRegEx} from "../Utility";
 
-interface Props {}
+interface Props {
+}
+
 interface responseData {
   jwt: string;
   person: Person;
@@ -22,6 +25,7 @@ const LoginForm: FC<Props> = () => {
   const [password, setPassword] = useState<string>("");
   const [userCredentials] = useState<Credentials>(new Credentials("", ""));
   const [updateState, setUpdateState] = useState<boolean>(false);
+  const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
   const [displayEmailError, setDisplayEmailError] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [displayPasswordError, setDisplayPasswordError] = useState<boolean>(
@@ -38,12 +42,13 @@ const LoginForm: FC<Props> = () => {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsFormSubmitted(true);
     userCredentials.setEmail(email);
     userCredentials.setPassword(password);
     setUpdateState(!updateState);
     setLoading(true);
     signupApi
-      .post("/login", { email: email, password: password })
+      .post("/login", {email: email, password: password})
       .then(result => loginSuccess(result.data))
       .catch(error => loginFail());
   };
@@ -54,6 +59,7 @@ const LoginForm: FC<Props> = () => {
 
   const loginSuccess = (result: responseData) => {
     localStorage.setItem("token", result.jwt);
+    localStorage.setItem("person", JSON.stringify(result.person));
     rootDispatcher.updatePerson(result.person);
     setLoading(false);
     history.push("/dashboard");
@@ -64,13 +70,38 @@ const LoginForm: FC<Props> = () => {
     setLoading(false);
   };
 
+  const changeDisplayEmailError = () => {
+    if (isFormSubmitted) {
+      if (!email.match(emailRegEx)) {
+        setDisplayEmailError(true);
+      } else {
+        setDisplayEmailError(false);
+      }
+    }
+  };
+
+  const changeDisplayPasswordError = () => {
+    if (isFormSubmitted) {
+      if (password.length > 0) {
+        setDisplayPasswordError(false);
+      } else {
+        setDisplayPasswordError(true);
+      }
+    }
+  };
+
+  useEffect(() => {
+    changeDisplayEmailError();
+    changeDisplayPasswordError();
+  });
+
   return (
     <Card className={Classes.MainPaper}>
       <form onSubmit={handleSubmit} noValidate className={Classes.LoginForm}>
         <h2>Sign in</h2>
         <Grid container spacing={1} alignItems="flex-start">
           <Grid item xs={1}>
-            <AccountCircle style={{ marginTop: "16px" }} />
+            <AccountCircle style={{marginTop: "16px"}}/>
           </Grid>
           <Grid item xs={11}>
             <TextField
@@ -83,14 +114,15 @@ const LoginForm: FC<Props> = () => {
               error={displayEmailError}
               helperText={displayEmailError ? "Email or password wrong!" : ""}
               value={email}
+              autoComplete="on"
             />
           </Grid>
         </Grid>
 
-        <br />
+        <br/>
         <Grid container spacing={1} alignItems="flex-end">
           <Grid item xs={1}>
-            <LockIcon />
+            <LockIcon/>
           </Grid>
           <Grid item xs={11}>
             <TextField
@@ -103,7 +135,7 @@ const LoginForm: FC<Props> = () => {
               error={displayPasswordError}
               helperText={
                 displayPasswordError
-                  ? "Password should be at least 4 characters!"
+                  ? "Please enter a password!"
                   : ""
               }
               value={password}
@@ -111,7 +143,7 @@ const LoginForm: FC<Props> = () => {
             />
           </Grid>
         </Grid>
-        <br />
+        <br/>
         <Button
           className={Classes.Button}
           color="primary"
@@ -122,7 +154,7 @@ const LoginForm: FC<Props> = () => {
           Sign in
         </Button>
         <Button
-          style={{ marginLeft: "10px" }}
+          style={{marginLeft: "10px"}}
           className={Classes.Button}
           color="primary"
           variant="contained"
@@ -133,7 +165,7 @@ const LoginForm: FC<Props> = () => {
         </Button>
       </form>
       {displayEmailError ? <p>Email and/or password did not match!</p> : ""}
-      {loading ? <CircularProgress /> : ""}
+      {loading ? <CircularProgress/> : ""}
     </Card>
   );
 };

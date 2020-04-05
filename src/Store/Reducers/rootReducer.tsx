@@ -7,8 +7,12 @@ export interface InitialState {
   events: Array<Event>;
 }
 
+function getPersonFromLocalStorage<Person>() {
+  return localStorage.getItem("person")? JSON.parse(localStorage.getItem("person") as string): {} as Person
+}
+
 export const initialState: InitialState = {
-  person: {} as Person,
+  person: getPersonFromLocalStorage(),
   events: []
 };
 
