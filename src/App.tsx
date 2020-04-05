@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 import { Route, Switch } from "react-router-dom";
 import Classes from "./App.module.css";
 import SignupLogo from "./Components/Icons/SignupLogo";
@@ -20,17 +20,19 @@ const useStyles = makeStyles({
 });
 
 const App: FC = () => {
+  const [showLogoutButton, setShowLogoutButton] = useState<boolean>(false);
   const history = useHistory();
   const classes = useStyles();
   const logout = () => {
     localStorage.setItem("person", "");
     localStorage.setItem("token", "");
+    setShowLogoutButton(false);
     history.push("/");
   };
-  return (
-    <div className={Classes.App}>
-      <div className={Classes.AppHeader}>
-        <SignupLogo />
+
+  const logoutButton = () => {
+    if (showLogoutButton) {
+      return (
         <Button
           size="large"
           classes={{
@@ -40,14 +42,31 @@ const App: FC = () => {
         >
           Logout
         </Button>
+      );
+    }
+  };
+  return (
+    <div className={Classes.App}>
+      <div className={Classes.AppHeader}>
+        <SignupLogo />
+        {logoutButton()}
       </div>
       <div className={Classes.AppMainContent}>
         <Switch>
           <Route exact path="/">
             <LoginForm />
           </Route>
-          <ProtectedRoute path="/dashboard" Component={Dashboard} />
-          <ProtectedRoute path="/create_event" Component={CreateEventForm} />
+          <ProtectedRoute
+            path="/dashboard"
+            Component={Dashboard}
+            setShowLogoutButton={setShowLogoutButton}
+          />
+
+          <ProtectedRoute
+            path="/create_event"
+            setShowLogoutButton={setShowLogoutButton}
+            Component={CreateEventForm}
+          />
           <Route
             path="/password/new/:token"
             render={props => <ResetPassword {...props} />}
@@ -55,7 +74,6 @@ const App: FC = () => {
           <Route path="/password/forgot">
             <PasswordLink />
           </Route>
-          <ProtectedRoute path="/test" component={Dashboard} />
         </Switch>
       </div>
     </div>

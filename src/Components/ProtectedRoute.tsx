@@ -3,6 +3,7 @@ import { Route, Redirect } from "react-router-dom";
 import jwt from "jsonwebtoken";
 
 interface Props {
+  setShowLogoutButton: Function;
   [x: string]: any;
 }
 export const ProtectedRoute: FC<Props> = props => {
@@ -23,6 +24,9 @@ export const ProtectedRoute: FC<Props> = props => {
   };
 
   const result = verifyToken();
+  if (result) {
+    props.setShowLogoutButton(true);
+  }
   return (
     <Route
       render={props =>
