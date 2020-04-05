@@ -9,7 +9,7 @@ h2 {
 .App {
     display: grid;
     grid-template-columns: 1.5fr 10.5fr;
-    grid-template-rows: 1fr 10.5fr;
+    grid-template-rows: 0.5fr 11fr;
     grid-template-areas: "header header" "main main";
 
     height: 100vh;

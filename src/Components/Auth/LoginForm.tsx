@@ -2,15 +2,15 @@ import {Button, Card, Grid, TextField} from "@material-ui/core";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import LockIcon from "@material-ui/icons/Lock";
 import React, {ChangeEvent, FC, FormEvent, useEffect, useState} from "react";
-import Classes from "../App.module.css";
-import {Credentials} from "../Types/index";
+import Classes from "../../App.module.css";
+import {Credentials} from "../../Types";
 import {useDispatch} from "react-redux";
-import {RootDispatcher} from "../Store/Reducers/rootReducer";
+import {RootDispatcher} from "../../Store/Reducers/rootReducer";
 import {useHistory} from "react-router-dom";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import signupApi from "../api/signupApi";
-import {Person} from "../Types";
-import {emailRegEx} from "../Utility";
+import signupApi from "../../api/signupApi";
+import {Person} from "../../Types";
+import {emailRegEx} from "../../Utility";
 
 interface Props {
 }
@@ -20,7 +20,7 @@ interface responseData {
   person: Person;
 }
 
-const LoginForm: FC<Props> = () => {
+export const LoginForm: FC<Props> = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [userCredentials] = useState<Credentials>(new Credentials("", ""));
@@ -170,4 +170,3 @@ const LoginForm: FC<Props> = () => {
   );
 };
 
-export default LoginForm;
