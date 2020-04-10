@@ -165,7 +165,8 @@ export const CreateEventForm: FC<Props> = () => {
         duration: duration,
         location: location,
         invitations: invitations,
-        isDraft: isDraft
+        isDraft: isDraft,
+        isCanceled: false
       };
       createEvent({ variables: { eventInput } });
       setIsEventSubmitted(false);

@@ -2,15 +2,15 @@ import {Button, Card, Grid, TextField} from "@material-ui/core";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import LockIcon from "@material-ui/icons/Lock";
 import React, {ChangeEvent, FC, FormEvent, useEffect, useState} from "react";
-import Classes from "../App.module.css";
-import {Credentials} from "../Types/index";
+import Classes from "../../App.module.css";
+import {Credentials} from "../../Types";
 import {useDispatch} from "react-redux";
-import {RootDispatcher} from "../Store/Reducers/rootReducer";
+import {RootDispatcher} from "../../Store/Reducers/rootReducer";
 import {useHistory} from "react-router-dom";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import signupApi from "../api/signupApi";
-import {Person} from "../Types";
-import {emailRegEx} from "../Utility";
+import signupApi from "../../api/signupApi";
+import {Person} from "../../Types";
+import {emailRegEx} from "../../Utility";
 
 interface Props {
 }
@@ -20,13 +20,14 @@ interface responseData {
   person: Person;
 }
 
-const LoginForm: FC<Props> = () => {
+export const LoginForm: FC<Props> = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [userCredentials] = useState<Credentials>(new Credentials("", ""));
   const [updateState, setUpdateState] = useState<boolean>(false);
   const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
   const [displayEmailError, setDisplayEmailError] = useState<boolean>(false);
+  const [displayLoginError, setDisplayLoginError] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [displayPasswordError, setDisplayPasswordError] = useState<boolean>(
     false
@@ -49,10 +50,10 @@ const LoginForm: FC<Props> = () => {
     setLoading(true);
     signupApi
       .post("/login", {email: email, password: password})
-      .then(result => loginSuccess(result.data))
-      .catch(error => loginFail());
+      .then(result =>  loginSuccess(result.data))
+      .catch(() => loginFail());
   };
-
+  //
   const dispatch = useDispatch();
   const rootDispatcher = new RootDispatcher(dispatch);
   const history = useHistory();
@@ -60,13 +61,13 @@ const LoginForm: FC<Props> = () => {
   const loginSuccess = (result: responseData) => {
     localStorage.setItem("token", result.jwt);
     localStorage.setItem("person", JSON.stringify(result.person));
-    rootDispatcher.updatePerson(result.person);
+    rootDispatcher.login(result.person);
     setLoading(false);
     history.push("/dashboard");
   };
 
   const loginFail = () => {
-    setDisplayEmailError(true);
+    setDisplayLoginError(true);
     setLoading(false);
   };
 
@@ -164,10 +165,9 @@ const LoginForm: FC<Props> = () => {
           Forgot password
         </Button>
       </form>
-      {displayEmailError ? <p>Email and/or password did not match!</p> : ""}
+      {displayLoginError ? <p>Email and/or password did not match!</p> : ""}
       {loading ? <CircularProgress/> : ""}
     </Card>
   );
 };
 
-export default LoginForm;

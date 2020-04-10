@@ -51,8 +51,6 @@ export const RenderEvent: FC<Props> = props => {
     var datum = new Date();
     datum = setHours(datum, Number(arr[0]));
     datum = setMinutes(datum, Number(arr[1]));
-
-    console.log(datum);
     return datum;
   };
 

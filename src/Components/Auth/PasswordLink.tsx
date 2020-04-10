@@ -2,13 +2,13 @@ import { Button, Grid, TextField } from "@material-ui/core";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import React, { ChangeEvent, FC, FormEvent, useState } from "react";
 import { useHistory } from "react-router-dom";
-import Classes from "../App.module.css";
+import Classes from "../../App.module.css";
 import axios from "axios";
 
 interface Props {
   [x: string]: any;
 }
-const PasswordLink: FC<Props> = props => {
+export const PasswordLink: FC<Props> = props => {
   const [email, setEmail] = useState<string>("");
   const [displayEmailError, setDisplayEmailError] = useState<boolean>(false);
   const history = useHistory();
@@ -71,5 +71,3 @@ const PasswordLink: FC<Props> = props => {
     </div>
   );
 };
-
-export default PasswordLink;

@@ -1,14 +1,14 @@
 import { Button, Grid, TextField } from "@material-ui/core";
 import LockIcon from "@material-ui/icons/Lock";
 import React, { ChangeEvent, FC, FormEvent, useState } from "react";
-import Classes from "../App.module.css";
+import Classes from "../../App.module.css";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
 
 interface Props {
   [x: string]: any;
 }
-const ResetPassword: FC<Props> = props => {
+export const ResetPassword: FC<Props> = props => {
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [displayPasswordError, setDisplayPasswordError] = useState<boolean>(
@@ -105,5 +105,3 @@ const ResetPassword: FC<Props> = props => {
     </div>
   );
 };
-
-export default ResetPassword;
