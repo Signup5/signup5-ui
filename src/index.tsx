@@ -14,7 +14,7 @@ import * as serviceWorker from "./serviceWorker";
 import { store } from "./Store";
 import { BrowserRouter as Router } from "react-router-dom";
 
-const httpLink = new HttpLink({ uri: process.env.REACT_APP_API_URI + "/graphql" });
+const httpLink = new HttpLink({ uri: process.env.REACT_APP_API_URI + "/graphql", credentials: 'include' });
 
 const authLink = new ApolloLink((operation, forward) => {
   const token = localStorage.getItem("token");
