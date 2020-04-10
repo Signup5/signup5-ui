@@ -4,7 +4,7 @@ import {
   ApolloClient,
   InMemoryCache,
   HttpLink,
-  ApolloLink
+  ApolloLink,
 } from "apollo-boost";
 import React from "react";
 import { Provider } from "react-redux";
@@ -14,14 +14,14 @@ import * as serviceWorker from "./serviceWorker";
 import { store } from "./Store";
 import { BrowserRouter as Router } from "react-router-dom";
 
-const httpLink = new HttpLink({ uri: "http://localhost:8080/graphql" });
+const httpLink = new HttpLink({ uri: "/graphql" });
 
 const authLink = new ApolloLink((operation, forward) => {
   const token = localStorage.getItem("token");
   operation.setContext({
     headers: {
-      authorization: token ? `Bearer ${token}` : ""
-    }
+      authorization: token ? `Bearer ${token}` : "",
+    },
   });
   return forward(operation);
 });
@@ -29,8 +29,8 @@ const authLink = new ApolloLink((operation, forward) => {
 const client = new ApolloClient({
   link: authLink.concat(httpLink),
   cache: new InMemoryCache({
-    addTypename: false
-  })
+    addTypename: false,
+  }),
 });
 
 ReactDOM.render(
