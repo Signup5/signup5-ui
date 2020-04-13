@@ -76,6 +76,7 @@ export const Dashboard: FC = () => {
   return (
     <>
       <Card className={classes.root}>
+
         <AppBar position="static" color="default">
           <Tabs
             value={value}

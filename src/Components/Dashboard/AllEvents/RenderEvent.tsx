@@ -8,8 +8,8 @@ import {
   Typography
 } from "@material-ui/core";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import React, {Dispatch, FC, SetStateAction, useState} from "react";
-import {Event, Person} from "../../../Types";
+import React, {Dispatch, FC, SetStateAction, useEffect, useState} from "react";
+import {Event, EventTypeFilter, Person} from "../../../Types";
 import {createStyles, makeStyles, Theme} from "@material-ui/core/styles";
 import {useDispatch, useSelector} from "react-redux";
 import SpeedDial from '@material-ui/lab/SpeedDial';
@@ -85,17 +85,31 @@ interface Props {
   setSnackbarOpen: Dispatch<SetStateAction<boolean>>;
   setSnackbarMessage: Dispatch<SetStateAction<string>>;
   setSnackbarSeverity: Dispatch<SetStateAction<"success" | "info" | "warning" | "error" | undefined>>;
+  filter: EventTypeFilter;
 }
 
 interface StateProps {
   person: Person;
 }
 
+function render(filter: EventTypeFilter, eventType: string) {
+  switch (eventType) {
+    case "draft":
+      return filter.draft;
+    case "guest":
+      return filter.guest;
+    case "host":
+      return filter.host;
+    default:
+      return true
+  }
+}
+
 export const RenderEvent: FC<Props> = props => {
   const [editable, setEditable] = useState<boolean>(false);
   const [open, setOpen] = useState(false);
-  const classes = useStyles();
   const event: Event = props.event;
+  const classes = useStyles();
 
   const stateProps = useSelector<InitialState, StateProps>(
     (state: InitialState) => {
@@ -104,6 +118,8 @@ export const RenderEvent: FC<Props> = props => {
       };
     }
   );
+  const eventType = event.host.email === stateProps.person.email ? event.isDraft ? "draft": "host" : "guest";
+
   const dispatch = useDispatch();
   const rootDispatcher = new RootDispatcher(dispatch);
 
@@ -180,6 +196,7 @@ export const RenderEvent: FC<Props> = props => {
 
   return (
     <>
+    { render(props.filter, eventType) ?
       <ExpansionPanel>
         <ExpansionPanelSummary
           expandIcon={<ExpandMoreIcon/>}
@@ -187,6 +204,7 @@ export const RenderEvent: FC<Props> = props => {
           id="panel1c-header"
         >
           <div className={classes.largeColumn}>
+            {eventType}
             <Typography className={classes.heading}>{event.title}</Typography>
           </div>
           <div className={classes.column}>
@@ -206,6 +224,6 @@ export const RenderEvent: FC<Props> = props => {
         </ExpansionPanelDetails>
         {menu()}
       </ExpansionPanel>
-    </>
-  )
+    : ""}
+      </>)
 }
