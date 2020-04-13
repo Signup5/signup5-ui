@@ -7,6 +7,7 @@ import Tabs from "@material-ui/core/Tabs";
 import Typography from "@material-ui/core/Typography";
 import React, { ChangeEvent, FC, useState } from "react";
 import { CreateEventForm } from "./CreateEvent";
+import { CreatePerson } from "./CreatePerson/CreatePerson";
 import { AllEvents } from "./AllEvents";
 import { InvitationList } from "./Invitations";
 import Alert from "@material-ui/lab/Alert";
@@ -37,7 +38,7 @@ function TabPanel(props: TabPanelProps) {
 function a11yProps(index: any) {
   return {
     id: `simple-tab-${index}`,
-    "aria-controls": `simple-tabpanel-${index}`
+    "aria-controls": `simple-tabpanel-${index}`,
   };
 }
 
@@ -48,8 +49,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     flex: 1,
     padding: 0,
     margin: 0,
-    backgroundColor: theme.palette.background.paper
-  }
+    backgroundColor: theme.palette.background.paper,
+  },
 }));
 
 export const Dashboard: FC = () => {
@@ -84,6 +85,7 @@ export const Dashboard: FC = () => {
           >
             <Tab label="Dashboard" {...a11yProps(0)} />
             <Tab label="Create event" {...a11yProps(1)} />
+            <Tab label="Create person" {...a11yProps(2)} />
           </Tabs>
         </AppBar>
         <div style={{ overflowY: "auto", flex: 1 }}>
@@ -111,6 +113,9 @@ export const Dashboard: FC = () => {
           </TabPanel>
           <TabPanel value={value} index={1}>
             <CreateEventForm />
+          </TabPanel>
+          <TabPanel value={value} index={2}>
+            <CreatePerson />
           </TabPanel>
         </div>
       </Card>

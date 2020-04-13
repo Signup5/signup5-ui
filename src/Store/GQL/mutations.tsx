@@ -1,4 +1,4 @@
-import {gql} from "apollo-boost";
+import { gql } from "apollo-boost";
 
 export const SET_ATTENDANCE = gql`
   mutation($attendance: Attendance!, $invitation_id: Int!) {
@@ -11,10 +11,19 @@ export const SET_ATTENDANCE = gql`
   }
 `;
 
+export const CREATE_PERSON = gql`
+  mutation($person: PersonInput) {
+    createPerson(input: $person) {
+      id
+      message
+    }
+  }
+`;
+
 export const CREATE_EVENT = gql`
   mutation($eventInput: EventInput!) {
     event: createEvent(input: $eventInput) {
-     id
+      id
       host {
         id
         email
