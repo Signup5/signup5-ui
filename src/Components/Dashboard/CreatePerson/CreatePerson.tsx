@@ -1,36 +1,15 @@
-import {
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  Grid,
-  InputAdornment,
-  Snackbar,
-  TextField,
-} from "@material-ui/core";
-import RoomOutlinedIcon from "@material-ui/icons/RoomOutlined";
-import SubjectIcon from "@material-ui/icons/Subject";
+import {Button, Card, CardActions, CardContent, Grid, InputAdornment, Snackbar, TextField,} from "@material-ui/core";
 import MailOutlineIcon from "@material-ui/icons/MailOutline";
-import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
-import React, { ChangeEvent, FC, useState } from "react";
-import { useMutation } from "react-apollo";
-import { useDispatch, useSelector } from "react-redux";
+import MuiAlert, {AlertProps} from "@material-ui/lab/Alert";
+import React, {ChangeEvent, FC, useState} from "react";
+import {useMutation} from "react-apollo";
+import {useDispatch, useSelector} from "react-redux";
 import Classes from "../../../App.module.css";
 import LockIcon from "@material-ui/icons/Lock";
-import { CREATE_PERSON } from "../../../Store/GQL";
-import {
-  InitialState,
-  RootDispatcher,
-} from "../../../Store/Reducers/rootReducer";
-import {
-  EventInput,
-  InvitationInput,
-  Person,
-  PersonInput,
-} from "../../../Types";
-import { emailRegEx } from "../../../Utility";
-import { zonedTimeToUtc } from "date-fns-tz";
-import { format } from "date-fns";
+import {CREATE_PERSON} from "../../../Store/GQL";
+import {InitialState, RootDispatcher,} from "../../../Store/Reducers/rootReducer";
+import {Person, PersonInput,} from "../../../Types";
+import {emailRegEx} from "../../../Utility";
 import PersonIcon from "@material-ui/icons/Person";
 
 function Alert(props: AlertProps) {

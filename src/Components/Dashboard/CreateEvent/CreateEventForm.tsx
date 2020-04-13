@@ -21,26 +21,19 @@ import PeopleAltOutlinedIcon from "@material-ui/icons/PeopleAltOutlined";
 import RoomOutlinedIcon from "@material-ui/icons/RoomOutlined";
 import ScheduleIcon from "@material-ui/icons/Schedule";
 import SubjectIcon from "@material-ui/icons/Subject";
-import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
-import {
-  KeyboardDatePicker,
-  KeyboardTimePicker,
-  MuiPickersUtilsProvider
-} from "@material-ui/pickers";
-import React, { ChangeEvent, FC, useState } from "react";
-import { useMutation } from "react-apollo";
-import { useDispatch, useSelector } from "react-redux";
+import MuiAlert, {AlertProps} from "@material-ui/lab/Alert";
+import {KeyboardDatePicker, KeyboardTimePicker, MuiPickersUtilsProvider} from "@material-ui/pickers";
+import React, {ChangeEvent, FC, useState} from "react";
+import {useMutation} from "react-apollo";
+import {useDispatch, useSelector} from "react-redux";
 import Classes from "../../../App.module.css";
-import { CREATE_EVENT } from "../../../Store/GQL";
-import {
-  InitialState,
-  RootDispatcher
-} from "../../../Store/Reducers/rootReducer";
-import { EventInput, InvitationInput, Person } from "../../../Types";
-import { emailRegEx } from "../../../Utility";
-import { RenderGuest } from "./RenderGuest";
-import { zonedTimeToUtc } from "date-fns-tz";
-import { format } from "date-fns";
+import {CREATE_EVENT} from "../../../Store/GQL";
+import {InitialState, RootDispatcher} from "../../../Store/Reducers/rootReducer";
+import {EventInput, InvitationInput, Person} from "../../../Types";
+import {emailRegEx} from "../../../Utility";
+import {RenderGuest} from "./RenderGuest";
+import {zonedTimeToUtc} from "date-fns-tz";
+import {format} from "date-fns";
 
 function Alert(props: AlertProps) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;

@@ -1,4 +1,4 @@
-import { gql } from "apollo-boost";
+import {gql} from "apollo-boost";
 
 export const SET_ATTENDANCE = gql`
   mutation($attendance: Attendance!, $invitation_id: Int!) {

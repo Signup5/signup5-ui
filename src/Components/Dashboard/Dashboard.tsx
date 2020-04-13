@@ -1,15 +1,15 @@
-import { Card, Grid, Snackbar } from "@material-ui/core";
+import {Card, Grid, Snackbar} from "@material-ui/core";
 import AppBar from "@material-ui/core/AppBar";
 import Box from "@material-ui/core/Box";
-import { makeStyles, Theme } from "@material-ui/core/styles";
+import {makeStyles, Theme} from "@material-ui/core/styles";
 import Tab from "@material-ui/core/Tab";
 import Tabs from "@material-ui/core/Tabs";
 import Typography from "@material-ui/core/Typography";
-import React, { ChangeEvent, FC, useState } from "react";
-import { CreateEventForm } from "./CreateEvent";
-import { CreatePerson } from "./CreatePerson/CreatePerson";
-import { AllEvents } from "./AllEvents";
-import { InvitationList } from "./Invitations";
+import React, {ChangeEvent, FC, useState} from "react";
+import {CreateEventForm} from "./CreateEvent";
+import {CreatePerson} from "./CreatePerson/CreatePerson";
+import {AllEvents} from "./AllEvents";
+import {InvitationList} from "./Invitations";
 import Alert from "@material-ui/lab/Alert";
 
 interface TabPanelProps {

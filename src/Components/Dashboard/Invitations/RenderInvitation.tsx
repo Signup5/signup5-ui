@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@apollo/react-hooks";
+import {useMutation, useQuery} from "@apollo/react-hooks";
 import {
   Button,
   Divider,
@@ -9,10 +9,10 @@ import {
   Typography
 } from "@material-ui/core";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import React, { Dispatch, FC, SetStateAction, useState } from "react";
-import { GET_EVENT_BY_ID, SET_ATTENDANCE } from "../../../Store/GQL";
-import { Attendance, Event, Invitation, QueryResponse } from "../../../Types";
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
+import React, {Dispatch, FC, SetStateAction, useState} from "react";
+import {GET_EVENT_BY_ID, SET_ATTENDANCE} from "../../../Store/GQL";
+import {Attendance, Event, Invitation, QueryResponse} from "../../../Types";
+import {createStyles, makeStyles, Theme} from "@material-ui/core/styles";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
 const useStyles = makeStyles((theme: Theme) =>

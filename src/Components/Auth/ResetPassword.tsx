@@ -1,8 +1,8 @@
-import { Button, Grid, TextField } from "@material-ui/core";
+import {Button, Grid, TextField} from "@material-ui/core";
 import LockIcon from "@material-ui/icons/Lock";
-import React, { ChangeEvent, FC, FormEvent, useState } from "react";
+import React, {ChangeEvent, FC, FormEvent, useState} from "react";
 import Classes from "../../App.module.css";
-import { useHistory } from "react-router-dom";
+import {useHistory} from "react-router-dom";
 import axios from "axios";
 
 interface Props {

@@ -1,5 +1,5 @@
 import * as actionTypes from "./actionTypes";
-import {Person, Event} from "../../Types";
+import {Event, Person} from "../../Types";
 
 export const login = (person: Person) => {
   return {type: actionTypes.LOGIN, payload: person};
