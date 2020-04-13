@@ -8,29 +8,15 @@ import {
   Snackbar,
   TextField,
 } from "@material-ui/core";
-import RoomOutlinedIcon from "@material-ui/icons/RoomOutlined";
-import SubjectIcon from "@material-ui/icons/Subject";
 import MailOutlineIcon from "@material-ui/icons/MailOutline";
 import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
 import React, { ChangeEvent, FC, useState } from "react";
 import { useMutation } from "react-apollo";
-import { useDispatch, useSelector } from "react-redux";
 import Classes from "../../../App.module.css";
 import LockIcon from "@material-ui/icons/Lock";
 import { CREATE_PERSON } from "../../../Store/GQL";
-import {
-  InitialState,
-  RootDispatcher,
-} from "../../../Store/Reducers/rootReducer";
-import {
-  EventInput,
-  InvitationInput,
-  Person,
-  PersonInput,
-} from "../../../Types";
+import { Person, PersonInput } from "../../../Types";
 import { emailRegEx } from "../../../Utility";
-import { zonedTimeToUtc } from "date-fns-tz";
-import { format } from "date-fns";
 import PersonIcon from "@material-ui/icons/Person";
 
 function Alert(props: AlertProps) {
@@ -39,16 +25,11 @@ function Alert(props: AlertProps) {
 
 interface Props {}
 
-interface StateProps {
-  host: Person;
-}
-
 export const CreatePerson: FC<Props> = () => {
   const [email, setEmail] = useState<string>("");
   const [firstName, setFirstName] = useState<string>("");
   const [lastName, setLastName] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const [isEventSubmitted, setIsEventSubmitted] = useState<boolean>(false);
   const [displayEmailError, setDisplayEmailError] = useState<boolean>(false);
   const [displayFirstNameError, setDisplayFirstNameError] = useState<boolean>(
     false
@@ -66,20 +47,14 @@ export const CreatePerson: FC<Props> = () => {
     "success" | "info" | "warning" | "error" | undefined
   >(undefined);
 
-  const stateProps = useSelector<InitialState, StateProps>(
-    (state: InitialState) => {
-      return {
-        host: { ...state.person },
-      };
-    }
-  );
-
-  const dispatch = useDispatch();
-  const rootDispatcher = new RootDispatcher(dispatch);
-
   const [createPerson] = useMutation(CREATE_PERSON, {
     onError(err) {
-      setResponseMessage("Something went wrong!");
+      setResponseMessage(
+        err.message.replace(
+          "GraphQL error: Exception while fetching data (/createPerson) : ",
+          ""
+        )
+      );
       setSeverity("error");
       setOpen(true);
     },
@@ -112,7 +87,7 @@ export const CreatePerson: FC<Props> = () => {
     setPassword(e.target.value);
   };
 
-  const handleSubmit = (isDraft: boolean) => {
+  const handleSubmit = () => {
     if (validateInputFields()) {
       const person: PersonInput = {
         email: email,
@@ -121,12 +96,7 @@ export const CreatePerson: FC<Props> = () => {
         password: password,
       };
       createPerson({ variables: { person } });
-      console.log("WORKS");
     }
-
-    setIsEventSubmitted(true);
-
-    setIsEventSubmitted(false);
   };
 
   const validateInputFields = () => {
@@ -282,7 +252,7 @@ export const CreatePerson: FC<Props> = () => {
                 color="primary"
                 variant="contained"
                 type="submit"
-                onClick={() => handleSubmit(false)}
+                onClick={() => handleSubmit()}
               >
                 Create person
               </Button>
