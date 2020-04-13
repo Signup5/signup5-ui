@@ -32,6 +32,7 @@ export const InvitationList: FC<Props> = (props) => {
   );
 
   const response: QueryResponse = useQuery(GET_UPCOMING_UNREPLIED_INVITATIONS_BY_GUEST_ID, {
+    fetchPolicy: "network-only",
     variables: {
       id: stateProps.person.id
     },

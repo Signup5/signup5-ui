@@ -93,6 +93,7 @@ export const CreateEventForm: FC<Props> = () => {
       setSeverity("success");
       setOpen(true);
       rootDispatcher.createEvent(event);
+
     }
   });
 

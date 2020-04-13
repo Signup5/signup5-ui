@@ -6,6 +6,17 @@ import LocationOnOutlinedIcon from '@material-ui/icons/LocationOnOutlined';
 import PeopleAltOutlinedIcon from '@material-ui/icons/PeopleAltOutlined';
 import {createStyles, makeStyles, Theme} from "@material-ui/core/styles";
 import Badge from '@material-ui/core/Badge';
+import Dialog from '@material-ui/core/Dialog';
+import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+import ListItemText from '@material-ui/core/ListItemText';
+import PersonIcon from '@material-ui/icons/Person';
+import Avatar from '@material-ui/core/Avatar';
+import ListItem from '@material-ui/core/ListItem';
+import List from '@material-ui/core/List';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -74,14 +85,29 @@ const StyledBadge = withStyles((theme: Theme) =>
   }),
 )(Badge);
 
+
 interface Props {
   event: Event;
 }
 
 export const NonEditableEvent: FC<Props> = props => {
   const [showFullDescription, setShowFullDescription] = useState<boolean>(false);
+  const [dialogOpen, setDialogOpen] = useState<boolean>(false);
+  const [dialogAttendance, setDialogAttendance] = useState<string>("");
+
+
   const event: Event = props.event;
   const classes = useStyles();
+
+
+  const handleAttendanceClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    setDialogAttendance(e.currentTarget.title);
+    setDialogOpen(true)
+  }
+
+  const handleDialogClose = () => {
+    setDialogOpen(false);
+  }
 
   function invitationSummary(attendance: string) {
     return event.invitations.filter(i => {
@@ -89,11 +115,25 @@ export const NonEditableEvent: FC<Props> = props => {
     }).length
   }
 
+  const dialogContent = () => {
+    return
+    // return event.invitations.map(invitation => {
+    //   return <ListItem>
+    //     <ListItemAvatar>
+    //       <Avatar>
+    //         <PersonIcon/>
+    //       </Avatar>
+    //     </ListItemAvatar>
+    //     <ListItemText primary={invitation.guest.email}/>
+    //   </ListItem>
+
+  }
+
   const descriptionArea = () => {
     return <>
       <Typography className={classes.contentText}>
         {/*{event.description}*/}
-          {showFullDescription ? event.description : event.description.substr(0, 200) + (event.description.length > 200 ? "..." : "")}
+        {showFullDescription ? event.description : event.description.substr(0, 200) + (event.description.length > 200 ? "..." : "")}
       </Typography>
       {event.description.length < 200 ? "" :
         <Button size="small"
@@ -101,6 +141,7 @@ export const NonEditableEvent: FC<Props> = props => {
         </Button>}
     </>
   };
+
 
   return (
     <Grid container spacing={3}>
@@ -138,29 +179,48 @@ export const NonEditableEvent: FC<Props> = props => {
           <Typography className={classes.contentText}>
             <StyledBadge badgeContent={invitationSummary("ATTENDING")} color="primary"
                          style={{marginLeft: "18px"}}>
-              <Button size="small">
+              <Button size="small" onClick={handleAttendanceClick} title="ATTENDING">
                 Attending
               </Button>
             </StyledBadge>
             <StyledBadge badgeContent={invitationSummary("MAYBE")} color="primary" style={{marginLeft: "18px"}}>
-              <Button size="small">
+              <Button size="small" onClick={handleAttendanceClick} title="MAYBE">
                 Maybe
               </Button>
             </StyledBadge>
             <StyledBadge badgeContent={invitationSummary("NOT_ATTENDING")} color="primary"
                          style={{marginLeft: "18px"}}>
-              <Button size="small">
+              <Button size="small" onClick={handleAttendanceClick} title="NOT_ATTENDING">
                 Not Attending
               </Button>
             </StyledBadge>
             <StyledBadge badgeContent={invitationSummary("NO_RESPONSE")} color="secondary"
                          style={{marginLeft: "18px"}}>
-              <Button size="small">
+              <Button size="small" onClick={handleAttendanceClick} title="NO_RESPONSE">
                 No Response
               </Button>
             </StyledBadge>
           </Typography>
 
+          <Dialog open={dialogOpen} onClose={handleDialogClose}>
+            <DialogTitle>{dialogAttendance}</DialogTitle>
+            <List>
+                {event.invitations.map(invitation => {
+                  return invitation.attendance.toString() === dialogAttendance ?
+                    <ListItem >
+                      <ListItemAvatar>
+                        <Avatar>
+                          <PersonIcon />
+                        </Avatar>
+                      </ListItemAvatar>
+                      <ListItemText primary={invitation.guest.email} />
+                    </ListItem>
+
+                    : ""
+                })}
+            </List>
+
+          </Dialog>
         </Grid>
       </Grid>
       {/**invitation summary end*/}
