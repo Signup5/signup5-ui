@@ -85,7 +85,7 @@ export const Dashboard: FC = () => {
           >
             <Tab label="Dashboard" {...a11yProps(0)} />
             <Tab label="Create event" {...a11yProps(1)} />
-            <Tab label="Create person" {...a11yProps(2)} />
+            <Tab label="Add person" {...a11yProps(2)} />
           </Tabs>
         </AppBar>
         <div style={{ overflowY: "auto", flex: 1 }}>
