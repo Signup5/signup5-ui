@@ -35,8 +35,7 @@ export const InvitationList: FC<Props> = (props) => {
     fetchPolicy: "network-only",
     variables: {
       id: stateProps.person.id
-    },
-    fetchPolicy: "network-only"
+    }
   });
 
   useEffect(() => {
