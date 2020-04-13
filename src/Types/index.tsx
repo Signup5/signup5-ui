@@ -1,4 +1,4 @@
-import {emailRegEx} from "../Utility";
+import { emailRegEx } from "../Utility";
 
 export type Person = {
   id: number;
@@ -11,7 +11,7 @@ export enum Attendance {
   ATTENDING,
   NOT_ATTENDING,
   MAYBE,
-  NO_RESPONSE
+  NO_RESPONSE,
 }
 
 export type Invitation = {
@@ -23,16 +23,16 @@ export type Invitation = {
 
 export type Event = {
   id: number;
-  host: Person
+  host: Person;
   title: string;
   description: string;
   date_of_event: string;
   time_of_event: string;
   duration: number;
   location: string;
-  invitations: Array<Invitation>
-  isDraft: boolean
-  isCanceled: boolean
+  invitations: Array<Invitation>;
+  isDraft: boolean;
+  isCanceled: boolean;
 };
 
 export interface UpdateEventInput {
@@ -61,7 +61,12 @@ export interface EventInput {
   isCanceled: boolean;
 }
 
-
+export interface PersonInput {
+  email: string;
+  first_name: string;
+  last_name: string;
+  password: string;
+}
 
 export interface InvitationInput {
   id?: number;

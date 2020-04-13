@@ -1,71 +1,71 @@
 body {
-    background-color: whitesmoke;
+  background-color: whitesmoke;
 }
 
 h2 {
-    margin: 0px;
+  margin: 0px;
 }
 
 .App {
-    display: grid;
-    grid-template-columns: 1.5fr 10.5fr;
-    grid-template-rows: 0.5fr 11fr;
-    grid-template-areas: "header header" "main main";
+  display: grid;
+  grid-template-columns: 1.5fr 10.5fr;
+  grid-template-rows: 0.5fr 11fr;
+  grid-template-areas: "header header" "main main";
 
-    height: 100vh;
+  height: 100vh;
 }
 
 .AppHeader {
-    padding: 10px;
-    grid-area: header;
-    border-bottom: 1px solid rgb(135, 135, 135);
-    margin: 10px 30px 0 30px;
+  padding: 10px;
+  grid-area: header;
+  border-bottom: 1px solid rgb(135, 135, 135);
+  margin: 10px 30px 0 30px;
 }
 
 .AppMainContent {
-    grid-area: main;
-    overflow-x: hidden;
-    padding: 10px 30px;
-    margin-bottom: 14px;
-    display: flex;
+  grid-area: main;
+  overflow-x: hidden;
+  padding: 10px 30px;
+  margin-bottom: 14px;
+  display: flex;
 }
 
 .AppSidebar {
-    grid-area: sidebar;
-    border-right: 1px solid rgb(135, 135, 135);
-    margin: 30px 0 30px 0;
-    padding-left: 30px;
+  grid-area: sidebar;
+  border-right: 1px solid rgb(135, 135, 135);
+  margin: 30px 0 30px 0;
+  padding-left: 30px;
 }
 
 .SignupLogo {
-    max-width: 15%;
-    min-width: 215px;
+  max-width: 15%;
+  min-width: 215px;
 }
 
 .InputField {
-    width: 100%;
+  width: 100%;
 }
 
 .LoginForm {
-    width: 100%;
-    max-width: 300px;
-    padding: 12px;
+  width: 50%;
+  max-width: 300px;
+  padding: 12px;
 }
 
 .TextField {
-    margin: 10px 0px !important;
+  margin: 10px 0px !important;
 }
 
 .Button {
-    margin-top: 16px !important;
+  margin-top: 16px !important;
 }
 
 .MainPaper {
-    flex-grow: 1;
-    padding: 12px 24px;
-    margin-bottom: 10px;
+  flex-grow: 1;
+  padding: 12px 24px;
+  margin-bottom: 10px;
 }
 
 .Card {
-    padding: 12px 24px;
+  padding: 12px 24px;
 }
