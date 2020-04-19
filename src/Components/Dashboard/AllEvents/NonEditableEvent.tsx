@@ -13,8 +13,6 @@ import PersonIcon from "@material-ui/icons/Person";
 import Avatar from "@material-ui/core/Avatar";
 import ListItem from "@material-ui/core/ListItem";
 import List from "@material-ui/core/List";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -113,24 +111,10 @@ export const NonEditableEvent: FC<Props> = (props) => {
     }).length;
   }
 
-  const dialogContent = () => {
-    return;
-    // return event.invitations.map(invitation => {
-    //   return <ListItem>
-    //     <ListItemAvatar>
-    //       <Avatar>
-    //         <PersonIcon/>
-    //       </Avatar>
-    //     </ListItemAvatar>
-    //     <ListItemText primary={invitation.guest.email}/>
-    //   </ListItem>
-  };
-
   const descriptionArea = () => {
     return (
       <>
         <Typography className={classes.contentText}>
-          {/*{event.description}*/}
           {showFullDescription
             ? event.description
             : event.description.substr(0, 200) +
@@ -150,6 +134,30 @@ export const NonEditableEvent: FC<Props> = (props) => {
       </>
     );
   };
+
+  function Modal() {
+    return (
+      <Dialog open={dialogOpen} onClose={handleDialogClose}>
+        <DialogTitle>{dialogAttendance}</DialogTitle>
+        <List>
+          {event.invitations.map((invitation) => {
+            return invitation.attendance.toString() === dialogAttendance ? (
+              <ListItem key={invitation.id + "listItem"}>
+                <ListItemAvatar key={invitation.id + "listItemAvatar"}>
+                  <Avatar key={invitation.id + "avatar"}>
+                    <PersonIcon key={invitation.id + "personIcon"} />
+                  </Avatar>
+                </ListItemAvatar>
+                <ListItemText primary={invitation.guest.email} />
+              </ListItem>
+            ) : (
+              ""
+            );
+          })}
+        </List>
+      </Dialog>
+    );
+  }
 
   return (
     <Grid container spacing={3}>
@@ -237,29 +245,11 @@ export const NonEditableEvent: FC<Props> = (props) => {
               </Button>
             </StyledBadge>
           </Typography>
-
-          <Dialog open={dialogOpen} onClose={handleDialogClose}>
-            <DialogTitle>{dialogAttendance}</DialogTitle>
-            <List>
-              {event.invitations.map((invitation) => {
-                return invitation.attendance.toString() === dialogAttendance ? (
-                  <ListItem>
-                    <ListItemAvatar>
-                      <Avatar>
-                        <PersonIcon />
-                      </Avatar>
-                    </ListItemAvatar>
-                    <ListItemText primary={invitation.guest.email} />
-                  </ListItem>
-                ) : (
-                  ""
-                );
-              })}
-            </List>
-          </Dialog>
         </Grid>
       </Grid>
       {/**invitation summary end*/}
+
+      <Modal />
     </Grid>
   );
 };

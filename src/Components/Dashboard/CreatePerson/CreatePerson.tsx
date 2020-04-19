@@ -1,22 +1,13 @@
-import {
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  Grid,
-  InputAdornment,
-  Snackbar,
-  TextField,
-} from "@material-ui/core";
+import {Button, Card, CardActions, CardContent, Grid, InputAdornment, Snackbar, TextField,} from "@material-ui/core";
 import MailOutlineIcon from "@material-ui/icons/MailOutline";
-import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
-import React, { ChangeEvent, FC, useState } from "react";
-import { useMutation } from "react-apollo";
+import MuiAlert, {AlertProps} from "@material-ui/lab/Alert";
+import React, {ChangeEvent, FC, useState} from "react";
+import {useMutation} from "react-apollo";
 import Classes from "../../../App.module.css";
 import LockIcon from "@material-ui/icons/Lock";
-import { CREATE_PERSON } from "../../../Store/GQL";
-import { Person, PersonInput } from "../../../Types";
-import { emailRegEx } from "../../../Utility";
+import {CREATE_PERSON} from "../../../Store/GQL";
+import {PersonInput,} from "../../../Types";
+import {emailRegEx} from "../../../Utility";
 import PersonIcon from "@material-ui/icons/Person";
 
 function Alert(props: AlertProps) {

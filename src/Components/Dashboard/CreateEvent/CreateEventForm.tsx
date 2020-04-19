@@ -20,9 +20,8 @@ import ScheduleIcon from "@material-ui/icons/Schedule";
 import SubjectIcon from "@material-ui/icons/Subject";
 import MuiAlert, {AlertProps} from "@material-ui/lab/Alert";
 import {KeyboardDatePicker, KeyboardTimePicker, MuiPickersUtilsProvider} from "@material-ui/pickers";
-import React, {ChangeEvent, FC, useEffect, useState} from "react";
+import React, {ChangeEvent, FC, useState} from "react";
 import {useMutation, useQuery} from "react-apollo";
-import {useHistory} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import Classes from "../../../App.module.css";
 import {CREATE_EVENT, GET_ALL_PERSONS} from "../../../Store/GQL";
@@ -30,6 +29,7 @@ import {InitialState, RootDispatcher} from "../../../Store/Reducers/rootReducer"
 import {EventInput, GuestInput, InvitationInput, Person, QueryResponse} from "../../../Types";
 import {zonedTimeToUtc} from "date-fns-tz";
 import {format} from "date-fns";
+import {useHistory} from "react-router-dom";
 import {Autocomplete} from "@material-ui/lab";
 
 function Alert(props: AlertProps) {

@@ -1,15 +1,12 @@
-import { useQuery } from "@apollo/react-hooks";
+import {useQuery} from "@apollo/react-hooks";
 import React, {Dispatch, FC, SetStateAction, useState} from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { GET_HOSTED_AND_INVITED_EVENTS_BY_PERSON_ID } from "../../../Store/GQL";
-import {
-  InitialState,
-  RootDispatcher
-} from "../../../Store/Reducers/rootReducer";
-import { Event, Person, QueryResponse, EventTypeFilter } from "../../../Types";
-import { RenderEvent } from "./RenderEvent";
+import {useDispatch, useSelector} from "react-redux";
+import {GET_HOSTED_AND_INVITED_EVENTS_BY_PERSON_ID} from "../../../Store/GQL";
+import {InitialState, RootDispatcher} from "../../../Store/Reducers/rootReducer";
+import {Event, EventTypeFilter, Person, QueryResponse} from "../../../Types";
+import {RenderEvent} from "./RenderEvent";
 import LinearProgress from "@material-ui/core/LinearProgress";
-import { Grid } from "@material-ui/core";
+import {Grid} from "@material-ui/core";
 import Checkbox from '@material-ui/core/Checkbox';
 
 interface Props {
