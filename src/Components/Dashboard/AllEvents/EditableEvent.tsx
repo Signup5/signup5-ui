@@ -1,17 +1,6 @@
-import {
-  Button,
-  FormControl,
-  Grid,
-  IconButton,
-  InputAdornment,
-  InputLabel,
-  List,
-  MenuItem,
-  Select,
-  TextField
-} from "@material-ui/core";
+import {Button, FormControl, Grid, InputAdornment, InputLabel, MenuItem, Select, TextField} from "@material-ui/core";
 import React, {ChangeEvent, Dispatch, FC, SetStateAction, useEffect, useState} from "react";
-import {Event, InvitationInput, Person, UpdateEventInput} from "../../../Types";
+import {Event, GuestInput, InvitationInput, Person, QueryResponse, UpdateEventInput} from "../../../Types";
 import Classes from "../../../App.module.css";
 import EventOutlinedIcon from "@material-ui/icons/EventOutlined";
 import PeopleAltOutlinedIcon from "@material-ui/icons/PeopleAltOutlined";
@@ -23,13 +12,11 @@ import DateFnsUtils from "@date-io/date-fns";
 import {useHistory} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {InitialState, RootDispatcher} from "../../../Store/Reducers/rootReducer";
-import {useMutation} from "react-apollo";
-import {UPDATE_EVENT} from "../../../Store/GQL";
+import {useMutation, useQuery} from "react-apollo";
+import {GET_ALL_PERSONS, UPDATE_EVENT} from "../../../Store/GQL";
 import {zonedTimeToUtc} from "date-fns-tz";
 import {format} from "date-fns";
-import {emailRegEx} from "../../../Utility";
-import {RenderGuest} from "../CreateEvent/RenderGuest";
-import KeyboardReturnIcon from "@material-ui/icons/KeyboardReturn";
+import {Autocomplete} from "@material-ui/lab";
 
 interface Props {
   event: Event;
@@ -55,13 +42,10 @@ export const EditableEvent: FC<Props> = props => {
   const [date_of_event, setDate_of_event] = useState<Date | null>(new Date(event.date_of_event));
   const [time_of_event, setTime_of_event] = useState<Date | null>(time);
   const [location, setLocation] = useState<string>(event.location);
-  const [guestEmail, setGuestEmail] = useState<string>("");
-  const [guestList, setGuestList] = useState<Array<string>>(event.invitations.map(e => {
-    return e.guest.email
+  const [guestsToInvite, setGuestsToInvite] = useState<Array<GuestInput>>(event.invitations.map(e => {
+    return e.guest
   }));
-  const [isGuestSubmitted, setIsGuestSubmitted] = useState<boolean>(false);
-  const [displayEmailError, setDisplayEmailError] = useState<boolean>(false);
-  const [emailError, setEmailError] = useState<string>("");
+  const [userList, setUserList] = useState<GuestInput[]>([]);
   const [isEventSubmitted, setIsEventSubmitted] = useState<boolean>(false);
   const [duration, setDuration] = useState<number>(event.duration);
 
@@ -77,6 +61,12 @@ export const EditableEvent: FC<Props> = props => {
     }
   );
 
+  const response: QueryResponse = useQuery(GET_ALL_PERSONS, {
+    onCompleted() {
+      setUserList(response.data.getAllPersons);
+    }
+  });
+
   const [updateEvent] = useMutation(UPDATE_EVENT, {
     onError(err) {
       props.setSnackbarMessage("Something went wrong!");
@@ -91,6 +81,12 @@ export const EditableEvent: FC<Props> = props => {
       rootDispatcher.updateEvent(event);
     }
   });
+
+  function updateGuestList(guests: any) {
+    setGuestsToInvite(guests.map((guest: any) => {
+      return guest;
+    }))
+  };
 
   const onTitleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setTitle(e.target.value);
@@ -112,10 +108,6 @@ export const EditableEvent: FC<Props> = props => {
     setLocation(e.target.value);
   };
 
-  const onGuestEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setGuestEmail(e.target.value);
-  };
-
   const onDurationChange = (e: ChangeEvent<{ value: unknown }>) => {
     setDuration(Number(e.target.value));
   };
@@ -135,11 +127,9 @@ export const EditableEvent: FC<Props> = props => {
 
       const invitations: Array<InvitationInput> = [];
 
-      guestList.forEach(email => {
+      guestsToInvite.forEach(guest => {
         const invitation: InvitationInput = {
-          guest: {
-            email: email
-          }
+          guest
         };
         invitations.push(invitation);
       });
@@ -164,60 +154,6 @@ export const EditableEvent: FC<Props> = props => {
     }
   };
 
-  const addToGuestList = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      setIsGuestSubmitted(true);
-      const guests: Array<string> = guestList;
-
-      const lowerCaseGuestList = guestList.map(email => {
-        return email.toLowerCase();
-      });
-
-      if (guestEmail.match(emailRegEx)) {
-        if (!lowerCaseGuestList.includes(guestEmail.toLowerCase())) {
-          guests.push(guestEmail);
-          setGuestEmail("");
-          setGuestList(guests);
-          setDisplayEmailError(false);
-          setEmailError("");
-          setIsGuestSubmitted(false);
-        } else {
-          setEmailError("Guest already invited");
-          setDisplayEmailError(true);
-          setIsGuestSubmitted(false);
-        }
-      }
-    }
-  };
-
-  const changeDisplayEmailError = () => {
-    if (isGuestSubmitted) {
-      if (!guestEmail.match(emailRegEx)) {
-        setDisplayEmailError(true);
-        setEmailError("Invalid email");
-      } else {
-        setDisplayEmailError(false);
-        setEmailError("");
-      }
-    }
-  };
-
-  const renderGuestList = () => {
-    return guestList.map((guest, index) => {
-      return (
-        <RenderGuest
-          guest={guest}
-          removeGuest={removeGuest}
-          key={index + guest}
-        />
-      );
-    });
-  };
-
-  const removeGuest = (guest: string) => {
-    setGuestList(guestList.filter(g => g !== guest));
-  };
-
   const today = new Date();
   const maxDate = new Date().setFullYear(today.getFullYear() + 3);
 
@@ -225,7 +161,7 @@ export const EditableEvent: FC<Props> = props => {
     if (!stateProps.host.id) {
       history.push("");
     }
-    changeDisplayEmailError();
+    // changeDisplayEmailError();
   });
 
 
@@ -413,44 +349,29 @@ export const EditableEvent: FC<Props> = props => {
           />
         </Grid>
         <Grid item xs={true}>
-          <TextField
-            className={Classes.TextField}
-            id="addGuest"
-            label="Add guest"
-            fullWidth={true}
-            value={guestEmail}
-            onKeyUp={addToGuestList}
-            onChange={onGuestEmailChange}
-            error={displayEmailError}
-            helperText={emailError}
-            variant="filled"
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  {guestEmail.match(emailRegEx) ? (
-                    <IconButton color="primary">
-                      <KeyboardReturnIcon/>
-                    </IconButton>
-                  ) : (
-                    ""
-                  )}
-                </InputAdornment>
-              )
-            }}
+
+          <Autocomplete
+            multiple
+            id="guestListDropdown"
+            options={userList}
+            value={userList.filter((o1: GuestInput) => guestsToInvite.some((o2: GuestInput) => o1.email === o2.email))}
+            getOptionLabel={(guest: GuestInput) => guest.first_name + " " + guest.last_name + " (" + guest.email + ")"}
+            style={{flexGrow: 20}}
+            filterSelectedOptions
+            onChange={(event, value) => updateGuestList(value)}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                variant="outlined"
+                label="Add guests"
+                placeholder="Add new guest"
+              />
+            )}
           />
         </Grid>
 
       </Grid>
       {/*guest row end*/}
-      <List
-        dense={true}
-        style={{
-          maxHeight: "150px",
-          overflowY: guestList.length >= 4 ? "scroll" : "hidden"
-        }}
-      >
-        {renderGuestList()}
-      </List>
 
       {/*button row start*/}
       <Grid container item spacing={3} justify="flex-end">
