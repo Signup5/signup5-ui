@@ -1,4 +1,4 @@
-import { emailRegEx } from "../Utility";
+import {emailRegEx} from "../Utility";
 
 export type Person = {
   id: number;

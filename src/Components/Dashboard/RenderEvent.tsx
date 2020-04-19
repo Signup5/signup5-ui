@@ -1,36 +1,29 @@
 import {
+  Button,
+  Card,
+  CardActions,
+  CardContent,
   ExpansionPanel,
   ExpansionPanelDetails,
   ExpansionPanelSummary,
-  Snackbar,
-  Typography,
-  Card,
-  CardContent,
-  TextField,
   InputAdornment,
-  List,
-  CardActions,
-  Button
+  Snackbar,
+  TextField,
+  Typography
 } from "@material-ui/core";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import Alert from "@material-ui/lab/Alert";
-import React, { FC, useState } from "react";
-import { Event, Invitation } from "../../Types";
+import React, {FC, useState} from "react";
+import {Event} from "../../Types";
 import Classes from "../../App.module.css";
 import EventOutlinedIcon from "@material-ui/icons/EventOutlined";
-import KeyboardReturnIcon from "@material-ui/icons/KeyboardReturn";
 import PeopleAltOutlinedIcon from "@material-ui/icons/PeopleAltOutlined";
 import RoomOutlinedIcon from "@material-ui/icons/RoomOutlined";
 import ScheduleIcon from "@material-ui/icons/Schedule";
 import SubjectIcon from "@material-ui/icons/Subject";
-import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
-import {
-  KeyboardDatePicker,
-  KeyboardTimePicker,
-  MuiPickersUtilsProvider
-} from "@material-ui/pickers";
+import {KeyboardDatePicker, KeyboardTimePicker, MuiPickersUtilsProvider} from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
-import { setHours, setMinutes } from "date-fns";
+import {setHours, setMinutes} from "date-fns";
 
 interface Props {
   event: Event;
