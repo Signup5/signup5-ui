@@ -1,18 +1,17 @@
-import {Button, Card, Grid, TextField} from "@material-ui/core";
-import AccountCircle from "@material-ui/icons/AccountCircle";
-import LockIcon from "@material-ui/icons/Lock";
-import React, {ChangeEvent, FC, FormEvent, useEffect, useState} from "react";
+import { Button, Card, Grid, TextField } from "@material-ui/core";
+import MailOutlineOutlinedIcon from "@material-ui/icons/MailOutlineOutlined";
+import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
+import React, { ChangeEvent, FC, FormEvent, useEffect, useState } from "react";
 import Classes from "../../App.module.css";
-import {Credentials, Person} from "../../Types";
-import {useDispatch, useSelector} from "react-redux";
-import {InitialState, RootDispatcher} from "../../Store/Reducers/rootReducer";
-import {useHistory} from "react-router-dom";
+import { Credentials, Person } from "../../Types";
+import { useDispatch, useSelector } from "react-redux";
+import { InitialState, RootDispatcher } from "../../Store/Reducers/rootReducer";
+import { useHistory } from "react-router-dom";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import signupApi from "../../api/signupApi";
-import {emailRegEx} from "../../Utility";
+import { emailRegEx } from "../../Utility";
 
-interface Props {
-}
+interface Props {}
 
 interface StateProps {
   person: Person;
@@ -39,7 +38,7 @@ export const LoginForm: FC<Props> = () => {
   const stateProps = useSelector<InitialState, StateProps>(
     (state: InitialState) => {
       return {
-        person: state.person
+        person: state.person,
       };
     }
   );
@@ -60,8 +59,8 @@ export const LoginForm: FC<Props> = () => {
     setUpdateState(!updateState);
     setLoading(true);
     signupApi
-      .post("/login", {email: email, password: password})
-      .then(result =>  loginSuccess(result.data))
+      .post("/login", { email: email, password: password })
+      .then((result) => loginSuccess(result.data))
       .catch(() => loginFail());
   };
   //
@@ -106,8 +105,8 @@ export const LoginForm: FC<Props> = () => {
     changeDisplayEmailError();
     changeDisplayPasswordError();
     if (stateProps.person.id) {
-      history.push("/dashboard")
-    };
+      history.push("/dashboard");
+    }
   });
 
   return (
@@ -116,7 +115,7 @@ export const LoginForm: FC<Props> = () => {
         <h2>Sign in</h2>
         <Grid container spacing={1} alignItems="flex-start">
           <Grid item xs={1}>
-            <AccountCircle style={{marginTop: "16px"}}/>
+            <MailOutlineOutlinedIcon style={{ marginTop: "20px" }} />
           </Grid>
           <Grid item xs={11}>
             <TextField
@@ -134,10 +133,10 @@ export const LoginForm: FC<Props> = () => {
           </Grid>
         </Grid>
 
-        <br/>
+        <br />
         <Grid container spacing={1} alignItems="flex-end">
           <Grid item xs={1}>
-            <LockIcon/>
+            <LockOutlinedIcon />
           </Grid>
           <Grid item xs={11}>
             <TextField
@@ -149,16 +148,14 @@ export const LoginForm: FC<Props> = () => {
               type="password"
               error={displayPasswordError}
               helperText={
-                displayPasswordError
-                  ? "Please enter a password!"
-                  : ""
+                displayPasswordError ? "Please enter a password!" : ""
               }
               value={password}
               autoComplete="on"
             />
           </Grid>
         </Grid>
-        <br/>
+        <br />
         <Button
           className={Classes.Button}
           color="primary"
@@ -169,7 +166,7 @@ export const LoginForm: FC<Props> = () => {
           Sign in
         </Button>
         <Button
-          style={{marginLeft: "10px"}}
+          style={{ marginLeft: "10px" }}
           className={Classes.Button}
           color="primary"
           variant="contained"
@@ -180,8 +177,7 @@ export const LoginForm: FC<Props> = () => {
         </Button>
       </form>
       {displayLoginError ? <p>Email and/or password did not match!</p> : ""}
-      {loading ? <CircularProgress/> : ""}
+      {loading ? <CircularProgress /> : ""}
     </Card>
   );
 };
-
