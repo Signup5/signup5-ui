@@ -1,5 +1,16 @@
 import {gql} from "apollo-boost";
 
+export const GET_ALL_PERSONS = gql`
+query {
+    getAllPersons {
+        id
+        email
+        first_name
+        last_name
+    }
+}
+`;
+
 export const GET_PERSON_BY_EMAIL = gql`
   query getPersonByEmail($email: String!) {
     person: getPersonByEmail(email: $email) {
