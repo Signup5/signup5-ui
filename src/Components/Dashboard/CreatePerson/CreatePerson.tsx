@@ -1,37 +1,13 @@
-<<<<<<< HEAD
 import {Button, Card, CardActions, CardContent, Grid, InputAdornment, Snackbar, TextField,} from "@material-ui/core";
 import MailOutlineIcon from "@material-ui/icons/MailOutline";
 import MuiAlert, {AlertProps} from "@material-ui/lab/Alert";
 import React, {ChangeEvent, FC, useState} from "react";
 import {useMutation} from "react-apollo";
-import {useDispatch, useSelector} from "react-redux";
 import Classes from "../../../App.module.css";
 import LockIcon from "@material-ui/icons/Lock";
 import {CREATE_PERSON} from "../../../Store/GQL";
-import {InitialState, RootDispatcher,} from "../../../Store/Reducers/rootReducer";
-import {Person, PersonInput,} from "../../../Types";
+import {PersonInput,} from "../../../Types";
 import {emailRegEx} from "../../../Utility";
-=======
-import {
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  Grid,
-  InputAdornment,
-  Snackbar,
-  TextField,
-} from "@material-ui/core";
-import MailOutlineIcon from "@material-ui/icons/MailOutline";
-import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
-import React, { ChangeEvent, FC, useState } from "react";
-import { useMutation } from "react-apollo";
-import Classes from "../../../App.module.css";
-import LockIcon from "@material-ui/icons/Lock";
-import { CREATE_PERSON } from "../../../Store/GQL";
-import { Person, PersonInput } from "../../../Types";
-import { emailRegEx } from "../../../Utility";
->>>>>>> 9654ebb6ab60d082a11b6082b825f1c2e8327614
 import PersonIcon from "@material-ui/icons/Person";
 
 function Alert(props: AlertProps) {
