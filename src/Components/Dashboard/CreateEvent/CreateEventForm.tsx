@@ -22,6 +22,7 @@ import MuiAlert, {AlertProps} from "@material-ui/lab/Alert";
 import {KeyboardDatePicker, KeyboardTimePicker, MuiPickersUtilsProvider} from "@material-ui/pickers";
 import React, {ChangeEvent, FC, useEffect, useState} from "react";
 import {useMutation, useQuery} from "react-apollo";
+import {useHistory} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import Classes from "../../../App.module.css";
 import {CREATE_EVENT, GET_ALL_PERSONS} from "../../../Store/GQL";
@@ -61,6 +62,7 @@ export const CreateEventForm: FC<Props> = () => {
   const [severity, setSeverity] = useState<"success" | "info" | "warning" | "error" | undefined>(undefined);
   const [guestsToInvite, setGuestsToInvite] = useState<GuestInput[]>([]);
   const [userList, setUserList] = useState<GuestInput[]>([])
+  const history = useHistory();
 
   const stateProps = useSelector<InitialState, StateProps>(
     (state: InitialState) => {
@@ -163,8 +165,10 @@ export const CreateEventForm: FC<Props> = () => {
       };
       createEvent({variables: {eventInput}});
       setIsEventSubmitted(false);
+
     }
     setUserList([])
+    history.push("/")
   };
 
   const response: QueryResponse = useQuery(GET_ALL_PERSONS, {
