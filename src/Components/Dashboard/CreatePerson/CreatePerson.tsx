@@ -1,14 +1,23 @@
-import {Button, Card, CardActions, CardContent, Grid, InputAdornment, Snackbar, TextField,} from "@material-ui/core";
+import {
+  Button,
+  Card,
+  CardActions,
+  CardContent,
+  Grid,
+  InputAdornment,
+  Snackbar,
+  TextField,
+} from "@material-ui/core";
 import MailOutlineIcon from "@material-ui/icons/MailOutline";
-import MuiAlert, {AlertProps} from "@material-ui/lab/Alert";
-import React, {ChangeEvent, FC, useState} from "react";
-import {useMutation} from "react-apollo";
+import PersonOutlineIcon from "@material-ui/icons/PersonOutline";
+import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
+import React, { ChangeEvent, FC, useState } from "react";
+import { useMutation } from "react-apollo";
 import Classes from "../../../App.module.css";
-import LockIcon from "@material-ui/icons/Lock";
-import {CREATE_PERSON} from "../../../Store/GQL";
-import {PersonInput,} from "../../../Types";
-import {emailRegEx} from "../../../Utility";
-import PersonIcon from "@material-ui/icons/Person";
+import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
+import { CREATE_PERSON } from "../../../Store/GQL";
+import { PersonInput } from "../../../Types";
+import { emailRegEx } from "../../../Utility";
 
 function Alert(props: AlertProps) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -151,7 +160,7 @@ export const CreatePerson: FC<Props> = () => {
             />
           </div>
           <div style={{ display: "flex" }}>
-            <PersonIcon
+            <PersonOutlineIcon
               style={{ marginTop: "26px", marginRight: "14px", flexGrow: 0 }}
             />
             <TextField
@@ -179,7 +188,7 @@ export const CreatePerson: FC<Props> = () => {
             />
           </div>
           <div style={{ display: "flex" }}>
-            <PersonIcon
+            <PersonOutlineIcon
               style={{ marginTop: "26px", marginRight: "14px", flexGrow: 0 }}
             />
             <TextField
@@ -208,7 +217,7 @@ export const CreatePerson: FC<Props> = () => {
           </div>
 
           <div style={{ display: "flex" }}>
-            <LockIcon
+            <LockOutlinedIcon
               style={{ marginTop: "26px", marginRight: "14px", flexGrow: 0 }}
             />
             <TextField
