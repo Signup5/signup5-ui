@@ -4,14 +4,18 @@ import LockIcon from "@material-ui/icons/Lock";
 import React, {ChangeEvent, FC, FormEvent, useEffect, useState} from "react";
 import Classes from "../../App.module.css";
 import {Credentials, Person} from "../../Types";
-import {useDispatch} from "react-redux";
-import {RootDispatcher} from "../../Store/Reducers/rootReducer";
+import {useDispatch, useSelector} from "react-redux";
+import {InitialState, RootDispatcher} from "../../Store/Reducers/rootReducer";
 import {useHistory} from "react-router-dom";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import signupApi from "../../api/signupApi";
 import {emailRegEx} from "../../Utility";
 
 interface Props {
+}
+
+interface StateProps {
+  person: Person;
 }
 
 interface responseData {
@@ -30,6 +34,14 @@ export const LoginForm: FC<Props> = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [displayPasswordError, setDisplayPasswordError] = useState<boolean>(
     false
+  );
+
+  const stateProps = useSelector<InitialState, StateProps>(
+    (state: InitialState) => {
+      return {
+        person: state.person
+      };
+    }
   );
 
   const onPasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -93,6 +105,9 @@ export const LoginForm: FC<Props> = () => {
   useEffect(() => {
     changeDisplayEmailError();
     changeDisplayPasswordError();
+    if (stateProps.person.id) {
+      history.push("/dashboard")
+    };
   });
 
   return (

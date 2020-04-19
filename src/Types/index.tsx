@@ -128,3 +128,9 @@ export class Credentials {
     return this.password.length >= 4;
   }
 }
+
+export interface EventTypeFilter {
+  host: boolean;
+  guest: boolean;
+  draft: boolean;
+}
