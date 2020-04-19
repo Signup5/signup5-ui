@@ -1,14 +1,15 @@
-import {Button, Grid, TextField} from "@material-ui/core";
-import AccountCircle from "@material-ui/icons/AccountCircle";
-import React, {ChangeEvent, FC, FormEvent, useState} from "react";
-import {useHistory} from "react-router-dom";
+import { Button, Grid, TextField, Snackbar } from "@material-ui/core";
+import MailOutlineOutlinedIcon from "@material-ui/icons/MailOutlineOutlined";
+import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
+import React, { ChangeEvent, FC, FormEvent, useState } from "react";
+import { useHistory } from "react-router-dom";
 import Classes from "../../App.module.css";
 import signupApi from "../../api/signupApi";
 
 interface Props {
   [x: string]: any;
 }
-export const PasswordLink: FC<Props> = props => {
+export const PasswordLink: FC<Props> = (props) => {
   const [email, setEmail] = useState<string>("");
   const [displayEmailError, setDisplayEmailError] = useState<boolean>(false);
   const history = useHistory();
@@ -16,10 +17,33 @@ export const PasswordLink: FC<Props> = props => {
     setEmail(e.target.value);
   };
 
-  const sendEmailSuccess = () => {
-    alert("You have now got a link in your email inbox");
-    history.push("/");
+  const [open, setOpen] = useState<boolean>(false);
+  const [responseMessage, setResponseMessage] = useState<string>("");
+  const [severity, setSeverity] = useState<
+    "success" | "info" | "warning" | "error" | undefined
+  >(undefined);
+
+  const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpen(false);
   };
+
+  const sendEmailSuccess = () => {
+    setResponseMessage(
+      "You have now got a link in your email inbox and will get redirected to the startpage in 5 seconds"
+    );
+    setSeverity("success");
+    setTimeout(function () {
+      history.push("/");
+    }, 5000);
+    setOpen(true);
+  };
+
+  function Alert(props: AlertProps) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+  }
 
   const sendPasswordFail = (error: any) => {
     setDisplayEmailError(true);
@@ -29,18 +53,20 @@ export const PasswordLink: FC<Props> = props => {
     e.preventDefault();
     signupApi
       .post("/password/reset", {
-        email: email
+        email: email,
       })
       .then(() => sendEmailSuccess())
-      .catch(error => sendPasswordFail(error));
+      .catch((error) => sendPasswordFail(error));
   };
   return (
     <div>
+      <h2>Write your email below. You will get a link sent to you</h2>
       <form onSubmit={handleSubmit} noValidate className={Classes.LoginForm}>
-        <h2>Write your email below. You will get a link sent to you</h2>
         <Grid container spacing={1} alignItems="flex-start">
           <Grid item xs={1}>
-            <AccountCircle style={{ marginTop: "16px" }} />
+            <MailOutlineOutlinedIcon
+              style={{ marginTop: "20px", paddingRight: "30px" }}
+            />
           </Grid>
           <Grid item xs={11}>
             <TextField
@@ -55,9 +81,6 @@ export const PasswordLink: FC<Props> = props => {
             />
           </Grid>
         </Grid>
-
-        <br />
-        <br />
         <Button
           className={Classes.Button}
           color="primary"
@@ -68,6 +91,11 @@ export const PasswordLink: FC<Props> = props => {
           Send link
         </Button>
       </form>
+      <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+        <Alert onClose={handleClose} severity={severity}>
+          {responseMessage}
+        </Alert>
+      </Snackbar>
     </div>
   );
 };

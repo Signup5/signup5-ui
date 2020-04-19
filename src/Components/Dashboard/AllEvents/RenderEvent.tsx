@@ -8,13 +8,7 @@ import {
   Typography,
 } from "@material-ui/core";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import React, {
-  Dispatch,
-  FC,
-  SetStateAction,
-  useEffect,
-  useState,
-} from "react";
+import React, { Dispatch, FC, SetStateAction, useState } from "react";
 import { Event, EventTypeFilter, Person } from "../../../Types";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import { useDispatch, useSelector } from "react-redux";
@@ -23,7 +17,6 @@ import SpeedDialIcon from "@material-ui/lab/SpeedDialIcon";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import CancelOutlinedIcon from "@material-ui/icons/CancelOutlined";
 import SpeedDialAction from "@material-ui/lab/SpeedDialAction";
-import PersonAddOutlinedIcon from "@material-ui/icons/PersonAddOutlined";
 import { EditableEvent } from "./EditableEvent";
 
 import {
@@ -179,7 +172,7 @@ export const RenderEvent: FC<Props> = (props) => {
   };
 
   const menu = () => {
-    return !editable && event.host.id == stateProps.person.id ? (
+    return !editable && event.host.id === stateProps.person.id ? (
       <SpeedDial
         ariaLabel="SpeedDial example"
         className={classes.speedDial}

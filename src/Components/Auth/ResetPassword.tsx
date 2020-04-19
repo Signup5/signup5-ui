@@ -1,19 +1,36 @@
-import {Button, Grid, TextField} from "@material-ui/core";
-import LockIcon from "@material-ui/icons/Lock";
-import React, {ChangeEvent, FC, FormEvent, useState} from "react";
+import { Button, Grid, TextField, Snackbar } from "@material-ui/core";
+import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
+import React, { ChangeEvent, FC, FormEvent, useState } from "react";
+import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
 import Classes from "../../App.module.css";
-import {useHistory} from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import signupApi from "../../api/signupApi";
 
 interface Props {
   [x: string]: any;
 }
-export const ResetPassword: FC<Props> = props => {
+export const ResetPassword: FC<Props> = (props) => {
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [displayPasswordError, setDisplayPasswordError] = useState<boolean>(
     false
   );
+  const [open, setOpen] = useState<boolean>(false);
+  const [responseMessage, setResponseMessage] = useState<string>("");
+  const [severity, setSeverity] = useState<
+    "success" | "info" | "warning" | "error" | undefined
+  >(undefined);
+
+  const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpen(false);
+  };
+
+  function Alert(props: AlertProps) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+  }
   const history = useHistory();
   const token = props.match.params.token;
   const onPasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -25,10 +42,14 @@ export const ResetPassword: FC<Props> = props => {
   };
 
   const resetPasswordSucess = () => {
-    alert(
-      "You have now changed your password, you will be redirected to login page"
+    setResponseMessage(
+      "You have now changed your password, you will be redirected to the startpage in 5 seconds"
     );
-    history.push("/");
+    setSeverity("success");
+    setTimeout(function () {
+      history.push("/");
+    }, 5000);
+    setOpen(true);
   };
 
   const resetPasswordFail = (error: any) => {
@@ -44,18 +65,20 @@ export const ResetPassword: FC<Props> = props => {
     signupApi
       .post("/password/new", {
         password: password,
-        token: token
+        token: token,
       })
       .then(() => resetPasswordSucess())
-      .catch(error => resetPasswordFail(error.response.data));
+      .catch((error) => resetPasswordFail(error.response.data));
   };
   return (
     <div>
-      <form onSubmit={handleSubmit} noValidate className={Classes.LoginForm}>
-        <h2>Reset password</h2>
+      <h2>Reset password</h2>
+      <form onSubmit={handleSubmit} noValidate>
         <Grid container spacing={1} alignItems="flex-start">
           <Grid item xs={1}>
-            <LockIcon style={{ marginTop: "18px", marginRight: "200px" }} />
+            <LockOutlinedIcon
+              style={{ marginTop: "20px", paddingRight: "30px" }}
+            />
           </Grid>
           <Grid item xs={11}>
             <TextField
@@ -73,7 +96,9 @@ export const ResetPassword: FC<Props> = props => {
         <br />
         <Grid container spacing={1} alignItems="flex-end">
           <Grid item xs={1}>
-            <LockIcon style={{ marginTop: "18px", marginRight: "200px" }} />
+            <LockOutlinedIcon
+              style={{ marginTop: "18px", marginRight: "200px" }}
+            />
           </Grid>
           <Grid item xs={11}>
             <TextField
@@ -91,7 +116,6 @@ export const ResetPassword: FC<Props> = props => {
             />
           </Grid>
         </Grid>
-        <br />
         <Button
           className={Classes.Button}
           color="primary"
@@ -102,6 +126,11 @@ export const ResetPassword: FC<Props> = props => {
           Reset
         </Button>
       </form>
+      <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+        <Alert onClose={handleClose} severity={severity}>
+          {responseMessage}
+        </Alert>
+      </Snackbar>
     </div>
   );
 };
