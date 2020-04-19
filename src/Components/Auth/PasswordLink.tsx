@@ -3,7 +3,7 @@ import AccountCircle from "@material-ui/icons/AccountCircle";
 import React, {ChangeEvent, FC, FormEvent, useState} from "react";
 import {useHistory} from "react-router-dom";
 import Classes from "../../App.module.css";
-import axios from "axios";
+import signupApi from "../../api/signupApi";
 
 interface Props {
   [x: string]: any;
@@ -27,7 +27,7 @@ export const PasswordLink: FC<Props> = props => {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    axios
+    signupApi
       .post("/password/reset", {
         email: email
       })

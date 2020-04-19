@@ -3,7 +3,7 @@ import LockIcon from "@material-ui/icons/Lock";
 import React, {ChangeEvent, FC, FormEvent, useState} from "react";
 import Classes from "../../App.module.css";
 import {useHistory} from "react-router-dom";
-import axios from "axios";
+import signupApi from "../../api/signupApi";
 
 interface Props {
   [x: string]: any;
@@ -41,7 +41,7 @@ export const ResetPassword: FC<Props> = props => {
     if (password !== confirmPassword) {
       setDisplayPasswordError(true);
     }
-    axios
+    signupApi
       .post("/password/new", {
         password: password,
         token: token

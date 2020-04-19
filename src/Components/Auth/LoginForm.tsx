@@ -1,15 +1,15 @@
-import { Button, Card, Grid, TextField } from "@material-ui/core";
+import {Button, Card, Grid, TextField} from "@material-ui/core";
 import MailOutlineOutlinedIcon from "@material-ui/icons/MailOutlineOutlined";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
-import React, { ChangeEvent, FC, FormEvent, useEffect, useState } from "react";
+import React, {ChangeEvent, FC, FormEvent, useEffect, useState} from "react";
 import Classes from "../../App.module.css";
-import { Credentials, Person } from "../../Types";
-import { useDispatch, useSelector } from "react-redux";
-import { InitialState, RootDispatcher } from "../../Store/Reducers/rootReducer";
-import { useHistory } from "react-router-dom";
+import {Credentials, Person} from "../../Types";
+import {useDispatch, useSelector} from "react-redux";
+import {InitialState, RootDispatcher} from "../../Store/Reducers/rootReducer";
+import {useHistory} from "react-router-dom";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import signupApi from "../../api/signupApi";
-import { emailRegEx } from "../../Utility";
+import {emailRegEx} from "../../Utility";
 
 interface Props {}
 
