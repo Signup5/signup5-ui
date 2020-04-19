@@ -129,6 +129,7 @@ export const RenderEvent: FC<Props> = (props) => {
       };
     }
   );
+
   const eventType =
     event.host.email === stateProps.person.email
       ? event.isDraft

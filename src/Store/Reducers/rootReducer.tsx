@@ -8,7 +8,7 @@ export interface InitialState {
 }
 
 function getPersonFromLocalStorage<Person>() {
-  return localStorage.getItem("person")? JSON.parse(localStorage.getItem("person") as string): {} as Person
+  return localStorage.getItem("person") ? JSON.parse(localStorage.getItem("person") as string) : {} as Person
 }
 
 export const initialState: InitialState = {
@@ -81,6 +81,7 @@ export class RootDispatcher {
 
   updateEvents = (events: Array<Event>) =>
     this.dispatch({type: ActionType.UPDATE_EVENTS, payload: {events}});
+
 
   updateEvent = (event: Event) =>
     this.dispatch({type: ActionType.UPDATE_EVENT, payload: {event}});

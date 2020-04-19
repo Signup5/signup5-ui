@@ -46,6 +46,15 @@ export const GET_EVENT_BY_ID = gql`
       time_of_event
       duration
       location
+      invitations {
+        id
+        guest {
+          id
+          first_name
+          last_name
+          email
+        }
+      }
       isDraft
     }
   }
@@ -96,7 +105,7 @@ export const GET_EVENTS_BY_HOST_ID = gql`
       description
       date_of_event
       time_of_event
-      duration
+      duration 
       location
       isDraft
       invitations {
