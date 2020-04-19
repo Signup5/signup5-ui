@@ -135,10 +135,17 @@ export const NonEditableEvent: FC<Props> = (props) => {
     );
   };
 
+  function pritifyTitle(title: string) {
+    const newTitle =
+      title.charAt(0).toUpperCase() +
+      title.slice(1).toLowerCase().replace("_", " ");
+    return newTitle;
+  }
+
   function Modal() {
     return (
       <Dialog open={dialogOpen} onClose={handleDialogClose}>
-        <DialogTitle>{dialogAttendance}</DialogTitle>
+        <DialogTitle>{pritifyTitle(dialogAttendance)}</DialogTitle>
         <List>
           {event.invitations.map((invitation) => {
             return invitation.attendance.toString() === dialogAttendance ? (
@@ -200,7 +207,7 @@ export const NonEditableEvent: FC<Props> = (props) => {
               <Button
                 size="small"
                 onClick={handleAttendanceClick}
-                title="Attending"
+                title="ATTENDING"
               >
                 Attending
               </Button>
@@ -213,7 +220,7 @@ export const NonEditableEvent: FC<Props> = (props) => {
               <Button
                 size="small"
                 onClick={handleAttendanceClick}
-                title="Maybe"
+                title="MAYBE"
               >
                 Maybe
               </Button>
@@ -226,7 +233,7 @@ export const NonEditableEvent: FC<Props> = (props) => {
               <Button
                 size="small"
                 onClick={handleAttendanceClick}
-                title="Not attending"
+                title="NOT_ATTENDING"
               >
                 Not Attending
               </Button>
@@ -239,7 +246,7 @@ export const NonEditableEvent: FC<Props> = (props) => {
               <Button
                 size="small"
                 onClick={handleAttendanceClick}
-                title="No response"
+                title="NO_RESPONSE"
               >
                 No Response
               </Button>
