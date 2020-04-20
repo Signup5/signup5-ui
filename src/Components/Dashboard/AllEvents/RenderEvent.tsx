@@ -219,7 +219,6 @@ export const RenderEvent: FC<Props> = (props) => {
             id="panel1c-header"
           >
             <div className={classes.largeColumn}>
-              {eventType}
               <Typography className={classes.heading}>{event.title}</Typography>
             </div>
             <div className={classes.column}>
