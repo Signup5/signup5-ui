@@ -70,7 +70,10 @@ export const CreateEventForm: FC<Props> = () => {
   >(undefined);
   const [guestsToInvite, setGuestsToInvite] = useState<GuestInput[]>([]);
   const [userList, setUserList] = useState<GuestInput[]>([]);
+  const [initialUserList, setInitialUserList] = useState<GuestInput[]>([]);
+  const [userListDefaultValue, setUserListDefaultValue] = useState<GuestInput[]>([]);
   const history = useHistory();
+  // let initialUserList : Array<GuestInput> = [];
 
   const stateProps = useSelector<InitialState, StateProps>(
     (state: InitialState) => {
@@ -129,11 +132,12 @@ export const CreateEventForm: FC<Props> = () => {
   };
 
   function updateGuestList(guests: any) {
-    setGuestsToInvite(
-      guests.map((guest: any) => {
-        return guest;
-      })
-    );
+    const addedGuests = guests.map((guest: any) => {
+      return guest;
+    });
+
+    setGuestsToInvite(addedGuests);
+    setUserListDefaultValue(addedGuests);
   }
 
   const handleSubmit = (isDraft: boolean) => {
@@ -175,22 +179,26 @@ export const CreateEventForm: FC<Props> = () => {
       };
       createEvent({ variables: { eventInput } });
       setIsEventSubmitted(false);
+      setGuestsToInvite([]);
+      setTitle("");
+      setDescription("");
+      setDuration(60);
+      setLocation("")
+      setTime_of_event(null)
+      setDate_of_event(null);
+      // updateGuestList([]);
+      setUserList(initialUserList)
+      setUserListDefaultValue([]);
     }
-    setUserList([]);
-    history.push("/");
+    // history.push("/");
   };
 
   const response: QueryResponse = useQuery(GET_ALL_PERSONS, {
     onCompleted() {
-      const initialUserList = response.data.getAllPersons;
-      setGuestsToInvite([]);
-
-      // if (!initialUserList.includes(everyone)) {
-      //   initialUserList.unshift(everyone);
-      // }
-
-      setUserList(initialUserList);
-    },
+      const initialList = response.data.getAllPersons;
+      setUserList(initialList);
+      setInitialUserList(initialList);
+    }
   });
 
   if (response.loading) return <p>Loading...</p>;
@@ -361,6 +369,7 @@ export const CreateEventForm: FC<Props> = () => {
                 guest.email +
                 ")"
               }
+              value={userListDefaultValue}
               style={{ flexGrow: 20 }}
               filterSelectedOptions
               onChange={(event, value) => updateGuestList(value)}
