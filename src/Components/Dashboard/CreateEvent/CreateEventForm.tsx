@@ -270,6 +270,14 @@ export const CreateEventForm: FC<Props> = () => {
               label="Location"
               style={{ flexGrow: 20 }}
               value={location}
+              inputProps={{ maxLength: "100" }}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    {location.length}/100
+                  </InputAdornment>
+                ),
+              }}
               onChange={onLocationChange}
               variant="filled"
             />
