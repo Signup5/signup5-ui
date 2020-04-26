@@ -57,7 +57,9 @@ export const CreateEventForm: FC<Props> = () => {
   const [userList, setUserList] = useState<GuestInput[]>([]);
   const [initialUserList, setInitialUserList] = useState<GuestInput[]>([]);
   const [userListDefaultValue, setUserListDefaultValue] = useState<GuestInput[]>([]);
-  const [validTimeFormat, setValidTimeFormat] = useState<boolean>(true)
+  const [validTimeFormat, setValidTimeFormat] = useState<boolean>(true);
+  const [dateIsInThePast, setDateIsInThePast] = useState<boolean>(false);
+  const [dateIsInTheFuture, setDateIsInTheFuture] = useState<boolean>(false);
 
   const stateProps = useSelector<InitialState, StateProps>(
     (state: InitialState) => {
@@ -96,8 +98,19 @@ export const CreateEventForm: FC<Props> = () => {
   };
 
   const onDateChange = (date: Date | null) => {
-    setDate_of_event(date);
+    setDateIsInThePast(isDateInThePast(date));
+    isValidDate(date) && !dateIsInThePast ? setDate_of_event(date) : setDate_of_event(null);
   };
+
+  function isDateInThePast(date: Date | null) {
+    const now = new Date();
+
+    if (date instanceof Date && !isNaN(date.getDate())) {
+      return !isNaN(date.getDate()) && (date < now);
+    } else {
+      return false;
+    }
+  }
 
   const onTimeChange = (time: Date | null) => {
     setValidTimeFormat(isValidTime(time_of_event))
@@ -125,9 +138,19 @@ export const CreateEventForm: FC<Props> = () => {
     setUserListDefaultValue(addedGuests);
   }
 
+  function isValidDate(date: Date | null) {
+    if (date instanceof Date) {
+      const now = new Date();
+      return !isNaN(date.getDate()) && (date > now);
+    } else {
+      return false;
+    }
+  }
+
   function isValidTime(time: Date | null) {
     return time instanceof Date && !isNaN(time.getTime())
   }
+
 
   const handleSubmit = (isDraft: boolean) => {
     setIsEventSubmitted(true);
@@ -284,16 +307,14 @@ export const CreateEventForm: FC<Props> = () => {
                 id="date-picker-dialog"
                 format="yyyy-MM-dd"
                 value={date_of_event}
-                onChange={onDateChange}
                 style={{flexGrow: 8.5}}
                 maxDate={maxDate}
+                onChange={onDateChange}
                 error={isEventSubmitted && !date_of_event}
                 helperText={
-                  isEventSubmitted && !date_of_event ? "Required!" : ""
+                  isEventSubmitted && !date_of_event ? dateIsInThePast ? "Date can not be in the past!" : "A valid date is required" : ""
                 }
-                maxDateMessage="Date is too far in the future."
                 minDate={today}
-                minDateMessage="Date is in the past."
               />
               {/*spacer*/}
               <div style={{flexGrow: 1}}></div>
