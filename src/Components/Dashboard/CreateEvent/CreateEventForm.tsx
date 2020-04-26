@@ -18,32 +18,18 @@ import PeopleAltOutlinedIcon from "@material-ui/icons/PeopleAltOutlined";
 import RoomOutlinedIcon from "@material-ui/icons/RoomOutlined";
 import ScheduleIcon from "@material-ui/icons/Schedule";
 import SubjectIcon from "@material-ui/icons/Subject";
-import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
-import {
-  KeyboardDatePicker,
-  KeyboardTimePicker,
-  MuiPickersUtilsProvider,
-} from "@material-ui/pickers";
-import React, { ChangeEvent, FC, useState } from "react";
-import { useMutation, useQuery } from "react-apollo";
-import { useDispatch, useSelector } from "react-redux";
+import MuiAlert, {AlertProps} from "@material-ui/lab/Alert";
+import {KeyboardDatePicker, KeyboardTimePicker, MuiPickersUtilsProvider,} from "@material-ui/pickers";
+import React, {ChangeEvent, FC, useState} from "react";
+import {useMutation, useQuery} from "react-apollo";
+import {useDispatch, useSelector} from "react-redux";
 import Classes from "../../../App.module.css";
-import { CREATE_EVENT, GET_ALL_PERSONS } from "../../../Store/GQL";
-import {
-  InitialState,
-  RootDispatcher,
-} from "../../../Store/Reducers/rootReducer";
-import {
-  EventInput,
-  GuestInput,
-  InvitationInput,
-  Person,
-  QueryResponse,
-} from "../../../Types";
-import { zonedTimeToUtc } from "date-fns-tz";
-import { format } from "date-fns";
-import { useHistory } from "react-router-dom";
-import { Autocomplete } from "@material-ui/lab";
+import {CREATE_EVENT, GET_ALL_PERSONS} from "../../../Store/GQL";
+import {InitialState, RootDispatcher,} from "../../../Store/Reducers/rootReducer";
+import {EventInput, GuestInput, InvitationInput, Person, QueryResponse,} from "../../../Types";
+import {zonedTimeToUtc} from "date-fns-tz";
+import {format} from "date-fns";
+import {Autocomplete} from "@material-ui/lab";
 
 function Alert(props: AlertProps) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -72,8 +58,6 @@ export const CreateEventForm: FC<Props> = () => {
   const [userList, setUserList] = useState<GuestInput[]>([]);
   const [initialUserList, setInitialUserList] = useState<GuestInput[]>([]);
   const [userListDefaultValue, setUserListDefaultValue] = useState<GuestInput[]>([]);
-  const history = useHistory();
-  // let initialUserList : Array<GuestInput> = [];
 
   const stateProps = useSelector<InitialState, StateProps>(
     (state: InitialState) => {
@@ -116,7 +100,9 @@ export const CreateEventForm: FC<Props> = () => {
   };
 
   const onTimeChange = (time: Date | null) => {
-    setTime_of_event(time);
+      if (isValidTime(time)) {
+        setTime_of_event(time)
+      }
   };
 
   const onDescriptionChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -140,9 +126,13 @@ export const CreateEventForm: FC<Props> = () => {
     setUserListDefaultValue(addedGuests);
   }
 
+  function isValidTime(time: Date | null) {
+    return time instanceof Date && !isNaN(time.getTime())
+  }
+
   const handleSubmit = (isDraft: boolean) => {
     setIsEventSubmitted(true);
-    if (title.length > 0 && date_of_event != null && time_of_event != null) {
+    if (title.length > 0 && date_of_event != null && isValidTime(time_of_event)) {
       const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
       const dateString = date_of_event
@@ -186,11 +176,9 @@ export const CreateEventForm: FC<Props> = () => {
       setLocation("")
       setTime_of_event(null)
       setDate_of_event(null);
-      // updateGuestList([]);
       setUserList(initialUserList)
       setUserListDefaultValue([]);
     }
-    // history.push("/");
   };
 
   const response: QueryResponse = useQuery(GET_ALL_PERSONS, {
@@ -322,9 +310,9 @@ export const CreateEventForm: FC<Props> = () => {
                 id="time-picker"
                 value={time_of_event}
                 onChange={onTimeChange}
-                error={isEventSubmitted && !time_of_event}
+                error={isEventSubmitted && !isValidTime(time_of_event)}
                 helperText={
-                  isEventSubmitted && !time_of_event ? "Required!" : ""
+                  isEventSubmitted && !time_of_event ? !isValidTime(time_of_event) ? "Not a valid time format!": "Required!" : ""
                 }
                 ampm={false}
                 keyboardIcon={<ScheduleIcon />}
