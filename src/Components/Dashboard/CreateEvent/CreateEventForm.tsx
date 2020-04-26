@@ -57,6 +57,7 @@ export const CreateEventForm: FC<Props> = () => {
   const [userList, setUserList] = useState<GuestInput[]>([]);
   const [initialUserList, setInitialUserList] = useState<GuestInput[]>([]);
   const [userListDefaultValue, setUserListDefaultValue] = useState<GuestInput[]>([]);
+  const [validTimeFormat, setValidTimeFormat] = useState<boolean>(true)
 
   const stateProps = useSelector<InitialState, StateProps>(
     (state: InitialState) => {
@@ -99,7 +100,8 @@ export const CreateEventForm: FC<Props> = () => {
   };
 
   const onTimeChange = (time: Date | null) => {
-    return isValidTime(time) ? setTime_of_event(time) : setTime_of_event(null);
+    setValidTimeFormat(isValidTime(time_of_event))
+    isValidTime(time) ? setTime_of_event(time) : setTime_of_event(null)
   };
 
   const onDescriptionChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -307,9 +309,9 @@ export const CreateEventForm: FC<Props> = () => {
                 id="time-picker"
                 value={time_of_event}
                 onChange={onTimeChange}
-                error={isEventSubmitted && !isValidTime(time_of_event)}
+                error={isEventSubmitted && !time_of_event}
                 helperText={
-                  isEventSubmitted && !time_of_event ? !isValidTime(time_of_event) ? "Not a valid time format!" : "Required!" : ""
+                  isEventSubmitted && !time_of_event ? !validTimeFormat ? "Invalid time format!" : "Required!" : ""
                 }
                 ampm={false}
                 keyboardIcon={<ScheduleIcon/>}
