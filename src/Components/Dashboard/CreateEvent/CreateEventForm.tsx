@@ -35,7 +35,8 @@ function Alert(props: AlertProps) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
-interface Props {}
+interface Props {
+}
 
 interface StateProps {
   host: Person;
@@ -51,9 +52,7 @@ export const CreateEventForm: FC<Props> = () => {
   const [duration, setDuration] = useState<number>(60);
   const [open, setOpen] = useState<boolean>(false);
   const [responseMessage, setResponseMessage] = useState<string>("");
-  const [severity, setSeverity] = useState<
-    "success" | "info" | "warning" | "error" | undefined
-  >(undefined);
+  const [severity, setSeverity] = useState<"success" | "info" | "warning" | "error" | undefined>(undefined);
   const [guestsToInvite, setGuestsToInvite] = useState<GuestInput[]>([]);
   const [userList, setUserList] = useState<GuestInput[]>([]);
   const [initialUserList, setInitialUserList] = useState<GuestInput[]>([]);
@@ -62,7 +61,7 @@ export const CreateEventForm: FC<Props> = () => {
   const stateProps = useSelector<InitialState, StateProps>(
     (state: InitialState) => {
       return {
-        host: { ...state.person },
+        host: {...state.person},
       };
     }
   );
@@ -76,7 +75,7 @@ export const CreateEventForm: FC<Props> = () => {
       setSeverity("error");
       setOpen(true);
     },
-    onCompleted({ event }) {
+    onCompleted({event}) {
       setResponseMessage("Event successfully created!");
       setSeverity("success");
       setOpen(true);
@@ -100,9 +99,7 @@ export const CreateEventForm: FC<Props> = () => {
   };
 
   const onTimeChange = (time: Date | null) => {
-      if (isValidTime(time)) {
-        setTime_of_event(time)
-      }
+    return isValidTime(time) ? setTime_of_event(time) : setTime_of_event(null);
   };
 
   const onDescriptionChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -167,7 +164,7 @@ export const CreateEventForm: FC<Props> = () => {
         isDraft: isDraft,
         isCanceled: false,
       };
-      createEvent({ variables: { eventInput } });
+      createEvent({variables: {eventInput}});
       setIsEventSubmitted(false);
       setGuestsToInvite([]);
       setTitle("");
@@ -205,7 +202,7 @@ export const CreateEventForm: FC<Props> = () => {
             id="title"
             placeholder="Add Title *"
             type="text"
-            style={{ width: "100%" }}
+            style={{width: "100%"}}
             autoComplete="off"
             value={title}
             error={isEventSubmitted && title.length === 0}
@@ -213,7 +210,7 @@ export const CreateEventForm: FC<Props> = () => {
               isEventSubmitted && title.length === 0 ? "Required!" : ""
             }
             onChange={onTitleChange}
-            inputProps={{ minLength: "1", maxLength: "140" }}
+            inputProps={{minLength: "1", maxLength: "140"}}
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
@@ -223,9 +220,9 @@ export const CreateEventForm: FC<Props> = () => {
             }}
           />
 
-          <div style={{ display: "flex" }}>
+          <div style={{display: "flex"}}>
             <SubjectIcon
-              style={{ marginTop: "26px", marginRight: "14px", flexGrow: 0 }}
+              style={{marginTop: "26px", marginRight: "14px", flexGrow: 0}}
             />
 
             <TextField
@@ -237,8 +234,8 @@ export const CreateEventForm: FC<Props> = () => {
               value={description}
               onChange={onDescriptionChange}
               variant="outlined"
-              inputProps={{ maxLength: "5000" }}
-              style={{ flexGrow: 20 }}
+              inputProps={{maxLength: "5000"}}
+              style={{flexGrow: 20}}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
@@ -248,17 +245,17 @@ export const CreateEventForm: FC<Props> = () => {
               }}
             />
           </div>
-          <div style={{ display: "flex" }}>
+          <div style={{display: "flex"}}>
             <RoomOutlinedIcon
-              style={{ marginTop: "26px", marginRight: "14px", flexGrow: 0 }}
+              style={{marginTop: "26px", marginRight: "14px", flexGrow: 0}}
             />
             <TextField
               className={Classes.TextField}
               id="location"
               label="Location"
-              style={{ flexGrow: 20 }}
+              style={{flexGrow: 20}}
               value={location}
-              inputProps={{ maxLength: "100" }}
+              inputProps={{maxLength: "100"}}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
@@ -270,9 +267,9 @@ export const CreateEventForm: FC<Props> = () => {
               variant="filled"
             />
           </div>
-          <div style={{ display: "flex" }}>
+          <div style={{display: "flex"}}>
             <EventOutlinedIcon
-              style={{ marginTop: "26px", marginRight: "14px", flexGrow: 0 }}
+              style={{marginTop: "26px", marginRight: "14px", flexGrow: 0}}
             />
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
               <KeyboardDatePicker
@@ -286,7 +283,7 @@ export const CreateEventForm: FC<Props> = () => {
                 format="yyyy-MM-dd"
                 value={date_of_event}
                 onChange={onDateChange}
-                style={{ flexGrow: 8.5 }}
+                style={{flexGrow: 8.5}}
                 maxDate={maxDate}
                 error={isEventSubmitted && !date_of_event}
                 helperText={
@@ -297,7 +294,7 @@ export const CreateEventForm: FC<Props> = () => {
                 minDateMessage="Date is in the past."
               />
               {/*spacer*/}
-              <div style={{ flexGrow: 1 }}></div>
+              <div style={{flexGrow: 1}}></div>
 
               <KeyboardTimePicker
                 required
@@ -312,20 +309,20 @@ export const CreateEventForm: FC<Props> = () => {
                 onChange={onTimeChange}
                 error={isEventSubmitted && !isValidTime(time_of_event)}
                 helperText={
-                  isEventSubmitted && !time_of_event ? !isValidTime(time_of_event) ? "Not a valid time format!": "Required!" : ""
+                  isEventSubmitted && !time_of_event ? !isValidTime(time_of_event) ? "Not a valid time format!" : "Required!" : ""
                 }
                 ampm={false}
-                keyboardIcon={<ScheduleIcon />}
+                keyboardIcon={<ScheduleIcon/>}
                 KeyboardButtonProps={{
                   "aria-label": "change time",
                 }}
-                style={{ flexGrow: 8.5 }}
+                style={{flexGrow: 8.5}}
               />
               {/*spacer*/}
-              <div style={{ flexGrow: 1 }}></div>
+              <div style={{flexGrow: 1}}></div>
               <FormControl
                 variant="outlined"
-                style={{ flexGrow: 1, marginTop: "16px" }}
+                style={{flexGrow: 1, marginTop: "16px"}}
               >
                 <InputLabel id="demo-simple-select-outlined-label">
                   Duration
@@ -348,9 +345,9 @@ export const CreateEventForm: FC<Props> = () => {
             </MuiPickersUtilsProvider>
           </div>
 
-          <div style={{ display: "flex" }}>
+          <div style={{display: "flex"}}>
             <PeopleAltOutlinedIcon
-              style={{ marginTop: "26px", marginRight: "14px", flexGrow: 0 }}
+              style={{marginTop: "26px", marginRight: "14px", flexGrow: 0}}
             />
 
             <Autocomplete
@@ -366,7 +363,7 @@ export const CreateEventForm: FC<Props> = () => {
                 ")"
               }
               value={userListDefaultValue}
-              style={{ flexGrow: 20 }}
+              style={{flexGrow: 20}}
               filterSelectedOptions
               onChange={(event, value) => updateGuestList(value)}
               renderInput={(params) => (
@@ -388,7 +385,7 @@ export const CreateEventForm: FC<Props> = () => {
                 variant="contained"
                 type="submit"
                 onClick={() => handleSubmit(true)}
-                style={{ paddingRight: "12px" }}
+                style={{paddingRight: "12px"}}
               >
                 save as draft
               </Button>
