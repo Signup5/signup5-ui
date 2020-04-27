@@ -59,7 +59,6 @@ export const CreateEventForm: FC<Props> = () => {
   const [userListDefaultValue, setUserListDefaultValue] = useState<GuestInput[]>([]);
   const [validTimeFormat, setValidTimeFormat] = useState<boolean>(true);
   const [dateIsInThePast, setDateIsInThePast] = useState<boolean>(false);
-  const [dateIsInTheFuture, setDateIsInTheFuture] = useState<boolean>(false);
 
   const stateProps = useSelector<InitialState, StateProps>(
     (state: InitialState) => {

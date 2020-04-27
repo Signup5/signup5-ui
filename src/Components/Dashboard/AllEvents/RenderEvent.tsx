@@ -8,24 +8,22 @@ import {
   Typography,
 } from "@material-ui/core";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import React, { Dispatch, FC, SetStateAction, useState } from "react";
-import { Event, EventTypeFilter, Person } from "../../../Types";
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
-import { useDispatch, useSelector } from "react-redux";
+import React, {ChangeEvent, Dispatch, FC, SetStateAction, useState} from "react";
+import {Attendance, Event, EventTypeFilter, Person} from "../../../Types";
+import {createStyles, makeStyles, Theme} from "@material-ui/core/styles";
+import {useDispatch, useSelector} from "react-redux";
 import SpeedDial from "@material-ui/lab/SpeedDial";
 import SpeedDialIcon from "@material-ui/lab/SpeedDialIcon";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import CancelOutlinedIcon from "@material-ui/icons/CancelOutlined";
 import SpeedDialAction from "@material-ui/lab/SpeedDialAction";
-import { EditableEvent } from "./EditableEvent";
+import {EditableEvent} from "./EditableEvent";
 
-import {
-  InitialState,
-  RootDispatcher,
-} from "../../../Store/Reducers/rootReducer";
-import { useMutation } from "react-apollo";
-import { CANCEL_EVENT } from "../../../Store/GQL";
-import { NonEditableEvent } from "./NonEditableEvent";
+import {InitialState, RootDispatcher,} from "../../../Store/Reducers/rootReducer";
+import {useMutation} from "react-apollo";
+import {CANCEL_EVENT, GET_HOSTED_AND_INVITED_EVENTS_BY_PERSON_ID, SET_ATTENDANCE} from "../../../Store/GQL";
+import {NonEditableEvent} from "./NonEditableEvent";
+import {useApolloClient} from "@apollo/react-hooks";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -86,9 +84,7 @@ interface Props {
   event: Event;
   setSnackbarOpen: Dispatch<SetStateAction<boolean>>;
   setSnackbarMessage: Dispatch<SetStateAction<string>>;
-  setSnackbarSeverity: Dispatch<
-    SetStateAction<"success" | "info" | "warning" | "error" | undefined>
-  >;
+  setSnackbarSeverity: Dispatch<SetStateAction<"success" | "info" | "warning" | "error" | undefined>>;
   filter: EventTypeFilter;
 }
 
@@ -112,22 +108,72 @@ function render(filter: EventTypeFilter, eventType: string) {
 export const RenderEvent: FC<Props> = (props) => {
   const [editable, setEditable] = useState<boolean>(false);
   const [open, setOpen] = useState(false);
+  const [selectedAttendance, setSelectedAttendance] = useState<Attendance>(Attendance.NO_RESPONSE);
+  const [expanded, setExpanded] = useState<Event | null>(null);
+  const client = useApolloClient();
   const event: Event = props.event;
   const classes = useStyles();
 
   const stateProps = useSelector<InitialState, StateProps>(
     (state: InitialState) => {
       return {
-        person: { ...state.person },
+        person: {...state.person},
       };
     }
   );
 
+  const refetchEvents = async () => {
+    const {data} = await client.query({
+      query: GET_HOSTED_AND_INVITED_EVENTS_BY_PERSON_ID,
+      variables: {
+        id: stateProps.person.id,
+      },
+      fetchPolicy: "network-only",
+    });
+    rootDispatcher.updateEvents(data.events);
+  };
+
+  const [setAttendance, {loading}] = useMutation(SET_ATTENDANCE, {
+    onError(err) {
+      props.setSnackbarMessage(err.message);
+      props.setSnackbarSeverity("error");
+      props.setSnackbarOpen(true);
+    },
+    onCompleted({response}) {
+      props.setSnackbarMessage(response.message);
+      props.setSnackbarSeverity("success");
+      props.setSnackbarOpen(true);
+
+      if (selectedAttendance === Attendance.ATTENDING || selectedAttendance === Attendance.NOT_ATTENDING) {
+        refetchEvents();
+      }
+    },
+  });
+
+
+  const toggleExpansionPanel = (panel: Event) => (event: ChangeEvent<{}>, isExpanded: boolean) => {
+    setExpanded(isExpanded ? panel : null);
+  };
+
+  const setAttendanceHandler = (e: Attendance, event: Event) => {
+    const invitationId = event.invitations.filter(e => e.guest.email === stateProps.person.email)[0].id;
+    setSelectedAttendance(e);
+    setExpanded(null)
+    toggleExpansionPanel(event)
+
+    setAttendance({
+      variables: {
+        attendance: Attendance[e],
+        invitation_id: invitationId
+      },
+    });
+  };
+
   const eventType =
     event.host.email === stateProps.person.email
       ? event.isDraft
-        ? "draft"
-        : "host"
+      ? "draft"
+      : "host"
       : "guest";
 
   const dispatch = useDispatch();
@@ -142,7 +188,7 @@ export const RenderEvent: FC<Props> = (props) => {
       props.setSnackbarSeverity("error");
       props.setSnackbarOpen(true);
     },
-    onCompleted({ response }) {
+    onCompleted({response}) {
       props.setSnackbarMessage(response.message);
       props.setSnackbarSeverity("success");
       props.setSnackbarOpen(true);
@@ -152,12 +198,12 @@ export const RenderEvent: FC<Props> = (props) => {
 
   const actions = [
     {
-      icon: <EditOutlinedIcon />,
+      icon: <EditOutlinedIcon/>,
       name: "Edit event",
       click: () => setEditable(!editable),
     },
     {
-      icon: <CancelOutlinedIcon color="secondary" />,
+      icon: <CancelOutlinedIcon color="secondary"/>,
       name: "Cancel event",
       click: () => cancelEvent(),
     },
@@ -176,7 +222,7 @@ export const RenderEvent: FC<Props> = (props) => {
       <SpeedDial
         ariaLabel="Event Menu Dial"
         className={classes.speedDial}
-        icon={<SpeedDialIcon />}
+        icon={<SpeedDialIcon/>}
         onClose={handleSpeedDialClose}
         onOpen={handleSpeedDialOpen}
         open={open}
@@ -193,15 +239,15 @@ export const RenderEvent: FC<Props> = (props) => {
       </SpeedDial>
     ) : (
       <>
-        <Divider />
+        <Divider/>
         <ExpansionPanelActions>
-          <Button disabled size="small" color="primary">
+          <Button size="small" color="primary" onClick={() => setAttendanceHandler(Attendance.ATTENDING, event)}>
             Yes
           </Button>
-          <Button disabled size="small" color="default">
+          <Button size="small" color="default" onClick={() => setAttendanceHandler(Attendance.MAYBE, event)}>
             Maybe
           </Button>
-          <Button disabled size="small" color="secondary">
+          <Button size="small" color="secondary" onClick={() => setAttendanceHandler(Attendance.NOT_ATTENDING, event)}>
             No
           </Button>
         </ExpansionPanelActions>
@@ -212,9 +258,11 @@ export const RenderEvent: FC<Props> = (props) => {
   return (
     <>
       {render(props.filter, eventType) ? (
-        <ExpansionPanel>
+        <ExpansionPanel
+          expanded={expanded === event} onChange={toggleExpansionPanel(event)}
+        >
           <ExpansionPanelSummary
-            expandIcon={<ExpandMoreIcon />}
+            expandIcon={<ExpandMoreIcon/>}
             aria-controls="panel1c-content"
             id="panel1c-header"
           >
@@ -237,7 +285,7 @@ export const RenderEvent: FC<Props> = (props) => {
                 setSnackbarMessage={props.setSnackbarMessage}
               />
             ) : (
-              <NonEditableEvent event={event} />
+              <NonEditableEvent event={event}/>
             )}
           </ExpansionPanelDetails>
           {menu()}
