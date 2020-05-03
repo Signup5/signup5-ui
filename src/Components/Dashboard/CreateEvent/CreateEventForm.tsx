@@ -103,6 +103,7 @@ export const CreateEventForm: FC<Props> = () => {
 
   function isDateInThePast(date: Date | null) {
     const now = new Date();
+    now.setHours(0,0,0,0);
 
     if (date instanceof Date && !isNaN(date.getDate())) {
       return !isNaN(date.getDate()) && (date < now);
@@ -140,7 +141,8 @@ export const CreateEventForm: FC<Props> = () => {
   function isValidDate(date: Date | null) {
     if (date instanceof Date) {
       const now = new Date();
-      return !isNaN(date.getDate()) && (date > now);
+      now.setHours(0,0,0,0);
+      return !isNaN(date.getDate()) && (date >= now);
     } else {
       return false;
     }

@@ -133,7 +133,7 @@ export const RenderEvent: FC<Props> = (props) => {
     rootDispatcher.updateEvents(data.events);
   };
 
-  const [setAttendance, {loading}] = useMutation(SET_ATTENDANCE, {
+  const [setAttendance] = useMutation(SET_ATTENDANCE, {
     onError(err) {
       props.setSnackbarMessage(err.message);
       props.setSnackbarSeverity("error");
