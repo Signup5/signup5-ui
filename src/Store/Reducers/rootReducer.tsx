@@ -82,7 +82,6 @@ export class RootDispatcher {
   updateEvents = (events: Array<Event>) =>
     this.dispatch({type: ActionType.UPDATE_EVENTS, payload: {events}});
 
-
   updateEvent = (event: Event) =>
     this.dispatch({type: ActionType.UPDATE_EVENT, payload: {event}});
 

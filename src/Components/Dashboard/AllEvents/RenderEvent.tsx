@@ -108,7 +108,7 @@ function render(filter: EventTypeFilter, eventType: string) {
 export const RenderEvent: FC<Props> = (props) => {
   const [editable, setEditable] = useState<boolean>(false);
   const [open, setOpen] = useState(false);
-  const [selectedAttendance, setSelectedAttendance] = useState<Attendance>(Attendance.NO_RESPONSE);
+  // const [selectedAttendance, setSelectedAttendance] = useState<Attendance>(Attendance.NO_RESPONSE);
   const [expanded, setExpanded] = useState<Event | null>(null);
   const client = useApolloClient();
   const event: Event = props.event;
@@ -144,9 +144,7 @@ export const RenderEvent: FC<Props> = (props) => {
       props.setSnackbarSeverity("success");
       props.setSnackbarOpen(true);
 
-      if (selectedAttendance === Attendance.ATTENDING || selectedAttendance === Attendance.NOT_ATTENDING) {
-        refetchEvents();
-      }
+      refetchEvents();
     },
   });
 
@@ -155,15 +153,14 @@ export const RenderEvent: FC<Props> = (props) => {
     setExpanded(isExpanded ? panel : null);
   };
 
-  const setAttendanceHandler = (e: Attendance, event: Event) => {
+  const setAttendanceHandler = (newAttendanceStatus: Attendance, event: Event) => {
     const invitationId = event.invitations.filter(e => e.guest.email === stateProps.person.email)[0].id;
-    setSelectedAttendance(e);
     setExpanded(null)
     toggleExpansionPanel(event)
 
     setAttendance({
       variables: {
-        attendance: Attendance[e],
+        attendance: Attendance[newAttendanceStatus],
         invitation_id: invitationId
       },
     });

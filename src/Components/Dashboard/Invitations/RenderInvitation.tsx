@@ -70,9 +70,7 @@ interface Props {
   removeInvitation: (invitation: Invitation) => void;
   setSnackbarOpen: Dispatch<SetStateAction<boolean>>;
   setSnackbarMessage: Dispatch<SetStateAction<string>>;
-  setSnackbarSeverity: Dispatch<
-    SetStateAction<"success" | "info" | "warning" | "error" | undefined>
-  >;
+  setSnackbarSeverity: Dispatch<SetStateAction<"success" | "info" | "warning" | "error" | undefined>>;
 }
 
 export const RenderInvitation: FC<Props> = (props) => {
@@ -81,7 +79,7 @@ export const RenderInvitation: FC<Props> = (props) => {
   const [selectedAttendance, setSelectedAttendance] = useState<Attendance>(
     Attendance.NO_RESPONSE
   );
-  const { person } = useSelector<InitialState, StateProps>(
+  const {person} = useSelector<InitialState, StateProps>(
     (state: InitialState) => {
       return {
         person: state.person,
@@ -93,7 +91,7 @@ export const RenderInvitation: FC<Props> = (props) => {
   const rootDispatcher = new RootDispatcher(dispatch);
 
   const refetchEvents = async () => {
-    const { data } = await client.query({
+    const {data} = await client.query({
       query: GET_HOSTED_AND_INVITED_EVENTS_BY_PERSON_ID,
       variables: {
         id: person.id,
@@ -103,13 +101,13 @@ export const RenderInvitation: FC<Props> = (props) => {
     rootDispatcher.updateEvents(data.events);
   };
 
-  const [setAttendance, { loading }] = useMutation(SET_ATTENDANCE, {
+  const [setAttendance, {loading}] = useMutation(SET_ATTENDANCE, {
     onError(err) {
       props.setSnackbarMessage(err.message);
       props.setSnackbarSeverity("error");
       props.setSnackbarOpen(true);
     },
-    onCompleted({ response }) {
+    onCompleted({response}) {
       props.setSnackbarMessage(response.message);
       props.setSnackbarSeverity("success");
       props.setSnackbarOpen(true);
@@ -122,11 +120,12 @@ export const RenderInvitation: FC<Props> = (props) => {
     },
   });
 
-  const setAttendanceHandler = (e: Attendance) => {
-    setSelectedAttendance(e);
+  const setAttendanceHandler = (newAttendanceStatus: Attendance) => {
+    setSelectedAttendance(newAttendanceStatus);
+
     setAttendance({
       variables: {
-        attendance: Attendance[e],
+        attendance: Attendance[newAttendanceStatus],
         invitation_id: props.invitation.id,
       },
     });
@@ -148,7 +147,7 @@ export const RenderInvitation: FC<Props> = (props) => {
   return (
     <ExpansionPanel>
       <ExpansionPanelSummary
-        expandIcon={<ExpandMoreIcon />}
+        expandIcon={<ExpandMoreIcon/>}
         aria-controls="panel1c-content"
         id="panel1c-header"
       >
@@ -164,17 +163,17 @@ export const RenderInvitation: FC<Props> = (props) => {
       <ExpansionPanelDetails className={classes.details}>
         <Typography className={classes.contentText}>
           {event.description}
-          <br />
+          <br/>
           <a href="#secondary-heading-and-columns" className={classes.link}>
             Read more
           </a>
-          <br />
+          <br/>
           <span className={classes.secondaryHeading}>{event.location}</span>
         </Typography>
       </ExpansionPanelDetails>
-      <Divider />
+      <Divider/>
       <ExpansionPanelActions>
-        {loading ? <CircularProgress /> : ""}
+        {loading ? <CircularProgress/> : ""}
         <Button
           size="small"
           color="primary"

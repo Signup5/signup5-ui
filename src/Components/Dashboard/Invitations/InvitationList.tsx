@@ -49,7 +49,7 @@ export const InvitationList: FC<Props> = (props) => {
   }
 
   const render = () => {
-    return invitations.map((invitation:Invitation, index:number) => {
+    return invitations.map((invitation: Invitation, index: number) => {
       return <RenderInvitation
         key={index}
         invitation={invitation}

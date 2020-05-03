@@ -161,7 +161,6 @@ export const EditableEvent: FC<Props> = props => {
     if (!stateProps.host.id) {
       history.push("");
     }
-    // changeDisplayEmailError();
   });
 
 
